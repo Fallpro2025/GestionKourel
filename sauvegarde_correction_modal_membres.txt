@@ -1,0 +1,95 @@
+SAUVEGARDE - CORRECTION MODAL MEMBRES BLADE.PHP
+===============================================
+
+Date: 15 septembre 2025
+Projet: Gestion Kourel
+Développeur: Assistant IA
+
+PROBLÈME IDENTIFIÉ:
+==================
+L'utilisateur utilisait le modal dans resources/views/membres/membres.blade.php et non le composant Vue.js que j'avais modifié initialement. C'est pourquoi il ne voyait pas les modifications.
+
+MODIFICATIONS APPORTÉES AU MODAL BLADE.PHP:
+===========================================
+
+FICHIER: resources/views/membres/membres.blade.php
+
+1. CHAMP PHOTO AJOUTÉ AU MODAL:
+   ============================
+   - Ajout de enctype="multipart/form-data" au formulaire
+   - Nouveau champ input file avec accept="image/*"
+   - Prévisualisation d'image en temps réel (96x96px)
+   - Bouton de suppression d'image (croix rouge)
+   - Validation côté client intégrée
+
+2. STRUCTURE HTML AJOUTÉE:
+   =======================
+   ```html
+   <!-- Champ Photo -->
+   <div>
+       <label class="block text-white/80 text-sm font-medium mb-2">Photo de profil</label>
+       <div class="space-y-3">
+           <input type="file" 
+                  id="photoModal" 
+                  accept="image/*"
+                  onchange="previewImageModal(this)"
+                  class="search-input w-full px-4 py-3 text-white rounded-xl focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600">
+           
+           <!-- Prévisualisation de l'image -->
+           <div id="imagePreviewModal" class="hidden">
+               <div class="relative inline-block">
+                   <img id="previewImgModal" src="" alt="Prévisualisation" class="w-24 h-24 object-cover rounded-xl border-2 border-white/20">
+                   <button type="button" onclick="removeImageModal()" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600 transition-colors">
+                       ×
+                   </button>
+               </div>
+               <p class="text-white/60 text-xs mt-1">Cliquez sur la croix pour supprimer</p>
+           </div>
+       </div>
+   </div>
+   ```
+
+3. FONCTIONS JAVASCRIPT AJOUTÉES:
+   ===============================
+   - previewImageModal(input): Gestion de la sélection d'image
+     * Validation de la taille (max 2MB)
+     * Validation du type (JPEG, PNG, GIF, WebP)
+     * Création de la prévisualisation avec FileReader
+   
+   - removeImageModal(): Suppression de l'image sélectionnée
+     * Réinitialise l'input file
+     * Cache la prévisualisation
+
+4. FONCTIONNALITÉS IMPLÉMENTÉES:
+   ==============================
+   ✅ Upload d'image avec prévisualisation
+   ✅ Validation de la taille (max 2MB)
+   ✅ Validation des formats (JPEG, PNG, GIF, WebP)
+   ✅ Bouton de suppression d'image
+   ✅ Interface utilisateur cohérente avec le design existant
+   ✅ Validation côté client avec messages d'erreur
+
+5. DESIGN ET STYLE:
+   ================
+   - Cohérent avec le design sombre du modal
+   - Prévisualisation d'image de 96x96px (w-24 h-24)
+   - Bouton de suppression rouge avec effet hover
+   - Texte d'aide en blanc/60
+   - Style file input personnalisé avec bouton bleu
+
+6. INTÉGRATION:
+   =============
+   - Compatible avec le contrôleur Laravel existant
+   - Prêt pour l'envoi vers la route membres.store
+   - Gestion d'erreurs intégrée
+
+STATUT: ✅ TERMINÉ
+Le modal dans membres.blade.php contient maintenant le champ photo avec toutes les fonctionnalités.
+L'utilisateur peut maintenant voir et utiliser la fonctionnalité d'upload d'image dans son modal.
+
+PROCHAINES ÉTAPES:
+==================
+1. Connecter le formulaire du modal au contrôleur Laravel
+2. Tester l'upload d'image complet
+3. Ajouter l'affichage des photos dans la liste des membres
+4. Implémenter la fonction addNewMember() pour traiter le formulaire

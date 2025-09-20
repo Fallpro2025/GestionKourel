@@ -1,0 +1,28 @@
+{
+  "_charts-4ed993c7.js": {
+    "file": "assets/charts-4ed993c7.js"
+  },
+  "_vendor-6347d2e6.js": {
+    "file": "assets/vendor-6347d2e6.js"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-b74c11ae.css",
+    "isEntry": true,
+    "src": "resources/css/app.css"
+  },
+  "resources/js/app.css": {
+    "file": "assets/app-b8b83db9.css",
+    "src": "resources/js/app.css"
+  },
+  "resources/js/app.js": {
+    "css": [
+      "assets/app-b8b83db9.css"
+    ],
+    "file": "assets/app-32e40f0f.js",
+    "imports": [
+      "_vendor-6347d2e6.js"
+    ],
+    "isEntry": true,
+    "src": "resources/js/app.js"
+  }
+}

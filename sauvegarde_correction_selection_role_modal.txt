@@ -1,0 +1,160 @@
+SAUVEGARDE - CORRECTION SÉLECTION RÔLE MODAL MODIFICATION
+=======================================================
+
+Date: 2025-01-27
+Problème: Le rôle n'est pas sélectionné dans le modal de modification
+Cause: Mapping incorrect des valeurs de rôle et relation Laravel
+
+PROBLÈME IDENTIFIÉ
+==================
+❌ Le rôle n'est pas sélectionné lors de l'ouverture du modal
+❌ Mapping incorrect entre les valeurs de rôle et les options du select
+❌ Relation Laravel `role` non correctement gérée dans JavaScript
+❌ Valeurs de rôle ne correspondent pas aux options du select
+
+SOLUTION APPLIQUÉE
+====================
+
+1. MAPPING CORRECT DES VALEURS DE RÔLE
+-------------------------------------
+AVANT (incorrect):
+```javascript
+const roleField = document.getElementById('editRole');
+if (roleField) roleField.value = String(membre.role || '').toLowerCase();
+```
+
+APRÈS (corrigé):
+```javascript
+const roleField = document.getElementById('editRole');
+if (roleField) {
+    // Mapper le rôle correctement
+    let roleValue = '';
+    if (membre.role) {
+        // Si c'est un objet (relation Laravel), prendre le nom
+        if (typeof membre.role === 'object' && membre.role.nom) {
+            roleValue = membre.role.nom.toLowerCase();
+        } else if (typeof membre.role === 'string') {
+            roleValue = membre.role.toLowerCase();
+        }
+    }
+    
+    // Mapper les valeurs pour correspondre aux options du select
+    const roleMapping = {
+        'choriste': 'choriste',
+        'soliste': 'soliste',
+        'musicien': 'musicien',
+        'danseur': 'danseur',
+        'membre actif': 'membre_actif',
+        'membre honoraire': 'membre_honoraire',
+        'responsable': 'responsable',
+        'animateur': 'animateur',
+        'trésorier': 'tresorier',
+        'secrétaire': 'secretaire'
+    };
+    
+    const mappedRole = roleMapping[roleValue] || roleValue;
+    roleField.value = mappedRole;
+    console.log('🔍 Rôle mappé:', roleValue, '→', mappedRole);
+}
+```
+
+2. GESTION DES RELATIONS LARAVEL
+-------------------------------
+```javascript
+// Gestion des différents formats de rôle
+if (membre.role) {
+    // Si c'est un objet (relation Laravel), prendre le nom
+    if (typeof membre.role === 'object' && membre.role.nom) {
+        roleValue = membre.role.nom.toLowerCase();
+    } else if (typeof membre.role === 'string') {
+        roleValue = membre.role.toLowerCase();
+    }
+}
+```
+
+3. MAPPING DES VALEURS POUR LE SELECT
+------------------------------------
+```javascript
+const roleMapping = {
+    'choriste': 'choriste',
+    'soliste': 'soliste',
+    'musicien': 'musicien',
+    'danseur': 'danseur',
+    'membre actif': 'membre_actif',
+    'membre honoraire': 'membre_honoraire',
+    'responsable': 'responsable',
+    'animateur': 'animateur',
+    'trésorier': 'tresorier',
+    'secrétaire': 'secretaire'
+};
+```
+
+4. DEBUG AJOUTÉ
+---------------
+```javascript
+console.log('📊 Données membres chargées:', membresData.length, 'membres');
+console.log('🔍 Premier membre (debug):', membresData[0]);
+console.log('🔍 Rôle mappé:', roleValue, '→', mappedRole);
+```
+
+OPTIONS DU SELECT
+=================
+```html
+<select id="editRole" class="search-input w-full px-4 py-3 text-white rounded-xl focus:outline-none">
+    <option value="" style="background: #1f2937; color: white;">Sélectionner un rôle</option>
+    <option value="choriste" style="background: #1f2937; color: white;">Choriste</option>
+    <option value="soliste" style="background: #1f2937; color: white;">Soliste</option>
+    <option value="musicien" style="background: #1f2937; color: white;">Musicien</option>
+    <option value="danseur" style="background: #1f2937; color: white;">Danseur</option>
+    <option value="membre_actif" style="background: #1f2937; color: white;">Membre actif</option>
+    <option value="membre_honoraire" style="background: #1f2937; color: white;">Membre honoraire</option>
+    <option value="responsable" style="background: #1f2937; color: white;">Responsable</option>
+    <option value="animateur" style="background: #1f2937; color: white;">Animateur</option>
+    <option value="tresorier" style="background: #1f2937; color: white;">Trésorier</option>
+    <option value="secretaire" style="background: #1f2937; color: white;">Secrétaire</option>
+</select>
+```
+
+AVANTAGES DE LA CORRECTION
+==========================
+✅ Rôle correctement sélectionné dans le modal
+✅ Gestion des relations Laravel
+✅ Mapping correct des valeurs
+✅ Support des différents formats de rôle
+✅ Debug pour diagnostic
+✅ Code robuste et maintenable
+
+TESTS RECOMMANDÉS
+=================
+1. Ouvrir le modal de modification d'un membre
+2. Vérifier que le rôle est sélectionné correctement
+3. Tester avec différents types de rôles
+4. Vérifier les logs de debug dans la console
+5. Confirmer que la sélection fonctionne pour tous les membres
+
+RÉSULTATS ATTENDUS
+==================
+✅ Rôle sélectionné correctement dans le modal
+✅ Mapping correct des valeurs
+✅ Gestion robuste des relations Laravel
+✅ Debug visible dans la console
+✅ Expérience utilisateur améliorée
+✅ Code maintenable et extensible
+
+STATUT: CORRECTION APPLIQUÉE ✅
+===============================
+Le rôle devrait maintenant être sélectionné correctement dans le modal.
+
+FICHIERS MODIFIÉS
+=================
+- resources/views/membres/membres.blade.php (mapping des rôles)
+- sauvegarde_correction_selection_role_modal.txt (créé)
+
+NOTES IMPORTANTES
+=================
+- Gestion des relations Laravel dans JavaScript
+- Mapping des valeurs pour correspondre aux options
+- Debug ajouté pour diagnostic
+- Code robuste pour différents formats
+- Support complet des rôles disponibles
+

@@ -1,0 +1,85 @@
+SAUVEGARDE - CORRECTION ERREUR toLowerCase
+==========================================
+
+Date: 2025-01-27
+Erreur: (membre.role || "").toLowerCase is not a function
+Cause: Appel de toLowerCase() sur une valeur non-string
+
+PROBLÈME IDENTIFIÉ
+==================
+❌ Erreur: "(membre.role || "").toLowerCase is not a function"
+❌ Cause: Les propriétés membre.role et membre.statut ne sont pas des chaînes de caractères
+❌ Impact: Le modal de modification ne s'ouvre pas
+
+CORRECTIONS APPLIQUÉES
+======================
+
+1. LIGNE 1622 - Rôle du membre
+------------------------------
+AVANT:
+```javascript
+if (roleField) roleField.value = (membre.role || '').toLowerCase();
+```
+
+APRÈS:
+```javascript
+if (roleField) roleField.value = String(membre.role || '').toLowerCase();
+```
+
+2. LIGNE 1625 - Statut du membre
+--------------------------------
+AVANT:
+```javascript
+if (statutField) statutField.value = (membre.statut || 'actif').toLowerCase();
+```
+
+APRÈS:
+```javascript
+if (statutField) statutField.value = String(membre.statut || 'actif').toLowerCase();
+```
+
+3. LIGNE 1489 - Affichage du statut
+-----------------------------------
+AVANT:
+```javascript
+switch((membre.statut || '').toLowerCase()) {
+```
+
+APRÈS:
+```javascript
+switch(String(membre.statut || '').toLowerCase()) {
+```
+
+SOLUTION APPLIQUÉE
+==================
+✅ Utilisation de String() pour convertir en chaîne de caractères
+✅ Garantit que toLowerCase() fonctionne sur tous les types
+✅ Gestion sécurisée des valeurs null/undefined
+
+FONCTIONS CORRIGÉES
+===================
+1. remplirFormulaireModification() - Lignes 1622 et 1625
+2. remplirModalDetails() - Ligne 1489
+
+AVANTAGES DE LA CORRECTION
+==========================
+✅ Compatible avec tous les types de données
+✅ Gestion sécurisée des valeurs nulles
+✅ Pas d'erreur JavaScript
+✅ Fonctionnement garanti du modal
+
+TEST DE VALIDATION
+==================
+1. Cliquer sur le bouton "Modifier"
+2. Vérifier l'ouverture du modal
+3. Vérifier le remplissage des champs
+4. Confirmer l'absence d'erreurs dans la console
+
+STATUT: CORRECTION APPLIQUÉE ✅
+===============================
+L'erreur toLowerCase() est maintenant corrigée. Le bouton "Modifier" devrait fonctionner sans erreur.
+
+FICHIERS MODIFIÉS
+=================
+- resources/views/membres/membres.blade.php (3 corrections toLowerCase)
+- sauvegarde_correction_erreur_tolowercase.txt (créé)

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Bouton Modifier</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #1a1a1a; color: white; }
+        .test-button { padding: 15px 30px; margin: 10px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; }
+        .test-button:hover { background: #0056b3; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; }
+        .modal-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #333; padding: 30px; border-radius: 10px; }
+        .close { float: right; font-size: 24px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Test du Bouton Modifier</h1>
+    
+    <button class="test-button" onclick="testEditMember(1)">Test Modifier Membre 1</button>
+    <button class="test-button" onclick="testEditMember(2)">Test Modifier Membre 2</button>
+    <button class="test-button" onclick="testEditMember(3)">Test Modifier Membre 3</button>
+    
+    <div id="editMemberModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditMember()">&times;</span>
+            <h2>Modal Modification Membre</h2>
+            <p>Ce modal fonctionne !</p>
+            <p>ID du membre: <span id="memberIdDisplay"></span></p>
+        </div>
+    </div>
+    
+    <script>
+        console.log('✅ JavaScript de test chargé');
+        
+        function testEditMember(memberId) {
+            console.log('🧪 TEST - Bouton Modifier cliqué');
+            console.log('🧪 ID reçu:', memberId, 'Type:', typeof memberId);
+            
+            // Test simple d'abord
+            alert('Test: Bouton Modifier cliqué pour le membre ID: ' + memberId);
+            
+            // Puis essayer d'ouvrir le modal
+            const modal = document.getElementById('editMemberModal');
+            if (modal) {
+                console.log('✅ Modal trouvé, ouverture...');
+                document.getElementById('memberIdDisplay').textContent = memberId;
+                modal.style.display = 'block';
+            } else {
+                console.error('❌ Modal editMemberModal non trouvé');
+                alert('Erreur: Modal de modification non trouvé');
+            }
+        }
+        
+        function closeEditMember() {
+            console.log('Fermeture modal modification');
+            document.getElementById('editMemberModal').style.display = 'none';
+        }
+        
+        // Fermer les modals en cliquant à l'extérieur
+        window.onclick = function(event) {
+            const modal = document.getElementById('editMemberModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

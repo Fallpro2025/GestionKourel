@@ -1,0 +1,67 @@
+=== PROJET PLATEFORME GESTION DAHIRA/KOUREL ===
+Date: 2025
+Développeur: Assistant IA + Utilisateur
+
+=== OBJECTIFS GÉNÉRAUX ===
+Créer une plateforme digitale complète pour la gestion d'un dahira/kourel avec :
+- Gestion des membres
+- Suivi des cotisations (assignations)
+- Planification des répétitions, prestations, goudi aldiouma et événements
+- Suivi des présences, absences et retards
+- Système d'alertes automatiques et rapports statistiques
+
+=== FONCTIONNALITÉS DÉTAILLÉES ===
+
+👥 GESTION DES MEMBRES
+- Inscription avec profil complet (nom, prénom, contact, rôle)
+- Suivi individuel : cotisations, présence, absences, retards
+- Historique par membre exportable (PDF/Excel)
+
+💰 GESTION DES COTISATIONS (ASSIGNATIONS)
+- Création de projets de cotisation : nom, montant, échéance
+- Attribution du montant à chaque membre
+- Suivi des paiements (payé, partiel, restant)
+- Alertes de retard de paiement
+- Statistiques globales (recouvrement total, membres à jour ou non)
+
+📅 GESTION DES RÉPÉTITIONS, PRESTATIONS ET GOUDI ALDIOUMA
+- Configuration flexible des jours et heures (modifiable)
+- Enregistrement des présences :
+  * Présent
+  * Absent (justifié / non justifié)
+  * Retard (minutes de retard)
+- Historique par membre et par activité
+
+🎤 GESTION DES ÉVÉNEMENTS (MAGAL, GAMOU, PROMOKHANE...)
+- Création d'événements spéciaux
+- Sélection des membres pour les prestations (déclamation, chorale, animation)
+- Suivi des présences/absences spécifiques à l'événement
+
+🔔 SYSTÈME D'ALERTES ET RÈGLES
+- Absences répétitives (même justifiées → alerte)
+- Absences non justifiées (consécutives → alerte discipline)
+- Retards excessifs (ex. +10 min à 3 reprises → alerte)
+- Absences aux événements majeurs → alerte spéciale
+- Notifications aux responsables + éventuellement au membre par SMS/WhatsApp/email
+
+=== TECHNOLOGIES UTILISÉES ===
+- Framework: Laravel (PHP)
+- Base de données: MySQL/PostgreSQL
+- Frontend: Vue.js/React ou Blade templates
+- Notifications: SMS API, Email, WhatsApp Business API
+
+=== AVANTAGES DU PROJET ===
+1. Digitalisation complète de la gestion traditionnelle
+2. Automatisation des tâches répétitives
+3. Suivi précis et historique complet
+4. Alertes proactives pour maintenir la discipline
+5. Rapports statistiques pour les responsables
+6. Interface moderne et intuitive
+7. Accessible depuis mobile et desktop
+
+=== PROCHAINES ÉTAPES ===
+- Définition de l'architecture technique
+- Création du schéma de base de données
+- Développement des modules principaux
+- Tests et déploiement
+

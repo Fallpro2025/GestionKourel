@@ -1,0 +1,103 @@
+SAUVEGARDE - DIAGNOSTIC PROBLÈME NOM/PRÉNOM
+===========================================
+
+Date: 2025-01-27
+Problème: Dans le champ prénom on voit le nom, dans le champ nom rien ne s'affiche
+
+DIAGNOSTIC APPLIQUÉ
+===================
+
+1. LOGS DE DÉBOGAGE AJOUTÉS
+---------------------------
+✅ Affichage des données complètes du membre
+✅ Affichage du type de membre.nom
+✅ Affichage du nom complet avant séparation
+✅ Affichage des parties après split()
+✅ Affichage du prénom et nom extraits
+✅ Confirmation du remplissage des champs
+
+2. CODE DE DIAGNOSTIC
+--------------------
+```javascript
+function remplirFormulaireModification(membre) {
+    console.log('🔍 DEBUG - Données du membre:', membre);
+    console.log('🔍 DEBUG - membre.nom:', membre.nom, 'Type:', typeof membre.nom);
+    
+    const nomComplet = membre.nom || '';
+    console.log('🔍 DEBUG - Nom complet:', nomComplet);
+    
+    const nomParts = nomComplet.split(' ');
+    console.log('🔍 DEBUG - Parties du nom:', nomParts);
+    
+    const prenom = nomParts[0] || '';
+    const nom = nomParts.slice(1).join(' ') || '';
+    
+    console.log('🔍 DEBUG - Prénom extrait:', prenom);
+    console.log('🔍 DEBUG - Nom extrait:', nom);
+    
+    // Remplissage avec confirmation
+    const prenomField = document.getElementById('editFirstName');
+    if (prenomField) {
+        prenomField.value = prenom;
+        console.log('✅ Prénom rempli:', prenomField.value);
+    }
+    
+    const nomField = document.getElementById('editLastName');
+    if (nomField) {
+        nomField.value = nom;
+        console.log('✅ Nom rempli:', nomField.value);
+    }
+}
+```
+
+CAUSES POSSIBLES
+================
+
+1. STRUCTURE DES DONNÉES INCORRECTE
+-----------------------------------
+- membre.nom contient déjà le prénom seulement
+- membre.nom contient le nom de famille seulement
+- Structure différente de celle attendue
+
+2. LOGIQUE DE SÉPARATION INCORRECTE
+----------------------------------
+- Split sur ' ' ne fonctionne pas
+- Problème avec les espaces multiples
+- Problème avec les caractères spéciaux
+
+3. PROBLÈME DE REMPLISSAGE
+--------------------------
+- Champs HTML incorrects
+- Problème de sélection des éléments
+- Valeurs écrasées après remplissage
+
+ÉTAPES DE DIAGNOSTIC
+====================
+
+1. OUVRIR LA CONSOLE (F12)
+2. Cliquer sur "Modifier" d'un membre
+3. Vérifier les logs :
+   - "🔍 DEBUG - Données du membre:"
+   - "🔍 DEBUG - membre.nom:"
+   - "🔍 DEBUG - Nom complet:"
+   - "🔍 DEBUG - Parties du nom:"
+   - "🔍 DEBUG - Prénom extrait:"
+   - "🔍 DEBUG - Nom extrait:"
+   - "✅ Prénom rempli:"
+   - "✅ Nom rempli:"
+
+4. ANALYSER LES RÉSULTATS
+5. Identifier la cause exacte
+6. Appliquer la correction appropriée
+
+STATUT: DIAGNOSTIC EN COURS 🔍
+==============================
+Les logs de débogage permettront d'identifier la cause exacte du problème de séparation nom/prénom.
+
+PROCHAINES ÉTAPES
+=================
+1. Tester avec la console ouverte
+2. Analyser les logs
+3. Identifier la structure réelle des données
+4. Corriger la logique de séparation
+5. Valider le fonctionnement

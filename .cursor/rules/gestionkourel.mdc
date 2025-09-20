@@ -1,0 +1,67 @@
+Objectifs
+
+Créer une plateforme digitale permettant de gérer un dahira/kourel avec :
+
+La gestion des membres.
+
+Le suivi des cotisations (assignations).
+
+La planification des répétitions, prestations, goudi aldiouma et évènements.
+
+Le suivi des présences, absences et retards.
+
+Un système d’alertes automatiques et de rapports statistiques.
+
+👥 Gestion des Membres
+
+Inscription des membres avec profil (nom, prénom, contact, rôle).
+
+Suivi individuel : cotisations, présence, absences, retards.
+
+Historique par membre exportable (PDF/Excel).
+
+💰 Gestion des Cotisations (Assignations)
+
+Création de projets de cotisation : nom, montant, échéance.
+
+Attribution du montant à chaque membre.
+
+Suivi des paiements (payé, partiel, restant).
+
+Alertes de retard de paiement.
+
+Statistiques globales (recouvrement total, membres à jour ou non).
+
+📅 Gestion des Répétitions, Prestations et Goudi Aldiouma
+
+Configuration flexible des jours et heures (modifiable à tout moment).
+
+Enregistrement des présences :
+
+Présent
+
+Absent (justifié / non justifié)
+
+Retard (minutes de retard).
+
+Historique par membre et par activité.
+
+🎤 Gestion des Événements (Magal, Gamou, Promokhane…)
+
+Création d’événements spéciaux.
+
+Sélection des membres pour les prestations (déclamation, chorale, animation).
+
+Suivi des présences/absences spécifiques à l’événement.
+
+🔔 Système d’Alertes et Règles
+
+Absences répétitives (même justifiées → alerte).
+
+Absences non justifiées (consécutives → alerte discipline).
+
+Retards excessifs (ex. +10 min à 3 reprises → alerte).
+
+Absences aux évènements majeurs → alerte spéciale.
+
+Notifications aux responsables + éventuellement au membre par SMS/WhatsApp/email.

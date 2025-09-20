@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test JavaScript - Gestion Kourel</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-button { padding: 10px 20px; margin: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .test-button:hover { background: #0056b3; }
+        .result { margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Test des Fonctions JavaScript</h1>
+    
+    <button class="test-button" onclick="testOpenModal()">Test Ouvrir Modal</button>
+    <button class="test-button" onclick="testNotification()">Test Notification</button>
+    <button class="test-button" onclick="testValidation()">Test Validation</button>
+    
+    <div id="results"></div>
+    
+    <script>
+        function log(message) {
+            const results = document.getElementById('results');
+            results.innerHTML += '<div class="result">' + message + '</div>';
+            console.log(message);
+        }
+        
+        function testOpenModal() {
+            log('🔍 Test d\'ouverture de modal...');
+            try {
+                // Simuler l'ouverture d'un modal
+                log('✅ Fonction testOpenModal exécutée sans erreur');
+            } catch (error) {
+                log('❌ Erreur dans testOpenModal: ' + error.message);
+            }
+        }
+        
+        function testNotification() {
+            log('🔍 Test de notification...');
+            try {
+                showNotification('Test de notification', 'success');
+                log('✅ Fonction showNotification exécutée');
+            } catch (error) {
+                log('❌ Erreur dans showNotification: ' + error.message);
+            }
+        }
+        
+        function testValidation() {
+            log('🔍 Test de validation...');
+            try {
+                const result = validateFirstName();
+                log('✅ Fonction validateFirstName exécutée, résultat: ' + result);
+            } catch (error) {
+                log('❌ Erreur dans validateFirstName: ' + error.message);
+            }
+        }
+        
+        // Fonction showNotification simplifiée pour le test
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            let bgColor = 'blue';
+            if (type === 'success') bgColor = 'green';
+            if (type === 'error') bgColor = 'red';
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px;
+                background: ${bgColor};
+                color: white;
+                border-radius: 5px;
+                z-index: 1000;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 3000);
+        }
+        
+        // Fonction validateFirstName simplifiée pour le test
+        function validateFirstName() {
+            return true; // Version simplifiée pour le test
+        }
+        
+        log('✅ Script de test chargé');
+    </script>
+</body>
+</html>

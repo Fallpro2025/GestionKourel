@@ -1,0 +1,141 @@
+SAUVEGARDE - AMÉLIORATION AFFICHAGE INITIALES SANS PHOTO
+=======================================================
+
+Date: 2025-01-27
+Problème: Affichage des initiales peu cohérent quand pas de photo
+Solution: Logique améliorée et fonction utilitaire centralisée
+
+PROBLÈME IDENTIFIÉ
+==================
+❌ Calcul des initiales peu cohérent entre les cartes et modals
+❌ Logique répétée dans plusieurs endroits
+❌ Gestion incomplète des différents formats de noms
+❌ Initiales parfois incorrectes ou manquantes
+
+SOLUTION IMPLÉMENTÉE
+====================
+
+1. FONCTION UTILITAIRE CENTRALISÉE
+----------------------------------
+```javascript
+function calculerInitiales(membre) {
+    let initiales = 'M'; // Par défaut
+    
+    if (membre.nom) {
+        // Si on a un nom complet, prendre les premières lettres
+        const nomParts = membre.nom.split(' ').filter(part => part.length > 0);
+        if (nomParts.length >= 2) {
+            // Prendre la première lettre du prénom et du nom
+            initiales = (nomParts[0][0] + nomParts[nomParts.length - 1][0]).toUpperCase();
+        } else if (nomParts.length === 1) {
+            // Si un seul mot, prendre les deux premières lettres
+            initiales = nomParts[0].substring(0, 2).toUpperCase();
+        }
+    } else if (membre.prenom && membre.nom_famille) {
+        // Si on a prénom et nom séparés
+        initiales = (membre.prenom[0] + membre.nom_famille[0]).toUpperCase();
+    } else if (membre.prenom) {
+        // Si on a seulement le prénom
+        initiales = membre.prenom.substring(0, 2).toUpperCase();
+    }
+    
+    return initiales;
+}
+```
+
+2. LOGIQUE AMÉLIORÉE POUR LES CARTES
+-----------------------------------
+AVANT (incorrect):
+```php
+{{ strtoupper(substr($membre->prenom, 0, 1) . substr($membre->nom, 0, 1)) }}
+```
+
+APRÈS (corrigé):
+```php
+@php
+    $initiales = 'M'; // Par défaut
+    if ($membre->nom) {
+        $nomParts = array_filter(explode(' ', $membre->nom));
+        if (count($nomParts) >= 2) {
+            $initiales = strtoupper($nomParts[0][0] . end($nomParts)[0]);
+        } elseif (count($nomParts) === 1) {
+            $initiales = strtoupper(substr($nomParts[0], 0, 2));
+        }
+    } elseif ($membre->prenom && $membre->nom_famille) {
+        $initiales = strtoupper($membre->prenom[0] . $membre->nom_famille[0]);
+    } elseif ($membre->prenom) {
+        $initiales = strtoupper(substr($membre->prenom, 0, 2));
+    }
+@endphp
+{{ $initiales }}
+```
+
+3. LOGIQUE AMÉLIORÉE POUR LES MODALS
+-----------------------------------
+AVANT (incorrect):
+```javascript
+const initiales = membre.nom ? membre.nom.split(' ').map(n => n[0]).join('').toUpperCase() : 'M';
+```
+
+APRÈS (corrigé):
+```javascript
+const initiales = calculerInitiales(membre);
+```
+
+CAS D'USAGE GÉRÉS
+=================
+✅ Nom complet: "Alioune Fall" → "AF"
+✅ Nom seul: "Alioune" → "AL"
+✅ Prénom + Nom séparés: prenom="Alioune", nom_famille="Fall" → "AF"
+✅ Prénom seul: prenom="Alioune" → "AL"
+✅ Aucun nom: → "M" (par défaut)
+✅ Nom avec espaces multiples: "Alioune   Fall" → "AF"
+✅ Nom vide ou null: → "M" (par défaut)
+
+AVANTAGES DE LA SOLUTION
+========================
+✅ Logique centralisée et cohérente
+✅ Gestion complète de tous les cas
+✅ Code simplifié et maintenable
+✅ Initiales correctes partout
+✅ Fallback intelligent vers "M"
+✅ Filtrage des espaces multiples
+✅ Gestion des champs null/undefined
+
+TESTS RECOMMANDÉS
+=================
+1. Membre avec photo → Photo affichée
+2. Membre sans photo avec nom complet → Initiales correctes
+3. Membre sans photo avec nom seul → Initiales correctes
+4. Membre sans photo avec prénom seul → Initiales correctes
+5. Membre sans nom → "M" par défaut
+6. Cartes des membres → Initiales cohérentes
+7. Modal de détails → Initiales cohérentes
+8. Modal de modification → Initiales cohérentes
+
+RÉSULTATS ATTENDUS
+==================
+✅ Initiales cohérentes dans toutes les vues
+✅ Logique centralisée et maintenable
+✅ Gestion complète de tous les cas
+✅ Affichage élégant sans photo
+✅ Fallback intelligent vers "M"
+✅ Code simplifié et lisible
+
+STATUT: AMÉLIORATION TERMINÉE ✅
+===============================
+L'affichage des initiales est maintenant cohérent et robuste.
+
+FICHIERS MODIFIÉS
+=================
+- resources/views/membres/membres.blade.php (logique améliorée)
+- sauvegarde_amelioration_initiales_sans_photo.txt (créé)
+
+NOTES IMPORTANTES
+=================
+- Fonction utilitaire centralisée pour la cohérence
+- Gestion complète de tous les formats de noms
+- Fallback intelligent vers "M" par défaut
+- Code simplifié et maintenable
+- Logs de débogage pour diagnostic
+- Compatible avec tous les cas d'usage

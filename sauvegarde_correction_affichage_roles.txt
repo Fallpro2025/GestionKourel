@@ -1,0 +1,146 @@
+SAUVEGARDE - CORRECTION AFFICHAGE RÔLES MODAL AJOUT
+=================================================
+
+Date: 2025-01-27
+Problème: Les rôles ne s'affichent pas dans la liste déroulante du modal d'ajout
+Cause: Table roles vide - aucun rôle créé dans la base de données
+
+PROBLÈME IDENTIFIÉ
+==================
+❌ Liste déroulante des rôles vide dans le modal d'ajout
+❌ Table `roles` vide - aucun rôle créé
+❌ Champ `permissions` requis mais non fourni lors de la création
+❌ Erreur SQL: Field 'permissions' doesn't have a default value
+
+STRUCTURE TABLE ROLES
+=====================
+```sql
+CREATE TABLE roles (
+    id BIGINT PRIMARY KEY,
+    nom VARCHAR(50) UNIQUE,
+    description TEXT NULLABLE,
+    permissions JSON,                    -- CHAMP REQUIS !
+    niveau_priorite TINYINT DEFAULT 1,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
+);
+```
+
+SOLUTION APPLIQUÉE
+==================
+
+1. CRÉATION DES RÔLES PAR DÉFAUT
+-------------------------------
+✅ 8 rôles créés avec permissions appropriées
+✅ Champ `permissions` correctement rempli
+✅ Structure JSON pour les permissions
+
+2. RÔLES CRÉÉS
+-------------
+✅ Membre (permissions: voir_profil)
+✅ Responsable (permissions: voir_profil, gestion_activites)
+✅ Animateur (permissions: voir_profil, animer_activites)
+✅ Choriste (permissions: voir_profil, participer_chorale)
+✅ Trésorier (permissions: voir_profil, gestion_finances, gestion_cotisations)
+✅ Secrétaire (permissions: voir_profil, gestion_documents, gestion_evenements)
+✅ Président (permissions: voir_profil, gestion_membres, gestion_finances, gestion_evenements, administration)
+✅ Vice-président (permissions: voir_profil, gestion_membres, gestion_evenements)
+
+3. CODE DU MODAL AJOUT
+---------------------
+```html
+<select name="role_id" id="roleModal" required class="...">
+    <option value="">Sélectionner</option>
+    @foreach(\App\Models\Role::all() as $role)
+        <option value="{{ $role->id }}">{{ $role->nom }}</option>
+    @endforeach
+</select>
+```
+
+PERMISSIONS PAR RÔLE
+====================
+
+1. MEMBRE
+--------
+- voir_profil
+
+2. RESPONSABLE
+-------------
+- voir_profil
+- gestion_activites
+
+3. ANIMATEUR
+-----------
+- voir_profil
+- animer_activites
+
+4. CHORISTE
+----------
+- voir_profil
+- participer_chorale
+
+5. TRÉSORIER
+-----------
+- voir_profil
+- gestion_finances
+- gestion_cotisations
+
+6. SECRÉTAIRE
+------------
+- voir_profil
+- gestion_documents
+- gestion_evenements
+
+7. PRÉSIDENT
+-----------
+- voir_profil
+- gestion_membres
+- gestion_finances
+- gestion_evenements
+- administration
+
+8. VICE-PRÉSIDENT
+----------------
+- voir_profil
+- gestion_membres
+- gestion_evenements
+
+AVANTAGES DE LA CORRECTION
+=========================
+✅ Liste déroulante des rôles maintenant remplie
+✅ 8 rôles disponibles pour sélection
+✅ Permissions appropriées par rôle
+✅ Structure JSON pour extensibilité future
+✅ Modal d'ajout fonctionnel
+
+TESTS RECOMMANDÉS
+=================
+1. Ouvrir le modal d'ajout de membre
+2. Vérifier que la liste déroulante des rôles est remplie
+3. Sélectionner différents rôles
+4. Ajouter un membre avec un rôle
+5. Vérifier la sauvegarde en base
+
+RÉSULTATS ATTENDUS
+==================
+✅ Liste déroulante des rôles remplie
+✅ 8 options de rôles disponibles
+✅ Sélection de rôle fonctionnelle
+✅ Sauvegarde du rôle_id en base
+✅ Affichage correct du rôle sélectionné
+
+STATUT: RÔLES CRÉÉS AVEC SUCCÈS ✅
+==================================
+Les rôles sont maintenant disponibles dans la liste déroulante du modal d'ajout.
+
+FICHIERS MODIFIÉS
+=================
+- Base de données (table roles remplie)
+- sauvegarde_correction_affichage_roles.txt (créé)
+
+NOTES IMPORTANTES
+=================
+- Les permissions sont stockées en JSON pour flexibilité
+- Chaque rôle a des permissions appropriées à sa fonction
+- La structure permet d'ajouter facilement de nouveaux rôles
+- Le système de permissions peut être étendu selon les besoins

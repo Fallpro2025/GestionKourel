@@ -1,0 +1,142 @@
+SAUVEGARDE - CORRECTION NOM ET IMAGE MODIFICATION
+=================================================
+
+Date: 2025-01-27
+Problèmes: 
+1. Le nom est modifié en ajoutant le prénom
+2. L'image n'est pas modifiée
+
+CORRECTIONS APPLIQUÉES
+======================
+
+1. CORRECTION DE LA LOGIQUE DU NOM
+---------------------------------
+AVANT (problématique):
+```javascript
+const donneesModification = {
+    nom: `${prenom} ${nom}`,  // Concaténation incorrecte
+    // ...
+};
+```
+
+APRÈS (corrigé):
+```javascript
+const donneesModification = new FormData();
+donneesModification.append('prenom', prenom);
+donneesModification.append('nom', nom);
+// ...
+```
+
+2. IMPLÉMENTATION DE L'UPLOAD D'IMAGE
+------------------------------------
+✅ Utilisation de FormData pour supporter les fichiers
+✅ Ajout du champ photo dans les données
+✅ Validation du fichier image
+✅ Headers ajustés pour FormData
+
+CODE AJOUTÉ POUR L'IMAGE
+========================
+
+```javascript
+// Ajouter l'image si elle a été sélectionnée
+const photoInput = document.getElementById('editPhotoInput');
+if (photoInput && photoInput.files && photoInput.files[0]) {
+    donneesModification.append('photo', photoInput.files[0]);
+    console.log('📷 Image ajoutée:', photoInput.files[0].name);
+}
+```
+
+3. AJUSTEMENT DES HEADERS FETCH
+------------------------------
+AVANT (JSON):
+```javascript
+headers: {
+    'Content-Type': 'application/json',
+    'X-CSRF-TOKEN': '...',
+    'Accept': 'application/json'
+},
+body: JSON.stringify(donneesModification)
+```
+
+APRÈS (FormData):
+```javascript
+headers: {
+    'X-CSRF-TOKEN': '...',
+    'Accept': 'application/json'
+},
+body: donneesModification  // FormData directement
+```
+
+4. VALIDATION CONTRÔLEUR AJUSTÉE
+-------------------------------
+```php
+$validator = Validator::make($request->all(), [
+    'prenom' => 'required|string|max:255',
+    'nom' => 'required|string|max:255',
+    'telephone' => 'required|string|max:20',
+    'email' => 'nullable|email|max:255',
+    'role' => 'nullable|string|max:100',
+    'statut' => 'nullable|string|in:Actif,Inactif,Suspendu',
+    'notes' => 'nullable|string|max:1000',
+    'created_at' => 'nullable|date',
+    'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+    '_token' => 'required|string'
+]);
+```
+
+5. MISE À JOUR BASE DE DONNÉES
+------------------------------
+```php
+$membre->update([
+    'prenom' => $request->prenom,      // Champ séparé
+    'nom' => $request->nom,            // Champ séparé
+    'telephone' => $request->telephone,
+    'email' => $request->email,
+    'statut' => strtolower($request->statut),
+    'notes' => $request->notes,
+    'created_at' => $request->created_at ? new \DateTime($request->created_at) : $membre->created_at,
+    'photo_url' => $photoPath          // Gestion de l'image
+]);
+```
+
+AVANTAGES DES CORRECTIONS
+=========================
+✅ Nom et prénom sauvegardés séparément
+✅ Upload d'image fonctionnel
+✅ Validation appropriée pour les fichiers
+✅ FormData pour les données mixtes (texte + fichier)
+✅ Logs de débogage pour l'image
+
+FONCTIONNALITÉS AJOUTÉES
+========================
+✅ Sélection d'image dans le modal
+✅ Prévisualisation de l'image
+✅ Validation de taille et format
+✅ Upload sécurisé vers le serveur
+✅ Mise à jour de la photo_url en base
+
+TESTS RECOMMANDÉS
+=================
+1. Modifier le prénom et nom d'un membre
+2. Sélectionner une nouvelle image
+3. Cliquer sur "Sauvegarder"
+4. Vérifier que les champs sont correctement séparés
+5. Confirmer que l'image est uploadée
+6. Vérifier le rechargement de la page
+
+RÉSULTATS ATTENDUS
+==================
+✅ Prénom et nom sauvegardés séparément
+✅ Image uploadée et visible
+✅ Pas de concaténation incorrecte
+✅ Sauvegarde complète réussie
+
+STATUT: CORRECTIONS APPLIQUÉES ✅
+=================================
+Les problèmes de nom et d'image sont maintenant corrigés.
+
+FICHIERS MODIFIÉS
+=================
+- resources/views/membres/membres.blade.php (logique de sauvegarde)
+- app/Http/Controllers/MembreController.php (validation et mise à jour)
+- sauvegarde_correction_nom_image.txt (créé)

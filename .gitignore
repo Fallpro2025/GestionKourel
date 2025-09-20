@@ -1,0 +1,59 @@
+# Laravel
+/vendor/
+/node_modules/
+/public/hot
+/public/storage
+/storage/*.key
+/storage/logs/
+/storage/framework/cache/
+/storage/framework/sessions/
+/storage/framework/views/
+/bootstrap/cache/
+
+# Environment
+.env
+.env.backup
+.env.production
+.phpunit.result.cache
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Database
+*.sqlite
+*.db
+
+# Temporary files
+*.tmp
+*.temp
+
+# Backup files
+*.bak
+*.backup
+
+# Configuration files with sensitive data
+config_xampp.env
+config_xampp.php
+configurer_mysql.bat
+configurer_mysql.ps1
+configurer_xampp_mysql.sql
+creer_database.php
+creer_db_xampp.sql
+test_app.php
+test_mysql.php
+serveur_simple.php
+install.bat
+install.sh
+installer_gestion_kourel.bat
+installer_gestion_kourel.ps1
+demarrer_gestion_kourel.bat

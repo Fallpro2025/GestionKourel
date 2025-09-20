@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Simple - Gestion Kourel</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #1a1a1a; color: white; }
+        .test-button { padding: 15px 30px; margin: 10px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; }
+        .test-button:hover { background: #0056b3; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; }
+        .modal-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #333; padding: 30px; border-radius: 10px; }
+        .close { float: right; font-size: 24px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Test Simple des Fonctions</h1>
+    
+    <button class="test-button" onclick="openAddMemberModal()">Test Ajouter Membre</button>
+    <button class="test-button" onclick="viewMemberDetails(1)">Test Voir Détails</button>
+    <button class="test-button" onclick="editMember(1)">Test Modifier</button>
+    
+    <div id="addMemberModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddMemberModal()">&times;</span>
+            <h2>Modal Ajouter Membre</h2>
+            <p>Ce modal fonctionne !</p>
+        </div>
+    </div>
+    
+    <div id="memberDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeMemberDetails()">&times;</span>
+            <h2>Modal Détails Membre</h2>
+            <p>Ce modal fonctionne aussi !</p>
+        </div>
+    </div>
+    
+    <div id="editMemberModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditMember()">&times;</span>
+            <h2>Modal Modifier Membre</h2>
+            <p>Ce modal fonctionne également !</p>
+        </div>
+    </div>
+    
+    <script>
+        console.log('✅ JavaScript de test chargé');
+        
+        function openAddMemberModal() {
+            console.log('Ouverture modal ajout');
+            document.getElementById('addMemberModal').style.display = 'block';
+        }
+        
+        function closeAddMemberModal() {
+            console.log('Fermeture modal ajout');
+            document.getElementById('addMemberModal').style.display = 'none';
+        }
+        
+        function viewMemberDetails(memberId) {
+            console.log('Ouverture détails membre:', memberId);
+            document.getElementById('memberDetailsModal').style.display = 'block';
+        }
+        
+        function closeMemberDetails() {
+            console.log('Fermeture détails membre');
+            document.getElementById('memberDetailsModal').style.display = 'none';
+        }
+        
+        function editMember(memberId) {
+            console.log('Ouverture modification membre:', memberId);
+            document.getElementById('editMemberModal').style.display = 'block';
+        }
+        
+        function closeEditMember() {
+            console.log('Fermeture modification membre');
+            document.getElementById('editMemberModal').style.display = 'none';
+        }
+        
+        // Fermer les modals en cliquant à l'extérieur
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

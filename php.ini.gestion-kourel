@@ -1,0 +1,53 @@
+; Configuration PHP pour Gestion Kourel
+; Copier ces paramètres dans votre php.ini principal
+
+; Extensions nécessaires pour Laravel et MySQL
+extension=pdo
+extension=pdo_mysql
+extension=mysqli
+extension=mbstring
+extension=openssl
+extension=tokenizer
+extension=xml
+extension=ctype
+extension=json
+extension=bcmath
+extension=gd
+extension=fileinfo
+extension=curl
+
+; Configuration de base
+memory_limit = 512M
+max_execution_time = 300
+max_input_time = 300
+post_max_size = 64M
+upload_max_filesize = 64M
+
+; Configuration MySQL
+mysql.default_host = localhost
+mysql.default_user = root
+mysql.default_password = 
+
+; Configuration de session
+session.gc_maxlifetime = 7200
+session.cookie_lifetime = 0
+
+; Configuration de sécurité
+expose_php = Off
+allow_url_fopen = On
+allow_url_include = Off
+
+; Configuration d'erreurs (développement)
+display_errors = On
+display_startup_errors = On
+error_reporting = E_ALL
+log_errors = On
+error_log = php_errors.log
+
+; Configuration de performance
+opcache.enable = 1
+opcache.memory_consumption = 128
+opcache.interned_strings_buffer = 8
+opcache.max_accelerated_files = 4000
+opcache.revalidate_freq = 2
+opcache.fast_shutdown = 1

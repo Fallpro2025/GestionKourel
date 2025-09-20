@@ -1,0 +1,150 @@
+SAUVEGARDE - SÉPARATION MODAL VOIR VS MODIFIER
+==============================================
+
+Date: 2025-01-27
+Projet: Gestion Kourel - Séparation des fonctionnalités
+
+AMÉLIORATIONS APPORTÉES
+=======================
+
+1. MODAL "VOIR" - CONSULTATION UNIQUEMENT
+----------------------------------------
+✅ **Fonction** : Affichage des informations du membre (lecture seule)
+✅ **Contenu** : 
+   - Informations personnelles (nom, téléphone, email, rôle, statut)
+   - Onglets détaillés (Présence, Cotisations, Historique)
+   - Photo de profil (si disponible)
+✅ **Actions disponibles** :
+   - Exporter les données
+   - Imprimer la carte membre
+   - Fermer le modal
+   - Bouton "Modifier" pour passer au mode édition
+
+2. MODAL "MODIFIER" - ÉDITION COMPLÈTE
+------------------------------------
+✅ **Fonction** : Modification de toutes les valeurs du membre
+✅ **Contenu** :
+   - Photo de profil (upload et prévisualisation)
+   - Informations personnelles (prénom, nom, téléphone, email)
+   - Rôle et statut (listes déroulantes)
+   - Date d'inscription
+   - Notes personnelles
+✅ **Actions disponibles** :
+   - Changer la photo de profil
+   - Modifier tous les champs
+   - Validation en temps réel
+   - Sauvegarder les modifications
+   - Annuler les changements
+
+3. GESTION DES PHOTOS DE PROFIL
+------------------------------
+✅ **Upload de photos** :
+   - Bouton "Changer la photo" avec sélecteur de fichiers
+   - Formats acceptés : JPG, PNG, GIF
+   - Taille maximum : 2MB
+   - Validation du type de fichier
+
+✅ **Affichage des photos** :
+   - Photo réelle si disponible
+   - Initiales calculées si pas de photo
+   - Prévisualisation immédiate lors de la sélection
+
+✅ **Fonctions JavaScript** :
+   - `mettreAJourPhotoProfil()` : Affichage photo/initiales
+   - `previewPhoto()` : Prévisualisation de la nouvelle photo
+   - Validation de taille et type de fichier
+
+FONCTIONNALITÉS DÉTAILLÉES
+==========================
+
+### MODAL "VOIR" (Consultation)
+```javascript
+function viewMemberDetails(memberId) {
+    // Trouve le membre dans les données
+    // Remplit le modal avec les informations
+    // Ouvre le modal en mode lecture seule
+}
+```
+
+**Contenu affiché :**
+- Photo de profil ou initiales
+- Nom complet, téléphone, email
+- Rôle et statut avec couleurs
+- Date d'inscription formatée
+- Onglets : Présence, Cotisations, Historique
+
+### MODAL "MODIFIER" (Édition)
+```javascript
+function editMember(memberId) {
+    // Trouve le membre dans les données
+    // Remplit le formulaire avec les valeurs actuelles
+    // Ouvre le modal en mode édition
+}
+```
+
+**Champs modifiables :**
+- Photo de profil (upload)
+- Prénom et nom (séparés)
+- Téléphone et email
+- Rôle (liste déroulante)
+- Statut (liste déroulante)
+- Date d'inscription
+- Notes personnelles
+
+DIFFÉRENCES CLÉS
+===============
+
+| Aspect | Modal "Voir" | Modal "Modifier" |
+|--------|--------------|------------------|
+| **Objectif** | Consultation | Modification |
+| **Mode** | Lecture seule | Édition |
+| **Photo** | Affichage uniquement | Upload + prévisualisation |
+| **Champs** | Informations affichées | Formulaire modifiable |
+| **Actions** | Export, Impression | Sauvegarde, Annulation |
+| **Validation** | Aucune | Validation en temps réel |
+| **Navigation** | Onglets horizontaux | Formulaire vertical |
+
+WORKFLOW UTILISATEUR
+====================
+
+### Scénario 1 : Consultation simple
+1. Cliquer sur **"Voir"** → Modal d'affichage
+2. Consulter les informations
+3. Fermer le modal
+
+### Scénario 2 : Modification directe
+1. Cliquer sur **"Modifier"** → Formulaire d'édition
+2. Modifier les champs nécessaires
+3. Sauvegarder les modifications
+
+### Scénario 3 : Consultation puis modification
+1. Cliquer sur **"Voir"** → Modal d'affichage
+2. Cliquer sur **"Modifier"** dans le modal → Formulaire d'édition
+3. Modifier et sauvegarder
+
+TESTS RECOMMANDÉS
+=================
+1. **Modal Voir** :
+   - Vérifier l'affichage des informations
+   - Tester les onglets (Présence, Cotisations, Historique)
+   - Vérifier l'affichage de la photo/initiales
+
+2. **Modal Modifier** :
+   - Vérifier le pré-remplissage du formulaire
+   - Tester l'upload de photo
+   - Modifier des champs et sauvegarder
+   - Tester la validation des champs
+
+3. **Navigation** :
+   - Passer du modal Voir au modal Modifier
+   - Vérifier la cohérence des données
+
+FICHIERS MODIFIÉS
+=================
+- resources/views/membres/membres.blade.php (lignes 1250-1608)
+
+STATUT: TERMINÉ ✅
+==================
+Les modals Voir et Modifier sont maintenant clairement séparés.
+Le modal Voir affiche les informations, le modal Modifier permet l'édition.
+La gestion des photos de profil est implémentée.

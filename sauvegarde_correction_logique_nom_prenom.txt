@@ -1,0 +1,100 @@
+SAUVEGARDE - CORRECTION LOGIQUE NOM/PRÉNOM
+=========================================
+
+Date: 2025-01-27
+Problème: Champ prénom contient "Fall", champ nom vide alors que le membre s'appelle "Alioune Fall"
+
+ANALYSE DU PROBLÈME
+===================
+❌ Champ Prénom: "Fall" (devrait être "Alioune")
+❌ Champ Nom: vide (devrait être "Fall")
+❌ Logique de séparation incorrecte
+
+CORRECTIONS APPLIQUÉES
+======================
+
+1. LOGIQUE AMÉLIORÉE
+-------------------
+✅ Vérification des champs séparés (prenom, nom_famille)
+✅ Gestion des différents formats de données
+✅ Logs de débogage pour identifier la structure
+
+2. CODE CORRIGÉ
+--------------
+```javascript
+// Vérifier si les données ont déjà des champs séparés
+let prenom = '';
+let nom = '';
+
+// Si le membre a déjà des champs prénom et nom séparés
+if (membre.prenom && membre.nom_famille) {
+    prenom = membre.prenom;
+    nom = membre.nom_famille;
+    console.log('🔍 DEBUG - Utilisation des champs séparés');
+} else if (membre.prenom) {
+    prenom = membre.prenom;
+    nom = membre.nom || '';
+    console.log('🔍 DEBUG - Utilisation du champ prénom');
+} else {
+    // Séparer le nom complet
+    if (nomComplet.includes(' ')) {
+        const nomParts = nomComplet.split(' ');
+        prenom = nomParts[0] || '';
+        nom = nomParts.slice(1).join(' ') || '';
+    } else {
+        prenom = nomComplet;
+        nom = '';
+    }
+    console.log('🔍 DEBUG - Séparation du nom complet');
+}
+```
+
+STRATÉGIES DE CORRECTION
+========================
+
+1. CHAMPS SÉPARÉS DANS LA BASE
+------------------------------
+- Si membre.prenom et membre.nom_famille existent
+- Utiliser directement ces valeurs
+
+2. CHAMP PRÉNOM EXISTANT
+-----------------------
+- Si membre.prenom existe
+- Utiliser membre.prenom et membre.nom
+
+3. NOM COMPLET À SÉPARER
+-----------------------
+- Si seul membre.nom existe
+- Séparer par l'espace
+
+LOGS DE DÉBOGAGE AJOUTÉS
+========================
+✅ "🔍 DEBUG - Utilisation des champs séparés"
+✅ "🔍 DEBUG - Utilisation du champ prénom"
+✅ "🔍 DEBUG - Séparation du nom complet"
+✅ "🔍 DEBUG - Prénom final:"
+✅ "🔍 DEBUG - Nom final:"
+
+TESTS RECOMMANDÉS
+=================
+1. Ouvrir la console (F12)
+2. Cliquer sur "Modifier" d'un membre
+3. Vérifier les logs pour identifier la stratégie utilisée
+4. Confirmer que les champs se remplissent correctement
+
+RÉSULTATS ATTENDUS
+==================
+✅ Champ Prénom: "Alioune"
+✅ Champ Nom: "Fall"
+✅ Logs clairs sur la stratégie utilisée
+
+STATUT: CORRECTION APPLIQUÉE ✅
+==============================
+La logique de séparation nom/prénom est maintenant plus robuste et gère différents formats de données.
+
+PROCHAINES ÉTAPES
+=================
+1. Tester avec la console ouverte
+2. Vérifier les logs
+3. Confirmer le bon remplissage des champs
+4. Valider la sauvegarde
