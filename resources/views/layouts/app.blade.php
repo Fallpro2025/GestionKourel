@@ -12,6 +12,12 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
+    <!-- Script pour les alertes modernes -->
+    <script src="{{ asset('js/alertes-modernes.js') }}"></script>
+    
+    <!-- Styles personnalisés pour les listes déroulantes -->
+    <link href="{{ asset('css/select-styles.css') }}" rel="stylesheet">
+    
     <!-- Styles personnalisés -->
     <style>
         /* Animations fluides */
@@ -93,6 +99,9 @@
                         <a href="{{ route('evenements') }}" class="text-gray-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ request()->routeIs('evenements') ? 'text-blue-600 bg-blue-50' : '' }}">
                             <i class="fas fa-star mr-2"></i>Événements
                         </a>
+                        <a href="{{ route('roles.index') }}" class="text-gray-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ request()->routeIs('roles.*') ? 'text-blue-600 bg-blue-50' : '' }}">
+                            <i class="fas fa-user-tag mr-2"></i>Rôles
+                        </a>
                     </div>
                 </div>
                 
@@ -142,6 +151,9 @@
                 </a>
                 <a href="{{ route('evenements') }}" class="text-gray-500 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium {{ request()->routeIs('evenements') ? 'text-blue-600 bg-blue-50' : '' }}">
                     <i class="fas fa-star mr-2"></i>Événements
+                </a>
+                <a href="{{ route('roles.index') }}" class="text-gray-500 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium {{ request()->routeIs('roles.*') ? 'text-blue-600 bg-blue-50' : '' }}">
+                    <i class="fas fa-user-tag mr-2"></i>Rôles
                 </a>
             </div>
         </div>

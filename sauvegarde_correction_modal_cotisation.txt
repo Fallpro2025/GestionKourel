@@ -1,0 +1,69 @@
+=== SAUVEGARDE : CORRECTION DE LA VISIBILITÉ DU TEXTE DANS LES MODALS DE COTISATION ===
+Date: 27/09/2025
+Problème résolu: 
+- Texte non visible dans les modals de cotisation
+- Contraste insuffisant entre le texte et l'arrière-plan
+
+PROBLÈME IDENTIFIÉ:
+- Les modals utilisaient `bg-white/95` avec du texte `text-gray-800`
+- Le contraste était insuffisant pour une bonne lisibilité
+- Les labels et inputs n'étaient pas assez visibles
+
+SOLUTION IMPLÉMENTÉE:
+
+1. MODAL NOUVEAU PROJET (index.blade.php):
+   ✅ Titre: text-gray-800 → text-gray-900
+   ✅ Bouton fermer: text-gray-400 → text-gray-500
+   ✅ Labels: text-gray-800 → text-gray-900
+   ✅ Inputs: text-gray-800 → text-gray-900
+   ✅ Textarea: text-gray-800 → text-gray-900
+   ✅ Select: text-gray-800 → text-gray-900
+   ✅ Noms des membres: text-gray-800 → text-gray-900
+   ✅ Textes d'aide: text-gray-600 → text-gray-700
+   ✅ Montant total: text-blue-800 → text-blue-900
+
+2. MODAL AJOUT ASSIGNATION (show.blade.php):
+   ✅ Titre: text-gray-900 (déjà correct)
+   ✅ Bouton fermer: text-gray-400 → text-gray-500
+   ✅ Labels: text-gray-700 → text-gray-900
+   ✅ Inputs: ajout de text-gray-900
+   ✅ Select: ajout de text-gray-900
+   ✅ Background: bg-white → bg-white/95 backdrop-blur-xl
+   ✅ Bordure: ajout de border-white/30
+
+3. MODAL PAIEMENT (show.blade.php):
+   ✅ Titre: text-gray-900 (déjà correct)
+   ✅ Bouton fermer: text-gray-400 → text-gray-500
+   ✅ Labels: text-gray-700 → text-gray-900
+   ✅ Inputs: ajout de text-gray-900
+   ✅ Select: ajout de text-gray-900
+   ✅ Textarea: ajout de text-gray-900
+   ✅ Background: bg-white → bg-white/95 backdrop-blur-xl
+   ✅ Bordure: ajout de border-white/30
+
+4. AMÉLIORATIONS GÉNÉRALES:
+   ✅ Meilleur contraste avec text-gray-900
+   ✅ Arrière-plan blanc solide pour les inputs
+   ✅ Effet glassmorphism cohérent
+   ✅ Bordures subtiles pour la profondeur
+
+AVANTAGES:
+✅ Texte parfaitement lisible
+✅ Contraste optimal
+✅ Design cohérent avec le reste de la plateforme
+✅ Effet glassmorphism moderne
+✅ Accessibilité améliorée
+
+RÉSULTAT:
+- Tous les textes dans les modals de cotisation sont maintenant parfaitement visibles
+- Contraste optimal entre le texte et l'arrière-plan
+- Design cohérent et moderne
+- Meilleure expérience utilisateur
+
+TESTS À EFFECTUER:
+1. Ouvrir le modal "Nouveau Projet" dans /cotisations
+2. Vérifier que tous les labels et inputs sont lisibles
+3. Ouvrir le modal "Ajouter une assignation" dans /cotisations/{id}
+4. Vérifier que tous les champs sont visibles
+5. Ouvrir le modal "Enregistrer un paiement"
+6. Vérifier la lisibilité de tous les éléments

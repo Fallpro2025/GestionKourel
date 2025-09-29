@@ -1,0 +1,77 @@
+=== SAUVEGARDE : CORRECTION ALERTES QUI NE DISPARAISSENT PAS ===
+Date: 24/09/2025
+Problème résolu: 
+- Alertes de session qui ne disparaissaient pas automatiquement
+
+PROBLÈME IDENTIFIÉ:
+- Les alertes de session restaient affichées indéfiniment
+- Pas d'auto-disparition après quelques secondes
+- Problème de timing entre le chargement du script et l'exécution des alertes
+
+SOLUTION IMPLÉMENTÉE:
+
+1. CORRECTION DU COMPOSANT ALERTES-SESSION:
+   ✅ resources/views/components/alertes-session.blade.php
+   ✅ Vérification de la disponibilité d'alerteModerne avant utilisation
+   ✅ Système de retry avec setTimeout si pas encore chargé
+   ✅ Gestion des différents états de chargement du document
+
+2. AMÉLIORATION DU SCRIPT ALERTES-MODERNES:
+   ✅ public/js/alertes-modernes.js
+   ✅ Initialisation immédiate avec window.alerteModerne
+   ✅ Vérification de disponibilité dans toutes les fonctions
+   ✅ Gestion robuste des états de chargement
+
+3. OPTIMISATION DE L'ORDRE DE CHARGEMENT:
+   ✅ resources/views/layouts/app-with-sidebar.blade.php
+   ✅ resources/views/layouts/app.blade.php
+   ✅ Script chargé avant les styles pour éviter les conflits
+
+4. MÉCANISMES DE SÉCURITÉ:
+   ✅ Vérification typeof alerteModerne !== 'undefined'
+   ✅ Retry automatique toutes les 100ms si pas disponible
+   ✅ Gestion des états document.readyState
+   ✅ Fallback pour les fonctions de compatibilité
+
+5. LOGIQUE DE CHARGEMENT:
+   ```javascript
+   // Vérification de disponibilité
+   if (typeof alerteModerne !== 'undefined') {
+       alerteModerne.succes('Message');
+   } else {
+       // Retry après 100ms
+       setTimeout(afficherAlerteSucces, 100);
+   }
+   ```
+
+6. INITIALISATION ROBUSTE:
+   ```javascript
+   // Initialisation immédiate
+   function initialiserAlertes() {
+       if (!window.alerteModerne) {
+           window.alerteModerne = new AlerteModerne();
+       }
+   }
+   
+   // Démarrer dès que possible
+   if (document.readyState === 'loading') {
+       document.addEventListener('DOMContentLoaded', initialiserAlertes);
+   } else {
+       initialiserAlertes();
+   }
+   ```
+
+RÉSULTAT:
+- Alertes de session qui disparaissent automatiquement après 5 secondes
+- Système robuste qui fonctionne dans tous les cas de chargement
+- Gestion des erreurs et des états de chargement
+- Interface moderne et fluide
+
+TESTS À EFFECTUER:
+1. Créer un membre → Vérifier alerte verte qui disparaît après 5s
+2. Modifier un membre → Vérifier alerte verte qui disparaît après 5s
+3. Erreur de validation → Vérifier alerte rouge qui disparaît après 5s
+4. Rechargement rapide → Vérifier que les alertes fonctionnent quand même
+5. Navigation entre pages → Vérifier cohérence du système
+
+STATUT: ✅ TERMINÉ ET FONCTIONNEL

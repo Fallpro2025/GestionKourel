@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Alertes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-white mb-8">Test du Système d'Alertes</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white/10 backdrop-blur-xl rounded-xl p-6 border border-white/20">
+                <h2 class="text-xl font-bold text-white mb-4">Test des Toasts</h2>
+                
+                <div class="space-y-4">
+                    <button onclick="testSuccess()" class="w-full px-4 py-3 bg-green-500/20 text-green-400 rounded-xl hover:bg-green-500/30 transition-all duration-200 border border-green-500/30">
+                        <i class="fas fa-check mr-2"></i>Test Success
+                    </button>
+                    
+                    <button onclick="testError()" class="w-full px-4 py-3 bg-red-500/20 text-red-400 rounded-xl hover:bg-red-500/30 transition-all duration-200 border border-red-500/30">
+                        <i class="fas fa-times mr-2"></i>Test Error
+                    </button>
+                    
+                    <button onclick="testWarning()" class="w-full px-4 py-3 bg-yellow-500/20 text-yellow-400 rounded-xl hover:bg-yellow-500/30 transition-all duration-200 border border-yellow-500/30">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>Test Warning
+                    </button>
+                    
+                    <button onclick="testInfo()" class="w-full px-4 py-3 bg-blue-500/20 text-blue-400 rounded-xl hover:bg-blue-500/30 transition-all duration-200 border border-blue-500/30">
+                        <i class="fas fa-info-circle mr-2"></i>Test Info
+                    </button>
+                </div>
+            </div>
+            
+            <div class="bg-white/10 backdrop-blur-xl rounded-xl p-6 border border-white/20">
+                <h2 class="text-xl font-bold text-white mb-4">Test des Confirmations</h2>
+                
+                <div class="space-y-4">
+                    <button onclick="testConfirmation()" class="w-full px-4 py-3 bg-purple-500/20 text-purple-400 rounded-xl hover:bg-purple-500/30 transition-all duration-200 border border-purple-500/30">
+                        <i class="fas fa-question-circle mr-2"></i>Test Confirmation
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-8 bg-white/10 backdrop-blur-xl rounded-xl p-6 border border-white/20">
+            <h2 class="text-xl font-bold text-white mb-4">Debug</h2>
+            <div id="debug" class="text-white/70 text-sm font-mono"></div>
+        </div>
+    </div>
+
+    <!-- Charger le système d'alertes -->
+    <script src="/js/alertes-modernes.js"></script>
+    
+    <script>
+        function log(message) {
+            const debug = document.getElementById('debug');
+            debug.innerHTML += new Date().toLocaleTimeString() + ': ' + message + '<br>';
+        }
+        
+        function testSuccess() {
+            log('Test Success - alerteModerne disponible: ' + (typeof alerteModerne !== 'undefined'));
+            if (typeof alerteModerne !== 'undefined') {
+                alerteModerne.success('Ceci est un message de succès !');
+            } else {
+                alert('alerteModerne n\'est pas disponible');
+            }
+        }
+        
+        function testError() {
+            log('Test Error - alerteModerne disponible: ' + (typeof alerteModerne !== 'undefined'));
+            if (typeof alerteModerne !== 'undefined') {
+                alerteModerne.error('Ceci est un message d\'erreur !');
+            } else {
+                alert('alerteModerne n\'est pas disponible');
+            }
+        }
+        
+        function testWarning() {
+            log('Test Warning - alerteModerne disponible: ' + (typeof alerteModerne !== 'undefined'));
+            if (typeof alerteModerne !== 'undefined') {
+                alerteModerne.warning('Ceci est un message d\'avertissement !');
+            } else {
+                alert('alerteModerne n\'est pas disponible');
+            }
+        }
+        
+        function testInfo() {
+            log('Test Info - alerteModerne disponible: ' + (typeof alerteModerne !== 'undefined'));
+            if (typeof alerteModerne !== 'undefined') {
+                alerteModerne.info('Ceci est un message d\'information !');
+            } else {
+                alert('alerteModerne n\'est pas disponible');
+            }
+        }
+        
+        function testConfirmation() {
+            log('Test Confirmation - alerteModerne disponible: ' + (typeof alerteModerne !== 'undefined'));
+            if (typeof alerteModerne !== 'undefined') {
+                alerteModerne.confirmation('Êtes-vous sûr de vouloir continuer ?', function(confirme) {
+                    if (confirme) {
+                        alerteModerne.success('Action confirmée !');
+                    } else {
+                        alerteModerne.info('Action annulée');
+                    }
+                });
+            } else {
+                alert('alerteModerne n\'est pas disponible');
+            }
+        }
+        
+        // Vérifier le chargement
+        window.addEventListener('load', function() {
+            log('Page chargée');
+            log('alerteModerne disponible: ' + (typeof alerteModerne !== 'undefined'));
+            log('alerteSystem disponible: ' + (typeof alerteSystem !== 'undefined'));
+        });
+    </script>
+</body>
+</html>

@@ -449,44 +449,8 @@
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 min-h-screen">
-    <!-- Système de messages d'alerte -->
-    <div id="alertContainer" class="fixed top-4 right-4 z-50 space-y-2">
-        @if(session('success'))
-            <div class="alert alert-success bg-green-500/20 border border-green-500/30 rounded-xl p-4 max-w-sm">
-                <div class="flex items-center">
-                    <i class="fas fa-check-circle text-green-400 mr-3"></i>
-                    <span class="text-green-400 font-medium">{{ session('success') }}</span>
-                </div>
-            </div>
-        @endif
-        
-        @if(session('error'))
-            <div class="alert alert-error bg-red-500/20 border border-red-500/30 rounded-xl p-4 max-w-sm">
-                <div class="flex items-center">
-                    <i class="fas fa-exclamation-circle text-red-400 mr-3"></i>
-                    <span class="text-red-400 font-medium">{{ session('error') }}</span>
-                </div>
-            </div>
-        @endif
-        
-        @if(session('warning'))
-            <div class="alert alert-warning bg-yellow-500/20 border border-yellow-500/30 rounded-xl p-4 max-w-sm">
-                <div class="flex items-center">
-                    <i class="fas fa-exclamation-triangle text-yellow-400 mr-3"></i>
-                    <span class="text-yellow-400 font-medium">{{ session('warning') }}</span>
-                </div>
-            </div>
-        @endif
-        
-        @if(session('info'))
-            <div class="alert alert-info bg-blue-500/20 border border-blue-500/30 rounded-xl p-4 max-w-sm">
-                <div class="flex items-center">
-                    <i class="fas fa-info-circle text-blue-400 mr-3"></i>
-                    <span class="text-blue-400 font-medium">{{ session('info') }}</span>
-                </div>
-            </div>
-        @endif
-    </div>
+    <!-- Messages de session gérés par le système de toast -->
+    @include('components.alertes-session')
     <div id="app">
         <!-- Sidebar Navigation -->
         <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white/10 backdrop-blur-xl border-r border-white/20 sidebar-transition">
@@ -1397,15 +1361,15 @@
     </div>
     
     <script>
-        console.log('✅ JavaScript chargé correctement');
-        console.log('🔍 Vérification des fonctions disponibles...');
+        console.log('JavaScript chargé correctement');
+        console.log('Vérification des fonctions disponibles...');
         
         // Test de disponibilité des fonctions
                 setTimeout(() => {
-            console.log('🔍 Fonction editMember disponible:', typeof editMember);
-            console.log('🔍 Fonction viewMemberDetails disponible:', typeof viewMemberDetails);
-            console.log('🔍 Modal editMemberModal existe:', !!document.getElementById('editMemberModal'));
-            console.log('🔍 Modal memberDetailsModal existe:', !!document.getElementById('memberDetailsModal'));
+            console.log('Fonction editMember disponible:', typeof editMember);
+            console.log('Fonction viewMemberDetails disponible:', typeof viewMemberDetails);
+            console.log('Modal editMemberModal existe:', !!document.getElementById('editMemberModal'));
+            console.log('Modal memberDetailsModal existe:', !!document.getElementById('memberDetailsModal'));
             }, 1000);
             
         // Test simple pour vérifier que le JavaScript fonctionne
@@ -1416,7 +1380,7 @@
             // Test d'ouverture du modal
             const modal = document.getElementById('editMemberModal');
             if (modal) {
-                console.log('✅ Modal trouvé');
+                console.log('Modal trouvé');
                 modal.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
                 setTimeout(() => {
@@ -1424,7 +1388,7 @@
                     document.body.style.overflow = 'auto';
                 }, 2000);
             } else {
-                console.error('❌ Modal non trouvé');
+                console.error('Modal non trouvé');
                 showNotification('Erreur: Modal non trouvé', 'error');
             }
         };
@@ -1433,8 +1397,8 @@
         const membresData = @json($membres ?? []);
         let membreActuel = null;
         
-        console.log('📊 Données membres chargées:', membresData.length, 'membres');
-        console.log('🔍 Premier membre (debug):', membresData[0]);
+        console.log('Données membres chargées:', membresData.length, 'membres');
+        console.log('Premier membre (debug):', membresData[0]);
         
         // Fonction utilitaire pour calculer les initiales
         function calculerInitiales(membre) {
@@ -1623,7 +1587,7 @@
                 if (photoElement) {
                     photoElement.classList.add('hidden');
                 }
-                console.log('👤 Initiales détails affichées:', initiales);
+                console.log('Initiales détails affichées:', initiales);
             }
             
             // Nom complet
@@ -1686,7 +1650,7 @@
                 }
             }
             
-            console.log('✅ Modal de détails rempli avec les données de:', membre.nom);
+            console.log('Modal de détails rempli avec les données de:', membre.nom);
         }
         
         // Fonction de test pour diagnostiquer le problème
@@ -1701,11 +1665,11 @@
             // Puis essayer d'ouvrir le modal
             const modal = document.getElementById('editMemberModal');
             if (modal) {
-                console.log('✅ Modal trouvé, ouverture...');
+                console.log('Modal trouvé, ouverture...');
                 modal.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
             } else {
-                console.error('❌ Modal editMemberModal non trouvé');
+                console.error('Modal editMemberModal non trouvé');
                 showNotification('Erreur: Modal de modification non trouvé', 'error');
             }
         }
@@ -1718,34 +1682,34 @@
             try {
                 // Vérifier que les données sont disponibles
                 if (!membresData || membresData.length === 0) {
-                    console.error('❌ Aucune donnée membre disponible');
+                    console.error('Aucune donnée membre disponible');
                     showNotification('Erreur: Aucune donnée membre disponible', 'error');
                     return;
                 }
 
-                console.log('📊 Données membres:', membresData.length, 'membres');
-                console.log('📋 IDs disponibles:', membresData.map(m => m.id));
+                console.log('Données membres:', membresData.length, 'membres');
+                console.log('IDs disponibles:', membresData.map(m => m.id));
                 
                 // Trouver le membre
                 const membre = membresData.find(m => m.id == memberId);
                 if (!membre) {
-                    console.error('❌ Membre non trouvé avec ID:', memberId);
+                    console.error('Membre non trouvé avec ID:', memberId);
                     showNotification('Membre non trouvé avec l\'ID: ' + memberId, 'error');
                     return;
                 }
                 
-                console.log('✅ Membre trouvé:', membre.nom);
+                console.log('Membre trouvé:', membre.nom);
                 membreActuel = membre;
                 
                 // Ouvrir le modal directement
                 const modal = document.getElementById('editMemberModal');
                 if (!modal) {
-                    console.error('❌ Modal editMemberModal non trouvé');
+                    console.error('Modal editMemberModal non trouvé');
                     showNotification('Erreur: Modal de modification non trouvé', 'error');
                     return;
                 }
                 
-                console.log('✅ Modal trouvé, ouverture...');
+                console.log('Modal trouvé, ouverture...');
                 modal.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
                 

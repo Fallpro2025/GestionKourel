@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Role extends Model
 {
@@ -22,11 +23,37 @@ class Role extends Model
     ];
 
     /**
-     * Relation avec les membres ayant ce rôle
+     * Relation avec les membres ayant ce rôle (pour compatibilité)
      */
-    public function membres(): HasMany
+    public function membresDirects(): HasMany
     {
         return $this->hasMany(Membre::class);
+    }
+
+    /**
+     * Relation many-to-many avec les membres
+     */
+    public function membres(): BelongsToMany
+    {
+        return $this->belongsToMany(Membre::class, 'membre_role')
+                    ->withPivot(['est_principal', 'date_attribution', 'notes'])
+                    ->withTimestamps();
+    }
+
+    /**
+     * Relation avec les attributions de rôles
+     */
+    public function membreRoles(): HasMany
+    {
+        return $this->hasMany(MembreRole::class);
+    }
+
+    /**
+     * Compter le nombre de membres ayant ce rôle
+     */
+    public function compterMembres(): int
+    {
+        return $this->membres()->count();
     }
 
     /**

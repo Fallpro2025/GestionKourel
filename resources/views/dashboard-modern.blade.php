@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-6">
                 <div class="flex items-center">
-                    <h1 class="text-3xl font-bold text-white">Dashboard</h1>
+                    <h1 class="text-3xl font-bold text-white"><i class="fas fa-tachometer-alt mr-3"></i>Dashboard</h1>
                     <span class="ml-3 px-3 py-1 bg-green-500/20 text-green-400 text-sm rounded-full border border-green-500/30">
                         Gestion Kourel
                     </span>

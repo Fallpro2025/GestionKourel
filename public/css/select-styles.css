@@ -1,0 +1,69 @@
+/* Styles pour les listes déroulantes dans l'application */
+select {
+    color: white !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+select option {
+    background-color: #374151 !important;
+    color: white !important;
+}
+
+select:focus {
+    outline: none !important;
+    ring: 2px !important;
+    ring-color: #3b82f6 !important;
+}
+
+/* Styles spécifiques pour les modals */
+.modal select {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+}
+
+.modal select option {
+    background-color: #374151 !important;
+    color: white !important;
+}
+
+/* Styles pour les formulaires avec fond sombre */
+.bg-white\/10 select,
+.bg-white\/5 select {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+}
+
+.bg-white\/10 select option,
+.bg-white\/5 select option {
+    background-color: #374151 !important;
+    color: white !important;
+}
+
+/* Amélioration de la visibilité au survol */
+select option:hover {
+    background-color: #4b5563 !important;
+    color: white !important;
+}
+
+/* Styles pour les formulaires de création/modification */
+.form-container select {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.form-container select option {
+    background-color: #374151 !important;
+    color: white !important;
+}
+
+/* Styles pour les listes déroulantes dans les cartes */
+.card select {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+}
+
+.card select option {
+    background-color: #374151 !important;
+    color: white !important;
+}
