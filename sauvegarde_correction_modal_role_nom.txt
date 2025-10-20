@@ -1,0 +1,154 @@
+SAUVEGARDE - CORRECTION MODAL VOIR MEMBRE (RÔLE ET NOM)
+=======================================================
+
+Date: $(Get-Date)
+Problèmes résolus: Rôle affiché comme [object Object] et remplacement du nom complet
+
+PROBLÈMES IDENTIFIÉS:
+====================
+1. Le rôle s'affichait comme "[object Object]" dans le modal
+2. Le champ "Nom complet" était redondant avec "Prénom" et "Nom de famille"
+3. Logique de gestion des objets rôle incomplète
+
+SOLUTIONS IMPLÉMENTÉES:
+=======================
+
+1. CORRECTION DE L'AFFICHAGE DU RÔLE:
+   - Détection du type de données (objet vs string)
+   - Extraction de la propriété 'nom' si c'est un objet
+   - Gestion des cas d'erreur et debug détaillé
+
+2. REMPLACEMENT DU NOM COMPLET:
+   - Suppression du champ "Nom complet"
+   - Ajout du champ "Nom" séparé
+   - Structure claire : Prénom + Nom de famille + Nom
+
+LOGIQUE CORRIGÉE POUR LE RÔLE:
+=============================
+```javascript
+// Rôle - Logique améliorée pour gérer les objets
+let role = 'Rôle non défini';
+
+if (membre.role) {
+    // Si c'est un objet, extraire la propriété nom
+    if (typeof membre.role === 'object' && membre.role.nom) {
+        role = membre.role.nom;
+        console.log('🔍 DEBUG - Rôle trouvé dans membre.role.nom:', role);
+    } else if (typeof membre.role === 'string') {
+        role = membre.role;
+        console.log('🔍 DEBUG - Rôle trouvé dans membre.role (string):', role);
+    } else {
+        console.log('🔍 DEBUG - Rôle objet sans propriété nom:', membre.role);
+    }
+} else if (membre.role_membre) {
+    role = membre.role_membre;
+} else if (membre.role.fonction) {
+    role = membre.fonction;
+} else {
+    console.log('🔍 DEBUG - Aucun rôle trouvé, données disponibles:', Object.keys(membre));
+}
+```
+
+STRUCTURE DU MODAL AMÉLIORÉE:
+=============================
+
+**Avant:**
+- Prénom
+- Nom de famille  
+- Nom complet (redondant)
+- Téléphone
+- Email
+- Rôle
+- Statut
+- Date d'inscription
+
+**Maintenant:**
+- Prénom
+- Nom de famille
+- Nom
+- Téléphone
+- Email
+- Rôle
+- Statut
+- Date d'inscription
+
+MODIFICATIONS HTML:
+==================
+```html
+<!-- Avant -->
+<div>
+    <label class="block text-white/80 text-sm font-medium mb-2">Nom complet</label>
+    <div class="p-3 bg-white/5 rounded-xl text-white" id="memberFullName">Fatou Diop</div>
+</div>
+
+<!-- Maintenant -->
+<div>
+    <label class="block text-white/80 text-sm font-medium mb-2">Nom</label>
+    <div class="p-3 bg-white/5 rounded-xl text-white" id="memberNom">-</div>
+</div>
+```
+
+MODIFICATIONS JAVASCRIPT:
+========================
+```javascript
+// Mettre à jour tous les éléments de nom
+const elementsNom = ['memberName']; // Suppression de 'memberFullName'
+elementsNom.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) element.textContent = nomComplet;
+});
+
+// Mettre à jour le nom séparément
+const nomElement = document.getElementById('memberNom');
+if (nomElement) {
+    nomElement.textContent = nomFamille || 'Non renseigné';
+}
+```
+
+GESTION DES TYPES DE DONNÉES:
+============================
+
+1. **Rôle comme objet**:
+   ```javascript
+   membre.role = { nom: "Choriste", id: 1 }
+   // Extraction: membre.role.nom → "Choriste"
+   ```
+
+2. **Rôle comme string**:
+   ```javascript
+   membre.role = "Choriste"
+   // Utilisation directe: membre.role → "Choriste"
+   ```
+
+3. **Rôle undefined/null**:
+   ```javascript
+   membre.role = null
+   // Valeur par défaut: "Rôle non défini"
+   ```
+
+DEBUG AMÉLIORÉ:
+===============
+- Logs détaillés pour chaque cas de rôle
+- Affichage des clés disponibles si rôle non trouvé
+- Traçage du type de données détecté
+- Messages d'erreur informatifs
+
+AVANTAGES:
+==========
+✅ Rôle affiché correctement (plus de [object Object])
+✅ Structure claire avec Prénom + Nom de famille + Nom
+✅ Gestion robuste des différents types de données
+✅ Debug détaillé pour identifier les problèmes
+✅ Interface plus logique et organisée
+✅ Compatibilité avec les objets et strings
+
+RÉSULTAT:
+=========
+Le modal "Voir membre" affiche maintenant :
+- **Prénom** : Dans son propre champ
+- **Nom de famille** : Dans son propre champ  
+- **Nom** : Dans son propre champ (remplace "Nom complet")
+- **Rôle** : Correctement extrait de l'objet (plus de [object Object])
+- **Toutes les autres informations** : Préservées et fonctionnelles
+
+L'interface est maintenant plus claire et le rôle s'affiche correctement !

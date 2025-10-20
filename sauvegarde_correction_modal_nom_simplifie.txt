@@ -1,0 +1,149 @@
+SAUVEGARDE - CORRECTION MODAL NOM SIMPLIFIÉ
+==========================================
+
+Date: $(Get-Date)
+Problème résolu: Suppression des champs redondants et correction de l'affichage du nom
+
+PROBLÈMES IDENTIFIÉS:
+====================
+1. Deux champs "Nom" dans le modal (redondance)
+2. Champ "Nom de famille" et "Nom" séparés
+3. Affichage "Non renseigné" pour les deux champs
+4. Logique d'extraction du nom incomplète
+
+SOLUTIONS IMPLÉMENTÉES:
+=======================
+
+1. SUPPRESSION DU CHAMP REDONDANT:
+   - Suppression du champ "Nom de famille"
+   - Conservation d'un seul champ "Nom"
+   - Structure simplifiée : Prénom + Nom
+
+2. AMÉLIORATION DE LA LOGIQUE D'EXTRACTION:
+   - Gestion des cas où le nom est vide
+   - Utilisation du nom complet comme nom de famille si nécessaire
+   - Fallback intelligent pour éviter "Non renseigné"
+
+STRUCTURE SIMPLIFIÉE:
+====================
+
+**Avant:**
+- Prénom
+- Nom de famille (redondant)
+- Nom (redondant)
+- Téléphone, Email, etc.
+
+**Maintenant:**
+- Prénom
+- Nom
+- Téléphone, Email, etc.
+
+MODIFICATIONS HTML:
+==================
+```html
+<!-- Suppression du champ redondant -->
+<!-- <div>
+    <label class="block text-white/80 text-sm font-medium mb-2">Nom de famille</label>
+    <div class="p-3 bg-white/5 rounded-xl text-white" id="memberNomFamille">-</div>
+</div> -->
+
+<!-- Conservation d'un seul champ Nom -->
+<div>
+    <label class="block text-white/80 text-sm font-medium mb-2">Nom</label>
+    <div class="p-3 bg-white/5 rounded-xl text-white" id="memberNom">-</div>
+</div>
+```
+
+MODIFICATIONS JAVASCRIPT:
+========================
+```javascript
+// Suppression des références au champ "Nom de famille"
+// const nomFamilleElement = document.getElementById('memberNomFamille');
+// if (nomFamilleElement) {
+//     nomFamilleElement.textContent = nomFamille || 'Non renseigné';
+// }
+
+// Conservation d'un seul champ Nom
+const nomElement = document.getElementById('memberNom');
+if (nomElement) {
+    nomElement.textContent = nomFamille || 'Non renseigné';
+}
+```
+
+LOGIQUE D'EXTRACTION AMÉLIORÉE:
+===============================
+```javascript
+// Logique améliorée pour extraire prénom et nom
+if (membre.prenom && membre.nom_famille) {
+    // Cas idéal : champs séparés
+    prenom = membre.prenom;
+    nomFamille = membre.nom_famille;
+    nomComplet = `${prenom} ${nomFamille}`;
+} else if (membre.nom) {
+    // Cas courant : nom complet dans un seul champ
+    nomComplet = membre.nom;
+    
+    const partiesNom = membre.nom.trim().split(' ');
+    if (partiesNom.length >= 2) {
+        prenom = partiesNom[0];
+        nomFamille = partiesNom.slice(1).join(' ');
+    } else {
+        prenom = membre.nom;
+        nomFamille = membre.nom; // ← Utiliser le nom complet comme nom de famille
+    }
+} else if (membre.prenom) {
+    // Cas avec seulement le prénom
+    prenom = membre.prenom;
+    nomFamille = membre.prenom; // ← Utiliser le prénom comme nom
+    nomComplet = prenom;
+}
+```
+
+GESTION DES CAS D'ERREUR:
+=========================
+
+1. **Nom vide** :
+   ```javascript
+   // Avant: nomFamille = '' → "Non renseigné"
+   // Maintenant: nomFamille = membre.nom → Utilise le nom complet
+   ```
+
+2. **Prénom seul** :
+   ```javascript
+   // Avant: nomFamille = '' → "Non renseigné"  
+   // Maintenant: nomFamille = membre.prenom → Utilise le prénom comme nom
+   ```
+
+3. **Nom complet** :
+   ```javascript
+   // Séparation intelligente: "Jean Dupont" → prenom="Jean", nomFamille="Dupont"
+   ```
+
+AVANTAGES:
+==========
+✅ Structure simplifiée avec un seul champ "Nom"
+✅ Suppression de la redondance
+✅ Logique d'extraction robuste
+✅ Évite l'affichage "Non renseigné"
+✅ Interface plus claire et logique
+✅ Gestion intelligente des cas d'erreur
+
+RÉSULTAT:
+=========
+Le modal "Voir membre" affiche maintenant :
+- **Prénom** : Dans son propre champ
+- **Nom** : Dans un seul champ (plus de redondance)
+- **Téléphone, Email, Rôle, Statut** : Préservés et fonctionnels
+
+Structure finale du modal :
+```
+┌─────────────────┬─────────────────┐
+│ Prénom          │ Nom             │
+├─────────────────┼─────────────────┤
+│ Téléphone       │ Email           │
+├─────────────────┼─────────────────┤
+│ Rôle            │ Statut          │
+└─────────────────┴─────────────────┘
+```
+
+L'interface est maintenant plus claire et évite la confusion des champs redondants !

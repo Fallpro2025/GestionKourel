@@ -65,6 +65,327 @@
             }
         }
         
+        // Fonctions de changement de vue
+        // Variable pour sauvegarder le contenu original
+        let contenuOriginal = null;
+        
+        function switchToGridView() {
+            console.log('🔄 Passage en vue grille');
+            vueActuelle = 'grille';
+            localStorage.setItem('vueActuelle', vueActuelle);
+            
+            const container = document.getElementById('membersGrid');
+            if (container) {
+                // Restaurer le contenu original si disponible
+                if (contenuOriginal) {
+                    container.innerHTML = contenuOriginal;
+                }
+                container.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6';
+                console.log('✅ Vue grille restaurée');
+            }
+            
+            mettreAJourBoutonVue();
+        }
+        
+        function switchToListView() {
+            console.log('🔄 Passage en vue liste');
+            vueActuelle = 'liste';
+            localStorage.setItem('vueActuelle', vueActuelle);
+            
+            const container = document.getElementById('membersGrid');
+            if (container) {
+                // Restaurer le contenu original si disponible
+                if (contenuOriginal) {
+                    container.innerHTML = contenuOriginal;
+                }
+                container.className = 'view-list';
+                console.log('✅ Vue liste restaurée');
+            }
+            
+            mettreAJourBoutonVue();
+        }
+        
+        function switchToTableView() {
+            console.log('🔄 Passage en vue tableau');
+            vueActuelle = 'tableau';
+            localStorage.setItem('vueActuelle', vueActuelle);
+            
+            const container = document.getElementById('membersGrid');
+            if (container) {
+                // Sauvegarder le contenu original si ce n'est pas déjà fait
+                if (!contenuOriginal) {
+                    contenuOriginal = container.innerHTML;
+                }
+                
+                // Créer le tableau moderne
+                const tableHTML = `
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>Nom</th>
+                                <th>Téléphone</th>
+                                <th>Email</th>
+                                <th>Rôle</th>
+                                <th>Statut</th>
+                                <th>Présence</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${genererLignesTableau()}
+                        </tbody>
+                    </table>
+                `;
+                
+                container.innerHTML = tableHTML;
+                container.className = 'view-table';
+                console.log('✅ Vue tableau appliquée avec tableau moderne');
+            }
+            
+            mettreAJourBoutonVue();
+        }
+        
+        function genererLignesTableau() {
+            // Utiliser le contenu original sauvegardé pour extraire les données
+            if (!contenuOriginal) {
+                console.error('❌ Contenu original non disponible');
+                return '';
+            }
+            
+            // Créer un élément temporaire pour parser le HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = contenuOriginal;
+            
+            const membresCards = tempDiv.querySelectorAll('.member-card[data-name]');
+            let lignesHTML = '';
+            
+            membresCards.forEach(card => {
+                const dataId = card.getAttribute('data-id') || '';
+                const dataName = card.getAttribute('data-name') || '';
+                const dataRole = card.getAttribute('data-role') || '';
+                const dataStatus = card.getAttribute('data-status') || '';
+                const dataPresence = card.getAttribute('data-presence') || '0';
+                
+                // Extraire les informations de la carte
+                const nomElement = card.querySelector('h3');
+                const telephoneElement = card.querySelector('.text-white\\/60');
+                const emailElement = card.querySelector('.text-white\\/60:nth-of-type(2)');
+                const photoElement = card.querySelector('img');
+                const initialesElement = card.querySelector('.text-white.font-semibold');
+                
+                const nom = nomElement ? nomElement.textContent : dataName;
+                const telephone = telephoneElement ? telephoneElement.textContent : 'Non renseigné';
+                const email = emailElement ? emailElement.textContent : 'Non renseigné';
+                const photo = photoElement ? photoElement.src : '';
+                const initiales = initialesElement ? initialesElement.textContent : 'M';
+                
+                // Déterminer la classe de statut
+                const statusClass = dataStatus.toLowerCase();
+                
+                // Déterminer la classe de présence
+                const presenceNum = parseFloat(dataPresence) || 0;
+                let presenceClass = 'faible';
+                if (presenceNum >= 90) presenceClass = 'excellent';
+                else if (presenceNum >= 70) presenceClass = 'bon';
+                else if (presenceNum >= 50) presenceClass = 'moyen';
+                
+                lignesHTML += `
+                    <tr onclick="viewMemberDetails(${dataId || '1'})" 
+                        data-name="${dataName}" 
+                        data-role="${dataRole}" 
+                        data-status="${dataStatus}" 
+                        data-presence="${dataPresence}">
+                        <td>
+                            ${photo ? 
+                                `<img src="${photo}" alt="${nom}" class="table-avatar">` : 
+                                `<div class="table-avatar-placeholder">${initiales}</div>`
+                            }
+                        </td>
+                        <td>
+                            <div class="font-semibold">${nom}</div>
+                        </td>
+                        <td>
+                            <div class="text-white/80">${telephone}</div>
+                        </td>
+                        <td>
+                            <div class="text-white/80">${email}</div>
+                        </td>
+                        <td>
+                            <div class="text-white/90">${dataRole}</div>
+                        </td>
+                        <td>
+                            <span class="table-status ${statusClass}">${dataStatus}</span>
+                        </td>
+                        <td>
+                            <div class="table-presence">
+                                <div class="table-presence-bar">
+                                    <div class="table-presence-fill ${presenceClass}" style="width: ${presenceNum}%"></div>
+                                </div>
+                                <span class="text-sm text-white/80">${presenceNum}%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="table-actions">
+                                <button class="table-action-btn primary" onclick="event.stopPropagation(); viewMemberDetails(${dataId || '1'})" title="Voir détails">
+                                    <i class="fas fa-eye text-sm"></i>
+                                </button>
+                                <button class="table-action-btn success" onclick="event.stopPropagation(); editMember(${dataId || '1'})" title="Modifier">
+                                    <i class="fas fa-edit text-sm"></i>
+                                </button>
+                                <button class="table-action-btn warning" onclick="event.stopPropagation(); sendMessageToMember()" title="Envoyer SMS">
+                                    <i class="fas fa-sms text-sm"></i>
+                                </button>
+                                <button class="table-action-btn danger" onclick="event.stopPropagation(); deleteMember(${dataId || '1'})" title="Supprimer">
+                                    <i class="fas fa-trash text-sm"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            return lignesHTML;
+        }
+        
+        // Fonctions de filtrage améliorées
+        function filtrerMembres() {
+            const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
+            const roleFilter = document.getElementById('roleFilter')?.value || '';
+            const statusFilter = document.getElementById('statusFilter')?.value || '';
+            const presenceFilter = document.getElementById('presenceFilter')?.value || '';
+            
+            console.log('🔍 Filtrage avec:', { searchTerm, roleFilter, statusFilter, presenceFilter });
+            
+            // Sélectionner les éléments selon la vue actuelle
+            let elementsToFilter;
+            if (vueActuelle === 'tableau') {
+                elementsToFilter = document.querySelectorAll('.modern-table tbody tr');
+            } else {
+                elementsToFilter = document.querySelectorAll('.member-card');
+            }
+            
+            let membresVisibles = 0;
+            
+            elementsToFilter.forEach(element => {
+                let visible = true;
+                
+                // Utiliser les attributs data-* pour le filtrage
+                const dataName = element.getAttribute('data-name') || '';
+                const dataRole = element.getAttribute('data-role') || '';
+                const dataStatus = element.getAttribute('data-status') || '';
+                const dataPresence = element.getAttribute('data-presence') || '';
+                
+                // Filtre par recherche textuelle
+                if (searchTerm && visible) {
+                    if (!dataName.includes(searchTerm)) {
+                        visible = false;
+                    }
+                }
+                
+                // Filtre par rôle
+                if (roleFilter && visible) {
+                    if (!dataRole.includes(roleFilter)) {
+                        visible = false;
+                    }
+                }
+                
+                // Filtre par statut
+                if (statusFilter && visible) {
+                    if (!dataStatus.includes(statusFilter)) {
+                        visible = false;
+                    }
+                }
+                
+                // Filtre par présence
+                if (presenceFilter && visible) {
+                    const presenceNum = parseFloat(dataPresence) || 0;
+                    let matchPresence = false;
+                    
+                    switch(presenceFilter) {
+                        case 'excellent':
+                            matchPresence = presenceNum >= 90;
+                            break;
+                        case 'bon':
+                            matchPresence = presenceNum >= 70 && presenceNum < 90;
+                            break;
+                        case 'moyen':
+                            matchPresence = presenceNum >= 50 && presenceNum < 70;
+                            break;
+                        case 'faible':
+                            matchPresence = presenceNum < 50;
+                            break;
+                    }
+                    
+                    if (!matchPresence) {
+                        visible = false;
+                    }
+                }
+                
+                // Afficher/masquer l'élément
+                if (visible) {
+                    element.style.display = '';
+                    membresVisibles++;
+                } else {
+                    element.style.display = 'none';
+                }
+            });
+            
+            console.log(`✅ ${membresVisibles} membres visibles sur ${elementsToFilter.length}`);
+            
+            // Afficher un message si aucun résultat
+            afficherMessageAucunResultat(membresVisibles === 0);
+        }
+        
+        function afficherMessageAucunResultat(aucunResultat) {
+            let messageDiv = document.getElementById('noResultsMessage');
+            
+            if (aucunResultat) {
+                if (!messageDiv) {
+                    messageDiv = document.createElement('div');
+                    messageDiv.id = 'noResultsMessage';
+                    messageDiv.className = 'col-span-full text-center py-12';
+                    messageDiv.innerHTML = `
+                        <div class="text-white/60 text-lg mb-4">
+                            <i class="fas fa-search text-4xl mb-4"></i>
+                            <p>Aucun membre trouvé</p>
+                            <p class="text-sm">Essayez de modifier vos critères de recherche</p>
+                        </div>
+                    `;
+                    
+                    const container = document.getElementById('membersGrid');
+                    if (container) {
+                        container.appendChild(messageDiv);
+                    }
+                }
+                messageDiv.style.display = '';
+            } else if (messageDiv) {
+                messageDiv.style.display = 'none';
+            }
+        }
+        
+        function reinitialiserFiltres() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('roleFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('presenceFilter').value = '';
+            
+            // Afficher tous les membres selon la vue actuelle
+            let elementsToShow;
+            if (vueActuelle === 'tableau') {
+                elementsToShow = document.querySelectorAll('.modern-table tbody tr');
+            } else {
+                elementsToShow = document.querySelectorAll('.member-card');
+            }
+            
+            elementsToShow.forEach(element => {
+                element.style.display = '';
+            });
+            
+            afficherMessageAucunResultat(false);
+            console.log('🔄 Filtres réinitialisés');
+        }
+        
         // Initialiser la vue au chargement de la page
         document.addEventListener('DOMContentLoaded', function() {
             // Mettre à jour le bouton avec la vue actuelle
@@ -77,6 +398,44 @@
                 } else if (vueActuelle === 'tableau') {
                     switchToTableView();
                 }
+            }
+            
+            // Événements de recherche et filtrage
+            const searchInput = document.getElementById('searchInput');
+            const roleFilter = document.getElementById('roleFilter');
+            const statusFilter = document.getElementById('statusFilter');
+            const presenceFilter = document.getElementById('presenceFilter');
+            
+            if (searchInput) {
+                searchInput.addEventListener('input', filtrerMembres);
+                console.log('✅ Événement de recherche configuré');
+            }
+            
+            if (roleFilter) {
+                roleFilter.addEventListener('change', filtrerMembres);
+                console.log('✅ Événement de filtrage par rôle configuré');
+            }
+            
+            if (statusFilter) {
+                statusFilter.addEventListener('change', filtrerMembres);
+                console.log('✅ Événement de filtrage par statut configuré');
+            }
+            
+            if (presenceFilter) {
+                presenceFilter.addEventListener('change', filtrerMembres);
+                console.log('✅ Événement de filtrage par présence configuré');
+            }
+            
+            // Bouton de réinitialisation des filtres
+            const resetButton = document.createElement('button');
+            resetButton.innerHTML = '<i class="fas fa-times mr-2"></i>Réinitialiser';
+            resetButton.className = 'search-input px-4 py-3 text-white rounded-xl focus:outline-none hover:bg-white/20 transition-all duration-300';
+            resetButton.onclick = reinitialiserFiltres;
+            
+            const filtersContainer = document.querySelector('.flex.flex-wrap.gap-3');
+            if (filtersContainer) {
+                filtersContainer.appendChild(resetButton);
+                console.log('✅ Bouton de réinitialisation ajouté');
             }
         });
     </script>
@@ -343,8 +702,191 @@
         }
         
         .view-table {
-            display: table;
+            display: block;
             width: 100%;
+            overflow-x: auto;
+        }
+        
+        .modern-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .modern-table thead {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2));
+        }
+        
+        .modern-table th {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .modern-table td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: white;
+            vertical-align: middle;
+        }
+        
+        .modern-table tbody tr {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .modern-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .modern-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .table-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .table-avatar-placeholder {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .table-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .table-status.actif {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        
+        .table-status.inactif {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .table-status.suspendu {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        
+        .table-status.nouveau {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        .table-presence {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .table-presence-bar {
+            width: 3rem;
+            height: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+        
+        .table-presence-fill {
+            height: 100%;
+            border-radius: 9999px;
+            transition: width 0.3s ease;
+        }
+        
+        .table-presence-fill.excellent {
+            background: linear-gradient(90deg, #22c55e, #16a34a);
+        }
+        
+        .table-presence-fill.bon {
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+        }
+        
+        .table-presence-fill.moyen {
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+        }
+        
+        .table-presence-fill.faible {
+            background: linear-gradient(90deg, #ef4444, #dc2626);
+        }
+        
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .table-action-btn {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .table-action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .table-action-btn.primary:hover {
+            background: rgba(59, 130, 246, 0.3);
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+        
+        .table-action-btn.success:hover {
+            background: rgba(34, 197, 94, 0.3);
+            border-color: rgba(34, 197, 94, 0.5);
+        }
+        
+        .table-action-btn.warning:hover {
+            background: rgba(245, 158, 11, 0.3);
+            border-color: rgba(245, 158, 11, 0.5);
+        }
+        
+        .table-action-btn.danger:hover {
+            background: rgba(239, 68, 68, 0.3);
+            border-color: rgba(239, 68, 68, 0.5);
         }
         
         .member-list-item {
@@ -449,44 +991,120 @@
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 min-h-screen">
-    <!-- Système de messages d'alerte -->
-    <div id="alertContainer" class="fixed top-4 right-4 z-50 space-y-2">
+    <!-- Système de messages d'alerte modernes -->
+    <div id="alertContainer" class="fixed top-4 right-4 z-[9999] space-y-3">
         @if(session('success'))
-            <div class="alert alert-success bg-green-500/20 border border-green-500/30 rounded-xl p-4 max-w-sm">
-                <div class="flex items-center">
-                    <i class="fas fa-check-circle text-green-400 mr-3"></i>
-                    <span class="text-green-400 font-medium">{{ session('success') }}</span>
+            <div class="alert-item alert-success bg-gradient-to-r from-green-600/95 to-green-500/95 backdrop-blur-md border border-green-400/50 rounded-2xl p-4 max-w-sm shadow-2xl transform transition-all duration-500 ease-out">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle text-green-100 mr-3 text-lg"></i>
+                        <span class="text-green-100 font-semibold text-sm">{{ session('success') }}</span>
+                    </div>
+                    <button onclick="closeAlert(this)" class="text-green-200 hover:text-white transition-colors ml-2">
+                        <i class="fas fa-times text-sm"></i>
+                    </button>
                 </div>
             </div>
         @endif
         
         @if(session('error'))
-            <div class="alert alert-error bg-red-500/20 border border-red-500/30 rounded-xl p-4 max-w-sm">
-                <div class="flex items-center">
-                    <i class="fas fa-exclamation-circle text-red-400 mr-3"></i>
-                    <span class="text-red-400 font-medium">{{ session('error') }}</span>
+            <div class="alert-item alert-error bg-gradient-to-r from-red-600/95 to-red-500/95 backdrop-blur-md border border-red-400/50 rounded-2xl p-4 max-w-sm shadow-2xl transform transition-all duration-500 ease-out">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-circle text-red-100 mr-3 text-lg"></i>
+                        <span class="text-red-100 font-semibold text-sm">{{ session('error') }}</span>
+                    </div>
+                    <button onclick="closeAlert(this)" class="text-red-200 hover:text-white transition-colors ml-2">
+                        <i class="fas fa-times text-sm"></i>
+                    </button>
                 </div>
             </div>
         @endif
         
         @if(session('warning'))
-            <div class="alert alert-warning bg-yellow-500/20 border border-yellow-500/30 rounded-xl p-4 max-w-sm">
-                <div class="flex items-center">
-                    <i class="fas fa-exclamation-triangle text-yellow-400 mr-3"></i>
-                    <span class="text-yellow-400 font-medium">{{ session('warning') }}</span>
+            <div class="alert-item alert-warning bg-gradient-to-r from-yellow-600/95 to-yellow-500/95 backdrop-blur-md border border-yellow-400/50 rounded-2xl p-4 max-w-sm shadow-2xl transform transition-all duration-500 ease-out">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-triangle text-yellow-100 mr-3 text-lg"></i>
+                        <span class="text-yellow-100 font-semibold text-sm">{{ session('warning') }}</span>
+                    </div>
+                    <button onclick="closeAlert(this)" class="text-yellow-200 hover:text-white transition-colors ml-2">
+                        <i class="fas fa-times text-sm"></i>
+                    </button>
                 </div>
             </div>
         @endif
         
         @if(session('info'))
-            <div class="alert alert-info bg-blue-500/20 border border-blue-500/30 rounded-xl p-4 max-w-sm">
-                <div class="flex items-center">
-                    <i class="fas fa-info-circle text-blue-400 mr-3"></i>
-                    <span class="text-blue-400 font-medium">{{ session('info') }}</span>
+            <div class="alert-item alert-info bg-gradient-to-r from-blue-600/95 to-blue-500/95 backdrop-blur-md border border-blue-400/50 rounded-2xl p-4 max-w-sm shadow-2xl transform transition-all duration-500 ease-out">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-info-circle text-blue-100 mr-3 text-lg"></i>
+                        <span class="text-blue-100 font-semibold text-sm">{{ session('info') }}</span>
+                    </div>
+                    <button onclick="closeAlert(this)" class="text-blue-200 hover:text-white transition-colors ml-2">
+                        <i class="fas fa-times text-sm"></i>
+                    </button>
                 </div>
             </div>
         @endif
     </div>
+    
+    <!-- Système d'alerte de confirmation moderne -->
+    <div id="confirmModal" class="fixed inset-0 z-[10000] hidden">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-gradient-to-br from-slate-800/95 to-slate-900/95 backdrop-blur-xl border border-white/20 rounded-3xl p-8 max-w-md w-full shadow-2xl transform transition-all duration-300 scale-95 opacity-0" id="confirmDialog">
+                <div class="text-center">
+                    <div class="mb-6">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full flex items-center justify-center">
+                            <i class="fas fa-question-circle text-blue-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2" id="confirmTitle">Confirmation</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed" id="confirmMessage">Êtes-vous sûr de vouloir effectuer cette action ?</p>
+                    </div>
+                    
+                    <div class="flex space-x-3">
+                        <button onclick="closeConfirmModal(false)" class="flex-1 bg-gray-600/50 hover:bg-gray-600/70 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:scale-105">
+                            <i class="fas fa-times mr-2"></i>Annuler
+                        </button>
+                        <button onclick="closeConfirmModal(true)" class="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg">
+                            <i class="fas fa-check mr-2"></i>Confirmer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Système d'alerte de saisie moderne -->
+    <div id="promptModal" class="fixed inset-0 z-[10000] hidden">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-gradient-to-br from-slate-800/95 to-slate-900/95 backdrop-blur-xl border border-white/20 rounded-3xl p-8 max-w-md w-full shadow-2xl transform transition-all duration-300 scale-95 opacity-0" id="promptDialog">
+                <div class="text-center">
+                    <div class="mb-6">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-green-500/20 to-teal-500/20 rounded-full flex items-center justify-center">
+                            <i class="fas fa-edit text-green-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2" id="promptTitle">Saisie</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed mb-4" id="promptMessage">Veuillez saisir les informations :</p>
+                        <input type="text" id="promptInput" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" placeholder="Saisissez votre texte...">
+                    </div>
+                    
+                    <div class="flex space-x-3">
+                        <button onclick="closePromptModal(false)" class="flex-1 bg-gray-600/50 hover:bg-gray-600/70 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:scale-105">
+                            <i class="fas fa-times mr-2"></i>Annuler
+                        </button>
+                        <button onclick="closePromptModal(true)" class="flex-1 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg">
+                            <i class="fas fa-check mr-2"></i>Valider
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div id="app">
         <!-- Sidebar Navigation -->
         <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white/10 backdrop-blur-xl border-r border-white/20 sidebar-transition">
@@ -750,6 +1368,7 @@
                     @forelse($membres as $index => $membre)
                     <!-- Carte Membre {{ $index + 1 }} - Données Réelles -->
                     <div class="member-card rounded-2xl p-6 card-hover" 
+                         data-id="{{ $membre->id }}"
                          data-name="{{ strtolower($membre->nom . ' ' . $membre->prenom) }}" 
                          data-role="{{ strtolower($membre->role ? $membre->role->nom : 'membre') }}" 
                          data-status="{{ $membre->statut }}" 
@@ -815,6 +1434,9 @@
                             </button>
                             <button onclick="editMember({{ $membre->id }})" class="flex-1 px-3 py-2 bg-primary-500/20 text-primary-400 text-xs rounded-lg hover:bg-primary-500/30 transition-all duration-300">
                                 Modifier
+                            </button>
+                            <button onclick="deleteMember({{ $membre->id }})" class="px-3 py-2 bg-red-500/20 text-red-400 text-xs rounded-lg hover:bg-red-500/30 transition-all duration-300" title="Supprimer">
+                                <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </div>
@@ -1079,8 +1701,12 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-white/80 text-sm font-medium mb-2">Nom complet</label>
-                                <div class="p-3 bg-white/5 rounded-xl text-white" id="memberFullName">Fatou Diop</div>
+                                <label class="block text-white/80 text-sm font-medium mb-2">Prénom</label>
+                                <div class="p-3 bg-white/5 rounded-xl text-white" id="memberPrenom">-</div>
+                            </div>
+                            <div>
+                                <label class="block text-white/80 text-sm font-medium mb-2">Nom</label>
+                                <div class="p-3 bg-white/5 rounded-xl text-white" id="memberNom">-</div>
                             </div>
                             <div>
                                 <label class="block text-white/80 text-sm font-medium mb-2">Téléphone</label>
@@ -1391,14 +2017,131 @@
         </div>
     </div>
     
-    <!-- Système de Notifications Modernes -->
-    <div id="notificationContainer" class="fixed top-4 right-4 z-50 space-y-2">
-        <!-- Les notifications apparaîtront ici -->
-    </div>
     
     <script>
         console.log('✅ JavaScript chargé correctement');
         console.log('🔍 Vérification des fonctions disponibles...');
+        
+        // Gestion des alertes de session
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-suppression des alertes après 5 secondes
+            const alertes = document.querySelectorAll('.alert-item');
+            alertes.forEach(alerte => {
+                setTimeout(() => {
+                    closeAlert(alerte.querySelector('button'));
+                }, 5000);
+            });
+        });
+        
+        // Fonction pour fermer les alertes
+        function closeAlert(button) {
+            const alerte = button.closest('.alert-item');
+            if (!alerte) return;
+            
+            // Animation de sortie
+            alerte.style.transform = 'translateX(100%)';
+            alerte.style.opacity = '0';
+            
+            // Supprimer après l'animation
+            setTimeout(() => {
+                if (alerte.parentNode) {
+                    alerte.parentNode.removeChild(alerte);
+                }
+            }, 500);
+        }
+        
+        // Système de confirmation moderne
+        let confirmCallback = null;
+        
+        function showConfirm(title, message, callback) {
+            confirmCallback = callback;
+            document.getElementById('confirmTitle').textContent = title;
+            document.getElementById('confirmMessage').textContent = message;
+            
+            const modal = document.getElementById('confirmModal');
+            const dialog = document.getElementById('confirmDialog');
+            
+            modal.classList.remove('hidden');
+            
+            // Animation d'entrée
+            setTimeout(() => {
+                dialog.classList.remove('scale-95', 'opacity-0');
+                dialog.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+        
+        function closeConfirmModal(confirmed) {
+            const modal = document.getElementById('confirmModal');
+            const dialog = document.getElementById('confirmDialog');
+            
+            // Animation de sortie
+            dialog.classList.remove('scale-100', 'opacity-100');
+            dialog.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                if (confirmCallback) {
+                    confirmCallback(confirmed);
+                    confirmCallback = null;
+                }
+            }, 300);
+        }
+        
+        // Système de saisie moderne
+        let promptCallback = null;
+        
+        function showPrompt(title, message, defaultValue = '', callback) {
+            promptCallback = callback;
+            document.getElementById('promptTitle').textContent = title;
+            document.getElementById('promptMessage').textContent = message;
+            document.getElementById('promptInput').value = defaultValue;
+            
+            const modal = document.getElementById('promptModal');
+            const dialog = document.getElementById('promptDialog');
+            
+            modal.classList.remove('hidden');
+            
+            // Focus sur l'input
+            setTimeout(() => {
+                dialog.classList.remove('scale-95', 'opacity-0');
+                dialog.classList.add('scale-100', 'opacity-100');
+                document.getElementById('promptInput').focus();
+            }, 10);
+        }
+        
+        function closePromptModal(confirmed) {
+            const modal = document.getElementById('promptModal');
+            const dialog = document.getElementById('promptDialog');
+            const input = document.getElementById('promptInput');
+            
+            // Animation de sortie
+            dialog.classList.remove('scale-100', 'opacity-100');
+            dialog.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                if (promptCallback) {
+                    const value = confirmed ? input.value.trim() : null;
+                    promptCallback(value);
+                    promptCallback = null;
+                }
+            }, 300);
+        }
+        
+        // Gestion des touches pour les modales
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (!document.getElementById('confirmModal').classList.contains('hidden')) {
+                    closeConfirmModal(false);
+                }
+                if (!document.getElementById('promptModal').classList.contains('hidden')) {
+                    closePromptModal(false);
+                }
+            }
+            if (e.key === 'Enter' && !document.getElementById('promptModal').classList.contains('hidden')) {
+                closePromptModal(true);
+            }
+        });
         
         // Test de disponibilité des fonctions
                 setTimeout(() => {
@@ -1440,7 +2183,13 @@
         function calculerInitiales(membre) {
             let initiales = 'M'; // Par défaut
             
-            if (membre.nom) {
+            // Priorité aux champs séparés prénom et nom_famille
+            if (membre.prenom && membre.nom_famille) {
+                initiales = (membre.prenom[0] + membre.nom_famille[0]).toUpperCase();
+            } else if (membre.prenom) {
+                // Si on a seulement le prénom
+                initiales = membre.prenom.substring(0, 2).toUpperCase();
+            } else if (membre.nom) {
                 // Si on a un nom complet, prendre les premières lettres
                 const nomParts = membre.nom.split(' ').filter(part => part.length > 0);
                 if (nomParts.length >= 2) {
@@ -1450,69 +2199,66 @@
                     // Si un seul mot, prendre les deux premières lettres
                     initiales = nomParts[0].substring(0, 2).toUpperCase();
                 }
-            } else if (membre.prenom && membre.nom_famille) {
-                // Si on a prénom et nom séparés
-                initiales = (membre.prenom[0] + membre.nom_famille[0]).toUpperCase();
-            } else if (membre.prenom) {
-                // Si on a seulement le prénom
-                initiales = membre.prenom.substring(0, 2).toUpperCase();
             }
             
             return initiales;
         }
         
-        // Système de Notifications Modernes
+        // Système de Notifications Unifié
         function showNotification(message, type = 'success', duration = 4000) {
-            const container = document.getElementById('notificationContainer');
+            const container = document.getElementById('alertContainer');
             if (!container) return;
             
             // Créer l'élément de notification
             const notification = document.createElement('div');
-            notification.className = `notification-item transform transition-all duration-500 ease-out translate-x-full opacity-0`;
+            notification.className = `alert-item transform transition-all duration-500 ease-out translate-x-full opacity-0`;
             
             // Définir les styles selon le type
-            let bgColor, iconColor, icon, borderColor;
+            let bgColor, iconColor, icon, borderColor, textColor;
             switch(type) {
                 case 'success':
-                    bgColor = 'bg-gradient-to-r from-green-500 to-green-600';
+                    bgColor = 'bg-gradient-to-r from-green-600/95 to-green-500/95';
                     iconColor = 'text-green-100';
                     icon = 'fas fa-check-circle';
-                    borderColor = 'border-green-400';
+                    borderColor = 'border-green-400/50';
+                    textColor = 'text-green-100';
                     break;
                 case 'error':
-                    bgColor = 'bg-gradient-to-r from-red-500 to-red-600';
+                    bgColor = 'bg-gradient-to-r from-red-600/95 to-red-500/95';
                     iconColor = 'text-red-100';
                     icon = 'fas fa-exclamation-circle';
-                    borderColor = 'border-red-400';
+                    borderColor = 'border-red-400/50';
+                    textColor = 'text-red-100';
                     break;
                 case 'warning':
-                    bgColor = 'bg-gradient-to-r from-orange-500 to-orange-600';
-                    iconColor = 'text-orange-100';
+                    bgColor = 'bg-gradient-to-r from-yellow-600/95 to-yellow-500/95';
+                    iconColor = 'text-yellow-100';
                     icon = 'fas fa-exclamation-triangle';
-                    borderColor = 'border-orange-400';
+                    borderColor = 'border-yellow-400/50';
+                    textColor = 'text-yellow-100';
                     break;
                 case 'info':
-                    bgColor = 'bg-gradient-to-r from-blue-500 to-blue-600';
+                    bgColor = 'bg-gradient-to-r from-blue-600/95 to-blue-500/95';
                     iconColor = 'text-blue-100';
                     icon = 'fas fa-info-circle';
-                    borderColor = 'border-blue-400';
+                    borderColor = 'border-blue-400/50';
+                    textColor = 'text-blue-100';
                     break;
                 default:
-                    bgColor = 'bg-gradient-to-r from-gray-500 to-gray-600';
+                    bgColor = 'bg-gradient-to-r from-gray-600/95 to-gray-500/95';
                     iconColor = 'text-gray-100';
                     icon = 'fas fa-bell';
-                    borderColor = 'border-gray-400';
+                    borderColor = 'border-gray-400/50';
+                    textColor = 'text-gray-100';
             }
             
             notification.innerHTML = `
-                <div class="flex items-center space-x-3 p-4 rounded-xl shadow-2xl backdrop-blur-sm border ${borderColor} ${bgColor} min-w-80 max-w-96">
-                    <div class="flex-shrink-0">
-                        <i class="${icon} ${iconColor} text-xl"></i>
+                <div class="flex items-center justify-between backdrop-blur-md border ${borderColor} ${bgColor} rounded-2xl p-4 max-w-sm shadow-2xl">
+                    <div class="flex items-center">
+                        <i class="${icon} ${iconColor} mr-3 text-lg"></i>
+                        <span class="${textColor} font-semibold text-sm">${message}</span>
                     </div>
-                    <div class="flex-1">
-                        <p class="text-white font-medium text-sm leading-relaxed">${message}</p>
-                    </div>
-                    <button onclick="closeNotification(this)" class="flex-shrink-0 ml-2 text-white/80 hover:text-white transition-colors">
+                    <button onclick="closeAlert(this)" class="${textColor.replace('text-', 'text-').replace('-100', '-200')} hover:text-white transition-colors ml-2">
                         <i class="fas fa-times text-sm"></i>
                     </button>
                 </div>
@@ -1523,29 +2269,14 @@
             
             // Animation d'entrée
             setTimeout(() => {
-                notification.classList.remove('translate-x-full', 'opacity-0');
-                notification.classList.add('translate-x-0', 'opacity-100');
+                notification.style.transform = 'translateX(0)';
+                notification.style.opacity = '1';
             }, 100);
             
             // Auto-suppression
             setTimeout(() => {
-                closeNotification(notification.querySelector('button'));
+                closeAlert(notification.querySelector('button'));
             }, duration);
-        }
-        
-        function closeNotification(button) {
-            const notification = button.closest('.notification-item');
-            if (!notification) return;
-            
-            // Animation de sortie
-            notification.classList.add('translate-x-full', 'opacity-0');
-            
-            // Supprimer après l'animation
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 500);
         }
         
         // Fonctions de base pour les modals
@@ -1592,6 +2323,12 @@
         
         // Fonction pour remplir le modal de détails
         function remplirModalDetails(membre) {
+            console.log('🔍 DEBUG - Données du membre dans remplirModalDetails:', membre);
+            console.log('🔍 DEBUG - membre.prenom:', membre.prenom);
+            console.log('🔍 DEBUG - membre.nom_famille:', membre.nom_famille);
+            console.log('🔍 DEBUG - membre.nom:', membre.nom);
+            console.log('🔍 DEBUG - membre.role:', membre.role);
+            
             // Photo de profil
             const photoElement = document.getElementById('memberPhoto');
             const elementInitiales = document.getElementById('memberInitials');
@@ -1626,21 +2363,104 @@
                 console.log('👤 Initiales détails affichées:', initiales);
             }
             
-            // Nom complet
-            const nomComplet = membre.nom || 'Nom non défini';
-            const elementsNom = ['memberName', 'memberFullName'];
+            // Nom complet - Construction à partir des champs disponibles
+            let nomComplet = 'Nom non défini';
+            let prenom = '';
+            let nomFamille = '';
+            
+            // Logique améliorée pour extraire prénom et nom
+            if (membre.prenom && membre.nom_famille) {
+                // Cas idéal : champs séparés
+                prenom = membre.prenom;
+                nomFamille = membre.nom_famille;
+                nomComplet = `${prenom} ${nomFamille}`;
+                console.log('🔍 DEBUG - Utilisation des champs séparés:', prenom, nomFamille);
+            } else if (membre.nom) {
+                // Cas courant : nom complet dans un seul champ
+                nomComplet = membre.nom;
+                
+                // Essayer de séparer prénom et nom
+                const partiesNom = membre.nom.trim().split(' ');
+                if (partiesNom.length >= 2) {
+                    prenom = partiesNom[0];
+                    nomFamille = partiesNom.slice(1).join(' ');
+                    console.log('🔍 DEBUG - Séparation automatique:', prenom, nomFamille);
+                } else {
+                    prenom = membre.nom;
+                    nomFamille = membre.nom; // Utiliser le nom complet comme nom de famille
+                    console.log('🔍 DEBUG - Nom seul utilisé comme nom de famille:', prenom);
+                }
+            } else if (membre.prenom) {
+                // Cas avec seulement le prénom
+                prenom = membre.prenom;
+                nomFamille = membre.prenom; // Utiliser le prénom comme nom
+                nomComplet = prenom;
+                console.log('🔍 DEBUG - Prénom seul:', prenom);
+            }
+            
+            console.log('🔍 DEBUG - Nom complet final:', nomComplet);
+            console.log('🔍 DEBUG - Prénom extrait:', prenom);
+            console.log('🔍 DEBUG - Nom famille extrait:', nomFamille);
+            
+            // Mettre à jour tous les éléments de nom
+            const elementsNom = ['memberName'];
             elementsNom.forEach(id => {
                 const element = document.getElementById(id);
                 if (element) element.textContent = nomComplet;
             });
             
-            // Rôle
-            const role = membre.role || 'Rôle non défini';
+            // Mettre à jour le prénom séparément
+            const prenomElement = document.getElementById('memberPrenom');
+            if (prenomElement) {
+                prenomElement.textContent = prenom || 'Non renseigné';
+            }
+            
+            // Mettre à jour le nom séparément
+            const nomElement = document.getElementById('memberNom');
+            if (nomElement) {
+                nomElement.textContent = nomFamille || 'Non renseigné';
+            }
+            
+            // Rôle - Logique améliorée pour gérer les objets
+            let role = 'Rôle non défini';
+            
+            // Essayer différentes variantes du champ rôle
+            if (membre.role) {
+                // Si c'est un objet, extraire la propriété nom
+                if (typeof membre.role === 'object' && membre.role.nom) {
+                    role = membre.role.nom;
+                    console.log('🔍 DEBUG - Rôle trouvé dans membre.role.nom:', role);
+                } else if (typeof membre.role === 'string') {
+                    role = membre.role;
+                    console.log('🔍 DEBUG - Rôle trouvé dans membre.role (string):', role);
+                } else {
+                    console.log('🔍 DEBUG - Rôle objet sans propriété nom:', membre.role);
+                }
+            } else if (membre.role_membre) {
+                role = membre.role_membre;
+                console.log('🔍 DEBUG - Rôle trouvé dans membre.role_membre:', role);
+            } else if (membre.fonction) {
+                role = membre.fonction;
+                console.log('🔍 DEBUG - Rôle trouvé dans membre.fonction:', role);
+            } else {
+                console.log('🔍 DEBUG - Aucun rôle trouvé, données disponibles:', Object.keys(membre));
+            }
+            
+            console.log('🔍 DEBUG - Rôle final:', role);
+            
             const elementsRole = ['memberRole', 'memberRoleDetail'];
             elementsRole.forEach(id => {
                 const element = document.getElementById(id);
-                if (element) element.textContent = role;
+                if (element) {
+                    element.textContent = role;
+                    console.log(`✅ Rôle mis à jour pour ${id}:`, role);
+                } else {
+                    console.log(`❌ Élément ${id} non trouvé`);
+                }
             });
+            
+            console.log('🔍 DEBUG - Nom complet construit:', nomComplet);
+            console.log('🔍 DEBUG - Rôle:', role);
             
             // Téléphone
             const telephone = document.getElementById('memberPhone');
@@ -2147,33 +2967,39 @@
                 'ancien': 'Ancien'
             };
             
-            if (confirm(`Changer le statut de ${membreActuel?.nom || 'Membre'} vers "${statusLabels[newStatus]}" ?`)) {
-                membreActuel.statut = statusLabels[newStatus];
-                
-                // Mettre à jour l'affichage
-                const statusElement = document.getElementById('memberStatus');
-                if (statusElement) {
-                    statusElement.textContent = statusLabels[newStatus];
-                    statusElement.className = 'px-3 py-1 text-sm rounded-full border';
-                    
-                    switch(newStatus) {
-                        case 'actif':
-                            statusElement.classList.add('bg-green-500/20', 'text-green-400', 'border-green-500/30');
-                    break;
-                        case 'suspendu':
-                            statusElement.classList.add('bg-orange-500/20', 'text-orange-400', 'border-orange-500/30');
-                    break;
-                        case 'inactif':
-                            statusElement.classList.add('bg-red-500/20', 'text-red-400', 'border-red-500/30');
-                    break;
-                        case 'ancien':
-                            statusElement.classList.add('bg-gray-500/20', 'text-gray-400', 'border-gray-500/30');
-                    break;
-            }
-        }
+            showConfirm(
+                'Changer le statut',
+                `Changer le statut de ${membreActuel?.nom || 'Membre'} vers "${statusLabels[newStatus]}" ?`,
+                (confirmed) => {
+                    if (confirmed) {
+                        membreActuel.statut = statusLabels[newStatus];
+                        
+                        // Mettre à jour l'affichage
+                        const statusElement = document.getElementById('memberStatus');
+                        if (statusElement) {
+                            statusElement.textContent = statusLabels[newStatus];
+                            statusElement.className = 'px-3 py-1 text-sm rounded-full border';
+                            
+                            switch(newStatus) {
+                                case 'actif':
+                                    statusElement.classList.add('bg-green-500/20', 'text-green-400', 'border-green-500/30');
+                            break;
+                                case 'suspendu':
+                                    statusElement.classList.add('bg-orange-500/20', 'text-orange-400', 'border-orange-500/30');
+                            break;
+                                case 'inactif':
+                                    statusElement.classList.add('bg-red-500/20', 'text-red-400', 'border-red-500/30');
+                            break;
+                                case 'ancien':
+                                    statusElement.classList.add('bg-gray-500/20', 'text-gray-400', 'border-gray-500/30');
+                            break;
+                        }
+                    }
 
-                showNotification(`Statut de ${membreActuel?.nom || 'Membre'} changé vers "${statusLabels[newStatus]}"`, 'success');
-            }
+                        showNotification(`Statut de ${membreActuel?.nom || 'Membre'} changé vers "${statusLabels[newStatus]}"`, 'success');
+                    }
+                }
+            );
         }
         
         function changeMemberRole() {
@@ -2182,30 +3008,122 @@
             const roles = ['Choriste', 'Soliste', 'Musicien', 'Danseur', 'Membre actif', 'Responsable'];
             const currentRole = membreActuel.role || 'Choriste';
             
-            const roleInput = prompt(`Nouveau rôle pour ${membreActuel?.nom || 'Membre'}:\n\nRôles disponibles: ${roles.join(', ')}`, currentRole);
-            
-            if (roleInput && roleInput.trim() !== '' && roleInput !== currentRole) {
-                membreActuel.role = roleInput.trim();
-                
-                // Mettre à jour l'affichage
-                const elementsRole = ['memberRole', 'memberRoleDetail'];
-                elementsRole.forEach(id => {
-                    const element = document.getElementById(id);
-                    if (element) element.textContent = roleInput.trim();
-                });
-                
-                showNotification(`Rôle de ${membreActuel?.nom || 'Membre'} changé vers "${roleInput.trim()}"`, 'success');
-            }
+            showPrompt(
+                'Changer le rôle',
+                `Nouveau rôle pour ${membreActuel?.nom || 'Membre'}:\n\nRôles disponibles: ${roles.join(', ')}`,
+                currentRole,
+                (roleInput) => {
+                    if (roleInput && roleInput.trim() !== '' && roleInput !== currentRole) {
+                        membreActuel.role = roleInput.trim();
+                        
+                        // Mettre à jour l'affichage
+                        const elementsRole = ['memberRole', 'memberRoleDetail'];
+                        elementsRole.forEach(id => {
+                            const element = document.getElementById(id);
+                            if (element) element.textContent = roleInput.trim();
+                        });
+                        
+                        showNotification(`Rôle de ${membreActuel?.nom || 'Membre'} changé vers "${roleInput.trim()}"`, 'success');
+                    }
+                }
+            );
         }
         
         function sendMessageToMember() {
             if (!membreActuel) return;
             
-            const message = prompt(`Message à envoyer à ${membreActuel?.nom || 'Membre'} (${membreActuel?.telephone || 'N/A'}):`);
+            showPrompt(
+                'Envoyer un message',
+                `Message à envoyer à ${membreActuel?.nom || 'Membre'} (${membreActuel?.telephone || 'N/A'}):`,
+                '',
+                (message) => {
+                    if (message && message.trim() !== '') {
+                        showNotification(`SMS envoyé à ${membreActuel?.nom || 'Membre'}: "${message}"`, 'success');
+                    }
+                }
+            );
+        }
+        
+        // Fonction de suppression de membre
+        function deleteMember(memberId) {
+            console.log('🗑️ Suppression du membre:', memberId);
             
-            if (message && message.trim() !== '') {
-                showNotification(`SMS envoyé à ${membreActuel?.nom || 'Membre'}: "${message}"`, 'success');
+            // Trouver le membre dans les données pour obtenir son nom
+            const membre = membresData.find(m => m.id == memberId);
+            const nomMembre = membre ? (membre.nom || membre.prenom || 'Membre') : 'Membre';
+            
+            // Afficher la confirmation
+            showConfirm(
+                'Supprimer le membre',
+                `Êtes-vous sûr de vouloir supprimer "${nomMembre}" ?\n\nCette action est irréversible et supprimera définitivement toutes les données du membre.`,
+                (confirmed) => {
+                    if (confirmed) {
+                        // Effectuer la suppression
+                        supprimerMembre(memberId, nomMembre);
+                    }
+                }
+            );
+        }
+        
+        function supprimerMembre(memberId, nomMembre) {
+            console.log('🗑️ Suppression confirmée pour:', nomMembre);
+            
+            // Afficher un indicateur de chargement
+            showNotification('Suppression en cours...', 'info', 2000);
+            
+            // Simuler la suppression (remplacer par un appel API réel)
+            setTimeout(() => {
+                // Supprimer la carte du DOM
+                const carte = document.querySelector(`[data-id="${memberId}"]`);
+                if (carte) {
+                    // Animation de suppression
+                    carte.style.transform = 'scale(0.8)';
+                    carte.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        carte.remove();
+                        console.log('✅ Carte supprimée du DOM');
+                    }, 300);
+                }
+                
+                // Supprimer du tableau si en vue tableau
+                if (vueActuelle === 'tableau') {
+                    const ligne = document.querySelector(`tr[data-name*="${nomMembre.toLowerCase()}"]`);
+                    if (ligne) {
+                        ligne.style.transform = 'scale(0.8)';
+                        ligne.style.opacity = '0';
+                        
+                        setTimeout(() => {
+                            ligne.remove();
+                            console.log('✅ Ligne supprimée du tableau');
+                        }, 300);
+                    }
+                }
+                
+                // Supprimer des données JavaScript
+                const index = membresData.findIndex(m => m.id == memberId);
+                if (index !== -1) {
+                    membresData.splice(index, 1);
+                    console.log('✅ Membre supprimé des données');
+                }
+                
+                // Afficher le message de succès
+                showNotification(`Membre "${nomMembre}" supprimé avec succès !`, 'success');
+                
+                // Mettre à jour les statistiques si nécessaire
+                mettreAJourStatistiques();
+                
+            }, 1000);
+        }
+        
+        function mettreAJourStatistiques() {
+            // Mettre à jour le compteur de membres
+            const compteurMembres = document.querySelector('.metric-value');
+            if (compteurMembres) {
+                compteurMembres.textContent = membresData.length;
             }
+            
+            console.log('📊 Statistiques mises à jour');
         }
         
         function exportMemberData() {
