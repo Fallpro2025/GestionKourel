@@ -1,0 +1,78 @@
+SAUVEGARDE - CORRECTION PROBLÈME HEURE ET MINUTES RETARD
+=========================================================
+
+PROBLÈMES IDENTIFIÉS :
+1. L'heure d'arrivée affiche 13:30 au lieu de 12:30 (1h de plus) - problème de fuseau horaire
+2. Pas de minutes de retard affichées sous le statut malgré le calcul correct dans le modal
+
+CORRECTIONS APPLIQUÉES :
+
+1. CORRECTION DU FUSEAU HORAIRE :
+```php
+// AVANT (problématique)
+🕐 {{ $presence->heure_arrivee->format('H:i') }}
+
+// APRÈS (corrigé)
+🕐 {{ $presence->heure_arrivee->setTimezone('Europe/Paris')->format('H:i') }}
+```
+
+2. AFFICHAGE DES MINUTES DE RETARD :
+```php
+// AVANT (ne s'affichait que si > 0)
+@if($presence && $presence->minutes_retard > 0 && $statutCourant === 'retard')
+
+// APRÈS (s'affiche même si = 0)
+@if($presence && $presence->minutes_retard !== null && $statutCourant === 'retard')
+```
+
+CAUSE DU PROBLÈME DE L'HEURE :
+
+1. **Fuseau horaire** :
+   - Laravel stocke les heures en UTC
+   - L'affichage sans conversion montre UTC +1h
+   - La conversion vers 'Europe/Paris' corrige l'affichage
+
+2. **Minutes de retard** :
+   - La condition `> 0` empêchait l'affichage des 0 minutes
+   - Maintenant affiche même 0 min pour le statut "retard"
+
+RÉSULTAT ATTENDU :
+
+1. **Heure d'arrivée** :
+   - AVANT : 🕐 13:30 (incorrect)
+   - APRÈS : 🕐 12:30 (correct)
+
+2. **Minutes de retard** :
+   - AVANT : Pas d'affichage
+   - APRÈS : ⏳ 30 min de retard (même si 0 min)
+
+3. **Affichage complet** :
+   ```
+   🟠 En retard
+   🕐 12:30 (30 min)
+   ⏳ 30 min de retard
+   ```
+
+TESTS À EFFECTUER :
+
+1. **Test heure** :
+   - Recharger la page
+   - Vérifier que l'heure affiche 12:30 au lieu de 13:30
+
+2. **Test minutes** :
+   - Vérifier que les minutes de retard s'affichent sous le statut
+   - Même si elles sont à 0
+
+3. **Test complet** :
+   - Modifier une présence avec retard
+   - Vérifier l'affichage complet avec heure et minutes
+
+AVANTAGES :
+
+✅ **Heure correcte** : Plus de décalage de 1h
+✅ **Minutes visibles** : Affichage même à 0 min
+✅ **Information complète** : Heure + minutes + statut
+✅ **Cohérence** : Même affichage que le calcul du modal
+
+DATE : $(date)
+STATUT : CORRECTIONS APPLIQUÉES

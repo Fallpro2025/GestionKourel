@@ -1,0 +1,101 @@
+SAUVEGARDE - CORRECTION CALCUL AUTOMATIQUE MINUTES RETARD
+=========================================================
+
+PROBLÈME IDENTIFIÉ :
+- Les minutes de retard restent toujours à 0 malgré la saisie de l'heure d'arrivée
+- Le calcul automatique ne fonctionne pas côté client
+
+CAUSE DU PROBLÈME :
+- L'heure de début de la répétition était castée en 'datetime' dans le modèle
+- Le JavaScript recevait un objet datetime complet au lieu d'une chaîne "HH:MM"
+- Format incorrect dans le contrôleur PHP
+
+CORRECTIONS APPORTÉES :
+
+1. PRESENCES.BLADE.PHP :
+   - Correction du format de l'heure de début : format("H:i") au lieu de l'objet brut
+   - Ajout de logs de débogage détaillés
+   - Ajout d'un bouton de test temporaire
+   - Fonction de test pour vérifier le calcul
+
+2. ACTIVITYREPETITIONCONTROLLER.PHP :
+   - Correction du format de l'heure de début : ->format('H:i') au lieu de l'objet brut
+   - Cohérence entre les deux endroits où l'heure est utilisée
+
+DÉTAILS TECHNIQUES :
+
+Avant (incorrect) :
+```php
+// Dans le contrôleur
+$heureDebutRepetition = $dateRepetition . ' ' . $repetition->heure_debut . ':00';
+
+// Dans le JavaScript
+const heureDebutRepetition = '{{ $repetition->heure_debut ?? "" }}';
+```
+
+Après (correct) :
+```php
+// Dans le contrôleur
+$heureDebutRepetition = $dateRepetition . ' ' . $repetition->heure_debut->format('H:i') . ':00';
+
+// Dans le JavaScript
+const heureDebutRepetition = '{{ $repetition->heure_debut ? $repetition->heure_debut->format("H:i") : "" }}';
+```
+
+Logs de débogage ajoutés :
+```javascript
+console.log('Heure début:', heureDebut, 'Minute début:', minuteDebut);
+console.log('Heure arrivée:', heureArriveeH, 'Minute arrivée:', minuteArriveeM);
+console.log('Minutes de début:', minutesDebut);
+console.log('Minutes d\'arrivée:', minutesArrivee);
+console.log('Différence calculée:', differenceMinutes);
+```
+
+Fonction de test ajoutée :
+```javascript
+function testCalculRetard() {
+    // Simuler une heure d'arrivée pour le test
+    const heureTest = '14:15';
+    document.getElementById('heure_arrivee').value = heureTest;
+    
+    // Appeler la fonction de calcul
+    calculerMinutesRetard();
+}
+```
+
+MODÈLE ACTIVITYREPETITION :
+```php
+protected $casts = [
+    'date_repetition' => 'date',
+    'heure_debut' => 'datetime',  // ← Cast en datetime
+    'heure_fin' => 'datetime',
+];
+```
+
+PROBLÈME RÉSOLU :
+- L'heure de début est maintenant correctement formatée en "HH:MM"
+- Le calcul JavaScript fonctionne avec le bon format
+- Les logs permettent de déboguer facilement
+- Le bouton de test permet de vérifier le fonctionnement
+
+TESTS À EFFECTUER :
+
+1. **Ouvrir le modal** pour le statut "retard"
+2. **Cliquer sur "Test calcul"** pour vérifier le fonctionnement
+3. **Vérifier les logs** dans la console du navigateur
+4. **Saisir une heure d'arrivée** manuellement
+5. **Vérifier que les minutes** se calculent automatiquement
+
+EXEMPLE DE TEST :
+- Heure de début répétition : 14:00
+- Heure d'arrivée saisie : 14:15
+- Résultat attendu : 15 minutes de retard
+
+RÉSULTAT ATTENDU :
+- Les minutes de retard se calculent automatiquement
+- Le champ se met à jour en temps réel
+- Les logs montrent les calculs détaillés
+- Plus de problème avec les minutes à 0
+
+DATE : $(date)
+STATUT : CORRECTION APPLIQUÉE

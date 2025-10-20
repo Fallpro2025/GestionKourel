@@ -153,7 +153,7 @@
 </div>
 
 <!-- Modal Ajout de Rôle - Design Moderne -->
-<div id="modalAjoutRole" class="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full hidden z-50 transition-all duration-300">
+<div id="modalAjoutRole" class="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full hidden z-[2200] transition-all duration-300">
     <div class="relative min-h-screen flex items-center justify-center p-4">
         <!-- Overlay avec animation -->
         <div class="fixed inset-0 bg-gradient-to-br from-blue-900/20 via-purple-900/20 to-pink-900/20 backdrop-blur-md"></div>
@@ -245,7 +245,7 @@
 </div>
 
 <!-- Modal Modification de Rôle - Design Moderne -->
-<div id="modalModifRole" class="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full hidden z-50 transition-all duration-300">
+<div id="modalModifRole" class="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full hidden z-[2200] transition-all duration-300">
     <div class="relative min-h-screen flex items-center justify-center p-4">
         <!-- Overlay avec animation -->
         <div class="fixed inset-0 bg-gradient-to-br from-purple-900/20 via-pink-900/20 to-red-900/20 backdrop-blur-md"></div>

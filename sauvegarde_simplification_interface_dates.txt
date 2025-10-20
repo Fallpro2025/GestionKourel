@@ -1,0 +1,152 @@
+SAUVEGARDE - SIMPLIFICATION INTERFACE DATES
+===========================================
+
+Date: 30/09/2025
+Projet: Gestion Kourel
+
+PROBLÈME IDENTIFIÉ
+==================
+L'interface affichait trop de champs de dates (début/fin) ce qui créait de la 
+confusion pour l'utilisateur :
+- Dates pour l'activité simple
+- Dates pour la période de génération des répétitions
+- Horaires pour chaque jour
+
+SOLUTION APPLIQUÉE
+==================
+- Masquage automatique des dates d'activité quand "Avec répétitions" est sélectionné
+- Affichage uniquement des dates de génération pour les répétitions
+- Interface plus claire et moins confuse
+- Validation séparée pour chaque type de dates
+
+FICHIER MODIFIÉ
+===============
+- resources/views/activites/create.blade.php
+
+CHANGEMENTS EFFECTUÉS
+=====================
+
+1. MASQUAGE INTELLIGENT DES SECTIONS
+------------------------------------
+AVANT:
+- Toutes les sections visibles en même temps
+- Confusion entre les différents types de dates
+
+APRÈS:
+- Section "Dates" masquée pour les répétitions
+- Section "Répétitions" masquée pour les activités simples
+- Affichage conditionnel selon le choix
+
+2. AMÉLIORATION DE L'INTERFACE
+------------------------------
+- Titre explicite "Période de génération"
+- Description claire du fonctionnement
+- Validation séparée pour chaque type
+
+3. GESTION JAVASCRIPT
+---------------------
+- Toggle automatique des sections
+- Validation en temps réel pour chaque type de dates
+- Gestion des erreurs spécifiques
+
+FONCTIONNEMENT
+==============
+
+1. ACTIVITÉ SIMPLE
+------------------
+- Affichage des champs "Date de début" et "Date de fin"
+- Section répétitions masquée
+- Validation des dates d'activité
+
+2. AVEC RÉPÉTITIONS
+-------------------
+- Masquage des champs "Date de début" et "Date de fin"
+- Affichage de la section répétitions
+- Affichage des champs "Période de génération"
+- Validation des dates de génération
+
+AVANTAGES
+=========
+
+1. CLARTÉ
+---------
+- Interface moins chargée
+- Champs pertinents selon le contexte
+- Moins de confusion pour l'utilisateur
+
+2. LOGIQUE
+----------
+- Séparation claire entre activité simple et répétitions
+- Champs adaptés au contexte
+- Validation appropriée
+
+3. EXPÉRIENCE UTILISATEUR
+-------------------------
+- Interface plus intuitive
+- Moins d'erreurs de saisie
+- Navigation plus fluide
+
+4. MAINTENABILITÉ
+-----------------
+- Code plus organisé
+- Validation séparée
+- Gestion d'erreurs spécifique
+
+STRUCTURE DE L'INTERFACE
+========================
+
+1. Activité Simple
+- Type et nom
+- Description
+- Dates (début/fin) ← VISIBLE
+- Lieu et responsable
+- Statut
+- Configuration
+
+2. Avec Répétitions
+- Type et nom
+- Description
+- Dates (début/fin) ← MASQUÉ
+- Lieu et responsable
+- Statut
+- Configuration des répétitions ← VISIBLE
+  - Horaires prédéfinis
+  - Jours avec horaires spécifiques
+  - Période de génération ← VISIBLE
+
+VALIDATION
+==========
+
+1. Activités Simples
+- Date de fin > Date de début
+- Validation en temps réel
+
+2. Répétitions
+- Date de fin génération > Date de début génération
+- Au moins un jour avec horaires définis
+- Validation en temps réel
+
+EXEMPLES D'UTILISATION
+======================
+
+1. Créer une activité simple
+- Sélectionner "Activité simple"
+- Remplir les champs (dates visibles)
+- Soumettre
+
+2. Créer des répétitions
+- Sélectionner "Avec répétitions"
+- Choisir les jours et horaires
+- Définir la période de génération
+- Soumettre
+
+STATUT
+======
+✅ Interface simplifiée et clarifiée
+✅ Masquage intelligent des sections
+✅ Validation séparée pour chaque type
+✅ Expérience utilisateur améliorée
+✅ Code plus maintenable
+
+L'interface est maintenant plus claire et moins confuse, avec une séparation 
+logique entre les activités simples et les répétitions.

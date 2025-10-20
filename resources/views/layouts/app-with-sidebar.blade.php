@@ -103,7 +103,7 @@
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 min-h-screen">
     <div id="app">
         <!-- Sidebar Navigation -->
-        <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white/10 backdrop-blur-xl border-r border-white/20 sidebar-transition">
+        <div class="fixed inset-y-0 left-0 z-[2000] w-64 bg-white/10 backdrop-blur-xl border-r border-white/20 sidebar-transition">
             <div class="flex flex-col h-full">
                 <!-- Logo Section -->
                 <div class="flex items-center justify-center h-20 border-b border-white/20">
@@ -156,7 +156,7 @@
                         Événements
                     </a>
                     
-                    <a href="/alertes" class="nav-item flex items-center px-4 py-3 text-white/80 rounded-xl hover:bg-white/20 hover:text-white transition-all duration-300 {{ request()->is('alertes*') ? 'bg-white/20 text-white' : '' }}">
+                    <a href="{{ route('alertes.index') }}" class="nav-item flex items-center px-4 py-3 text-white/80 rounded-xl hover:bg-white/20 hover:text-white transition-all duration-300 {{ request()->is('alertes*') ? 'bg-white/20 text-white' : '' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4.828 7l2.586 2.586a2 2 0 002.828 0L12.828 7H4.828z"></path>
                         </svg>
@@ -200,5 +200,6 @@
     
     <!-- Scripts Section -->
     @yield('scripts')
+    @stack('scripts')
 </body>
 </html>

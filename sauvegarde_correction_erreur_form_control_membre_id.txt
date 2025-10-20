@@ -1,0 +1,80 @@
+SAUVEGARDE - CORRECTION ERREUR FORM CONTROL MEMBRE_ID
+=====================================================
+
+PROBLÈME IDENTIFIÉ :
+- Erreur HTML5 : "An invalid form control with name='membre_id' is not focusable"
+- Le champ select avec name="membre_id" est masqué (hidden) mais garde l'attribut required
+- Conflit entre l'attribut required et la classe hidden
+
+CAUSE DU PROBLÈME :
+- En mode modification, le select membre_id est masqué avec la classe "hidden"
+- Mais l'attribut "required" reste présent
+- HTML5 ne peut pas valider un champ masqué qui est requis
+- Cela cause l'erreur lors de la soumission du formulaire
+
+SOLUTION APPLIQUÉE :
+
+1. SUPPRESSION DE L'ATTRIBUT REQUIRED EN MODE MODIFICATION :
+```javascript
+// Dans modifierPresenceRepetition
+const membreSelect = document.getElementById('membre_id');
+membreSelect.classList.add('hidden');
+membreSelect.removeAttribute('required'); // Supprimer l'attribut required quand masqué
+```
+
+2. RESTAURATION DE L'ATTRIBUT REQUIRED EN MODE CRÉATION :
+```javascript
+// Dans desactiverModeModification
+const membreSelect = document.getElementById('membre_id');
+membreSelect.classList.remove('hidden');
+membreSelect.setAttribute('required', 'required'); // Remettre l'attribut required
+```
+
+LOGIQUE DE FONCTIONNEMENT :
+
+1. **Mode création** :
+   - Select membre_id visible
+   - Attribut required présent
+   - Validation HTML5 normale
+
+2. **Mode modification** :
+   - Select membre_id masqué (hidden)
+   - Attribut required supprimé
+   - Pas de conflit de validation
+
+3. **Retour en mode création** :
+   - Select membre_id visible
+   - Attribut required restauré
+   - Validation HTML5 normale
+
+AVANTAGES :
+
+✅ **Plus d'erreur HTML5** : Conflit résolu entre hidden et required
+✅ **Validation correcte** : Le champ est requis seulement quand visible
+✅ **Fonctionnement fluide** : Pas d'interruption lors de la soumission
+✅ **Cohérence** : Gestion appropriée des attributs selon le mode
+
+TESTS À EFFECTUER :
+
+1. **Test mode création** :
+   - Ouvrir le modal normalement
+   - Vérifier que le select membre_id est requis
+   - Soumettre sans sélectionner → Doit afficher l'erreur de validation
+
+2. **Test mode modification** :
+   - Cliquer sur "Modifier" pour une présence
+   - Vérifier qu'il n'y a plus d'erreur HTML5
+   - Soumettre → Doit fonctionner sans erreur
+
+3. **Test retour en mode création** :
+   - Fermer le modal après modification
+   - Rouvrir le modal
+   - Vérifier que le select est à nouveau requis
+
+RÉSULTAT ATTENDU :
+- Plus d'erreur "An invalid form control with name='membre_id' is not focusable"
+- Modal de modification fonctionnel
+- Validation HTML5 appropriée selon le mode
+
+DATE : $(date)
+STATUT : CORRECTION APPLIQUÉE

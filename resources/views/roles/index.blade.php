@@ -122,8 +122,23 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4">
-                                <div class="text-sm text-white">
-                                    {{ count($role->permissions ?? []) }} permission{{ count($role->permissions ?? []) > 1 ? 's' : '' }}
+                                @php($perms = is_countable($role->permissions ?? null) ? $role->permissions : [])
+                                @php($totalPerms = count($perms))
+                                <div class="flex flex-wrap items-center gap-2">
+                                    @foreach(array_slice($perms, 0, 3) as $perm)
+                                        @php($label = ucwords(str_replace('_', ' ', $perm)))
+                                        <span class="px-2.5 py-1 text-[11px] font-medium rounded-full bg-gradient-to-r from-blue-500/20 to-indigo-500/20 text-blue-200 border border-blue-400/30 hover:from-blue-500/30 hover:to-indigo-500/30 transition-smooth">
+                                            <i class="fas fa-check-circle mr-1 text-blue-300"></i>{{ $label }}
+                                        </span>
+                                    @endforeach
+                                    @if($totalPerms > 3)
+                                        <button onclick="voirRole({{ $role->id }})" class="px-2.5 py-1 text-[11px] font-semibold rounded-full bg-white/10 text-white border border-white/20 hover:bg-white/15 transition-smooth">
+                                            +{{ $totalPerms - 3 }}
+                                        </button>
+                                    @endif
+                                    @if($totalPerms === 0)
+                                        <span class="text-sm text-white/60">Aucune permission</span>
+                                    @endif
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -163,7 +178,7 @@
 </div>
 
 <!-- Modal Ajout/Modification -->
-<div id="modalRole" class="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full hidden z-50">
+<div id="modalRole" class="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full hidden z-[2200]">
     <div class="relative top-20 mx-auto p-5 w-11/12 md:w-3/4 lg:w-1/2">
         <div class="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/30 overflow-hidden">
             <div class="px-6 py-4 bg-gradient-to-r from-blue-500/20 to-purple-500/20 border-b border-white/20">
@@ -229,21 +244,20 @@
     </div>
 </div>
 
-<!-- Modal Détails -->
-<div id="modalDetails" class="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full hidden z-50">
-    <div class="relative top-20 mx-auto p-5 w-11/12 md:w-3/4 lg:w-1/2">
-        <div class="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/30 overflow-hidden">
-            <div class="px-6 py-4 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-b border-white/20">
+<!-- Modal Détails (style unifié) -->
+<div id="modalDetails" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[2200] hidden">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 w-full max-w-lg overflow-hidden">
+            <div class="px-6 py-4 border-b border-white/20">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-xl font-bold text-gray-800">Détails du Rôle</h3>
-                    <button onclick="fermerModalDetails()" class="text-gray-500 hover:text-gray-700 transition-colors duration-200">
+                    <h3 class="text-lg font-semibold text-white">Détails du Rôle</h3>
+                    <button onclick="fermerModalDetails()" class="text-white/70 hover:text-white transition-smooth">
                         <i class="fas fa-times text-xl"></i>
                     </button>
                 </div>
             </div>
-            
             <div class="p-6">
-                <div id="contenuDetails" class="space-y-4">
+                <div id="contenuDetails" class="space-y-4 text-white">
                     <!-- Contenu dynamique -->
                 </div>
             </div>

@@ -183,7 +183,27 @@ Route::get('/test-sans-alertes', function () {
 Route::resource('activites', App\Http\Controllers\ActiviteController::class);
 Route::get('/activites/{activite}/presences', [App\Http\Controllers\ActiviteController::class, 'presences'])->name('activites.presences');
 Route::post('/activites/{activite}/marquer-presence', [App\Http\Controllers\ActiviteController::class, 'marquerPresence'])->name('activites.marquer-presence');
+Route::put('/presences/{presence}', [App\Http\Controllers\ActiviteController::class, 'modifierPresence'])->name('presences.update');
 Route::get('/activites/{activite}/statistiques', [App\Http\Controllers\ActiviteController::class, 'statistiques'])->name('activites.statistiques');
+
+// Routes pour les répétitions d'activités
+Route::prefix('activites/{activite}')->group(function () {
+    Route::get('repetitions', [App\Http\Controllers\ActivityRepetitionController::class, 'index'])->name('activites.repetitions.index');
+    Route::get('repetitions/create', [App\Http\Controllers\ActivityRepetitionController::class, 'create'])->name('activites.repetitions.create');
+    Route::post('repetitions', [App\Http\Controllers\ActivityRepetitionController::class, 'store'])->name('activites.repetitions.store');
+    Route::post('repetitions/generer', [App\Http\Controllers\ActivityRepetitionController::class, 'genererRepetitions'])->name('activites.repetitions.generer');
+});
+
+// Routes pour les répétitions individuelles
+Route::prefix('repetitions/{repetition}')->group(function () {
+    Route::get('/', [App\Http\Controllers\ActivityRepetitionController::class, 'show'])->name('repetitions.show');
+    Route::get('edit', [App\Http\Controllers\ActivityRepetitionController::class, 'edit'])->name('repetitions.edit');
+    Route::put('/', [App\Http\Controllers\ActivityRepetitionController::class, 'update'])->name('repetitions.update');
+    Route::delete('/', [App\Http\Controllers\ActivityRepetitionController::class, 'destroy'])->name('repetitions.destroy');
+    Route::get('presences', [App\Http\Controllers\ActivityRepetitionController::class, 'presences'])->name('repetitions.presences');
+    Route::post('marquer-presence', [App\Http\Controllers\ActivityRepetitionController::class, 'marquerPresence'])->name('repetitions.marquer-presence');
+    Route::get('statistiques', [App\Http\Controllers\ActivityRepetitionController::class, 'statistiques'])->name('repetitions.statistiques');
+});
 
 // Routes pour les événements
 Route::resource('evenements', App\Http\Controllers\EvenementController::class);
@@ -192,10 +212,14 @@ Route::post('/evenements/{evenement}/ajouter-participant', [App\Http\Controllers
 Route::delete('/evenements/{evenement}/retirer-participant', [App\Http\Controllers\EvenementController::class, 'retirerParticipant'])->name('evenements.retirer-participant');
 Route::get('/evenements/{evenement}/statistiques', [App\Http\Controllers\EvenementController::class, 'statistiques'])->name('evenements.statistiques');
 
-// Route Gestion des Alertes
-Route::get('/alertes', function () {
-    return view('alertes.alertes');
-})->name('alertes');
+// Routes pour les alertes
+Route::resource('alertes', App\Http\Controllers\AlerteController::class);
+Route::post('/alertes/{alerte}/marquer-lue', [App\Http\Controllers\AlerteController::class, 'marquerCommeLue'])->name('alertes.marquer-lue');
+Route::post('/alertes/{alerte}/resoudre', [App\Http\Controllers\AlerteController::class, 'resoudre'])->name('alertes.resoudre');
+Route::post('/alertes/marquer-toutes-lues', [App\Http\Controllers\AlerteController::class, 'marquerToutesCommeLues'])->name('alertes.marquer-toutes-lues');
+Route::get('/alertes/non-lues', [App\Http\Controllers\AlerteController::class, 'nonLues'])->name('alertes.non-lues');
+Route::get('/alertes/critiques', [App\Http\Controllers\AlerteController::class, 'alertesCritiques'])->name('alertes.critiques');
+Route::get('/alertes/statistiques', [App\Http\Controllers\AlerteController::class, 'statistiques'])->name('alertes.statistiques');
 
 // Route de test pour vérifier que Laravel fonctionne
 Route::get('/test-laravel', function () {

@@ -56,6 +56,110 @@
                     </div>
                 </div>
 
+                <!-- Type de création -->
+                <div class="space-y-4">
+                    <label class="block text-sm font-semibold text-white/80">Type de création</label>
+                    <div class="flex space-x-6">
+                        <label class="flex items-center">
+                            <input type="radio" name="type_creation" value="simple" class="mr-2 text-blue-500" checked>
+                            <span class="text-white">Activité simple</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="type_creation" value="repetition" class="mr-2 text-blue-500">
+                            <span class="text-white">Avec répétitions</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Section Répétitions (cachée par défaut) -->
+                <div id="sectionRepetitions" class="space-y-6 hidden">
+                    <div class="bg-white/5 rounded-xl p-6 border border-white/10">
+                        <h3 class="text-lg font-semibold text-white mb-4">Configuration des répétitions</h3>
+                        
+                        <!-- Horaires prédéfinis -->
+                        <div class="space-y-4">
+                            <label class="block text-sm font-semibold text-white/80">Horaires prédéfinis</label>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="horaires_predefinis[]" value="mardi_soir" class="mr-2 text-blue-500">
+                                    <span class="text-white text-sm">Mardi Soir</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="horaires_predefinis[]" value="dimanche_midi" class="mr-2 text-blue-500">
+                                    <span class="text-white text-sm">Dimanche Midi</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="horaires_predefinis[]" value="jeudi_goudi" class="mr-2 text-blue-500">
+                                    <span class="text-white text-sm">Jeudi Goudi</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="horaires_predefinis[]" value="personnalise" class="mr-2 text-blue-500">
+                                    <span class="text-white text-sm">Personnalisé</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Horaires personnalisés -->
+                        <div id="horairesPersonnalises" class="space-y-4 hidden">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="heure_debut_perso" class="block text-sm font-semibold text-white/80">Heure de début</label>
+                                    <input type="time" id="heure_debut_perso" name="heure_debut_perso"
+                                           class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white">
+                                </div>
+                                <div>
+                                    <label for="heure_fin_perso" class="block text-sm font-semibold text-white/80">Heure de fin</label>
+                                    <input type="time" id="heure_fin_perso" name="heure_fin_perso"
+                                           class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Jours de répétition avec horaires -->
+                        <div class="space-y-4">
+                            <label class="block text-sm font-semibold text-white/80">Jours de répétition avec horaires</label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                @php
+                                    $jours = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
+                                @endphp
+                                @foreach($jours as $jour)
+                                <div class="flex items-center space-x-3">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" name="jours_repetition[]" value="{{ $jour }}" class="mr-2 text-blue-500">
+                                        <span class="text-white capitalize">{{ $jour }}</span>
+                                    </label>
+                                    <div class="flex space-x-2">
+                                        <input type="time" name="horaires[{{ $jour }}][debut]" 
+                                               class="w-20 px-2 py-1 bg-white/10 border border-white/20 rounded text-white text-sm" 
+                                               placeholder="Début">
+                                        <input type="time" name="horaires[{{ $jour }}][fin]" 
+                                               class="w-20 px-2 py-1 bg-white/10 border border-white/20 rounded text-white text-sm" 
+                                               placeholder="Fin">
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- Période de génération -->
+                        <div class="space-y-4">
+                            <label class="block text-sm font-semibold text-white/80">Période de génération</label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="date_debut_repetition" class="block text-sm font-semibold text-white/80">Date de début</label>
+                                    <input type="date" id="date_debut_repetition" name="date_debut_repetition"
+                                           class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white">
+                                </div>
+                                <div>
+                                    <label for="date_fin_repetition" class="block text-sm font-semibold text-white/80">Date de fin</label>
+                                    <input type="date" id="date_fin_repetition" name="date_fin_repetition"
+                                           class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Description -->
                 <div class="space-y-2">
                     <label for="description" class="block text-sm font-semibold text-white/80">Description</label>
@@ -65,18 +169,18 @@
                 </div>
 
                 <!-- Dates -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div id="sectionDates" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
                         <label for="date_debut" class="block text-sm font-semibold text-white/80">Date de début <span class="text-red-400">*</span></label>
                         <input type="datetime-local" id="date_debut" name="date_debut" required 
-                               value="{{ $activite->date_debut->format('Y-m-d\TH:i') }}"
+                               value="{{ $activite->date_debut ? $activite->date_debut->format('Y-m-d\TH:i') : '' }}"
                                class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white">
                     </div>
 
                     <div class="space-y-2">
                         <label for="date_fin" class="block text-sm font-semibold text-white/80">Date de fin <span class="text-red-400">*</span></label>
                         <input type="datetime-local" id="date_fin" name="date_fin" required
-                               value="{{ $activite->date_fin->format('Y-m-d\TH:i') }}"
+                               value="{{ $activite->date_fin ? $activite->date_fin->format('Y-m-d\TH:i') : '' }}"
                                class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white">
                     </div>
                 </div>
@@ -145,18 +249,132 @@
 
 @section('scripts')
 <script>
+// Gestion du type de création
+document.addEventListener('DOMContentLoaded', function() {
+    const typeCreationRadios = document.querySelectorAll('input[name="type_creation"]');
+    const sectionRepetitions = document.getElementById('sectionRepetitions');
+    const sectionDates = document.getElementById('sectionDates');
+    
+    // Fonction pour gérer l'affichage des sections
+    function toggleSections() {
+        const selectedType = document.querySelector('input[name="type_creation"]:checked').value;
+        const dateDebutInput = document.getElementById('date_debut');
+        const dateFinInput = document.getElementById('date_fin');
+        
+        if (selectedType === 'repetition') {
+            sectionRepetitions.classList.remove('hidden');
+            sectionDates.classList.add('hidden');
+            // Retirer l'attribut required des dates
+            if (dateDebutInput) dateDebutInput.removeAttribute('required');
+            if (dateFinInput) dateFinInput.removeAttribute('required');
+        } else {
+            sectionRepetitions.classList.add('hidden');
+            sectionDates.classList.remove('hidden');
+            // Ajouter l'attribut required aux dates
+            if (dateDebutInput) dateDebutInput.setAttribute('required', 'required');
+            if (dateFinInput) dateFinInput.setAttribute('required', 'required');
+        }
+    }
+    
+    // Écouter les changements de type de création
+    typeCreationRadios.forEach(radio => {
+        radio.addEventListener('change', toggleSections);
+    });
+    
+    // Initialiser l'affichage
+    toggleSections();
+    
+    // Gestion des horaires prédéfinis
+    const horairesPredefinisCheckboxes = document.querySelectorAll('input[name="horaires_predefinis[]"]');
+    const horairesPersonnalises = document.getElementById('horairesPersonnalises');
+    
+    horairesPredefinisCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            // Vérifier si "personnalise" est coché
+            const personnaliseCheckbox = document.querySelector('input[name="horaires_predefinis[]"][value="personnalise"]');
+            
+            if (personnaliseCheckbox && personnaliseCheckbox.checked) {
+                horairesPersonnalises.classList.remove('hidden');
+            } else {
+                horairesPersonnalises.classList.add('hidden');
+            }
+            
+            // Auto-remplir les jours et horaires selon les sélections
+            autoRemplirJoursEtHoraires();
+        });
+    });
+    
+    // Fonction pour auto-remplir les jours et horaires
+    function autoRemplirJoursEtHoraires() {
+        const horairesPredefinis = Array.from(document.querySelectorAll('input[name="horaires_predefinis[]"]:checked'))
+            .map(cb => cb.value);
+        
+        // Décocher tous les jours d'abord
+        document.querySelectorAll('input[name="jours_repetition[]"]').forEach(cb => cb.checked = false);
+        
+        // Vider tous les horaires
+        document.querySelectorAll('input[name^="horaires["]').forEach(input => input.value = '');
+        
+        // Appliquer les horaires prédéfinis
+        horairesPredefinis.forEach(horaire => {
+            switch(horaire) {
+                case 'mardi_soir':
+                    document.querySelector('input[name="jours_repetition[]"][value="mardi"]').checked = true;
+                    document.querySelector('input[name="horaires[mardi][debut]"]').value = '20:30';
+                    document.querySelector('input[name="horaires[mardi][fin]"]').value = '22:30';
+                    break;
+                case 'dimanche_midi':
+                    document.querySelector('input[name="jours_repetition[]"][value="dimanche"]').checked = true;
+                    document.querySelector('input[name="horaires[dimanche][debut]"]').value = '12:00';
+                    document.querySelector('input[name="horaires[dimanche][fin]"]').value = '15:00';
+                    break;
+                case 'jeudi_goudi':
+                    document.querySelector('input[name="jours_repetition[]"][value="jeudi"]').checked = true;
+                    document.querySelector('input[name="horaires[jeudi][debut]"]').value = '20:45';
+                    document.querySelector('input[name="horaires[jeudi][fin]"]').value = '21:15';
+                    break;
+            }
+        });
+    }
+    
+    // Auto-sélection des jours selon le type d'activité
+    const typeActivite = document.getElementById('type');
+    typeActivite.addEventListener('change', function() {
+        if (this.value === 'repetition') {
+            // Cocher les horaires prédéfinis pour répétition
+            document.querySelector('input[name="horaires_predefinis[]"][value="mardi_soir"]').checked = true;
+            document.querySelector('input[name="horaires_predefinis[]"][value="dimanche_midi"]').checked = true;
+            autoRemplirJoursEtHoraires();
+        } else if (this.value === 'goudi_aldiouma') {
+            // Cocher l'horaire prédéfini pour goudi aldiouma
+            document.querySelector('input[name="horaires_predefinis[]"][value="jeudi_goudi"]').checked = true;
+            autoRemplirJoursEtHoraires();
+        }
+    });
+});
+
 // Gestion du formulaire de modification
 document.getElementById('formEditActivite').addEventListener('submit', function(e) {
     e.preventDefault();
     
+    console.log('=== SOUMISSION FORMULAIRE MODIFICATION ===');
+    
     const formData = new FormData(this);
+    
+    // Afficher toutes les données du formulaire
+    console.log('Données du formulaire:');
+    for (let [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+    }
     
     // Validation de la configuration JSON si fournie
     const configuration = document.getElementById('configuration').value.trim();
     if (configuration) {
         try {
             JSON.parse(configuration);
+            console.log('Configuration JSON valide');
         } catch (error) {
+            console.error('Erreur JSON:', error);
             if (typeof alerteModerne !== 'undefined' && alerteModerne.toast) {
                 alerteModerne.error('Format JSON invalide pour la configuration');
             } else {
@@ -166,16 +384,30 @@ document.getElementById('formEditActivite').addEventListener('submit', function(
         }
     }
     
+    console.log('Envoi de la requête vers:', '{{ route("activites.update", $activite->id) }}');
+    
+    // Ajouter _method pour Laravel
+    formData.append('_method', 'PUT');
+    
     fetch('{{ route("activites.update", $activite->id) }}', {
-        method: 'PUT',
+        method: 'POST',
         headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: formData
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('=== RÉPONSE SERVEUR ===');
+        console.log('Status:', response.status);
+        console.log('Status Text:', response.statusText);
+        return response.json();
+    })
     .then(data => {
+        console.log('=== DONNÉES RÉPONSE ===');
+        console.log('Data:', data);
+        
         if (data.success) {
+            console.log('✅ Mise à jour réussie');
             if (typeof alerteModerne !== 'undefined' && alerteModerne.toast) {
                 alerteModerne.success(data.message);
             } else {
@@ -184,6 +416,16 @@ document.getElementById('formEditActivite').addEventListener('submit', function(
             // Rediriger vers la page de détails de l'activité
             window.location.href = '{{ route("activites.show", $activite->id) }}';
         } else {
+            console.error('❌ Erreur mise à jour:', data.message);
+            console.error('Erreurs détaillées:', data.errors);
+            
+            // Afficher les erreurs détaillées
+            if (data.errors) {
+                Object.keys(data.errors).forEach(field => {
+                    console.error(`Erreur ${field}:`, data.errors[field]);
+                });
+            }
+            
             if (typeof alerteModerne !== 'undefined' && alerteModerne.toast) {
                 alerteModerne.error(data.message);
             } else {
@@ -192,7 +434,7 @@ document.getElementById('formEditActivite').addEventListener('submit', function(
         }
     })
     .catch(error => {
-        console.error('Erreur:', error);
+        console.error('❌ Erreur catch:', error);
         if (typeof alerteModerne !== 'undefined' && alerteModerne.toast) {
             alerteModerne.error('Erreur lors de la mise à jour de l\'activité');
         } else {

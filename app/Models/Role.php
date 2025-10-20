@@ -23,6 +23,21 @@ class Role extends Model
     ];
 
     /**
+     * Garantir que l'attribut permissions est toujours un tableau
+     */
+    public function getPermissionsAttribute($value)
+    {
+        if (is_array($value)) {
+            return $value;
+        }
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            return is_array($decoded) ? $decoded : [];
+        }
+        return $value ?? [];
+    }
+
+    /**
      * Relation avec les membres ayant ce rôle (pour compatibilité)
      */
     public function membresDirects(): HasMany

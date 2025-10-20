@@ -1,0 +1,181 @@
+SAUVEGARDE - GESTION DES ACTIVITÉS ET RÉPÉTITIONS
+==================================================
+
+Date: 30/09/2025
+Projet: Gestion Kourel
+
+DESCRIPTION DU PROJET
+=====================
+Implémentation d'un système complet de gestion des activités avec répétitions, 
+gestion des présences, absences, retards et prestations pour chaque répétition.
+
+FONCTIONNALITÉS IMPLÉMENTÉES
+============================
+
+1. MODÈLES CRÉÉS/MODIFIÉS
+-------------------------
+- ActivityRepetition: Gestion des répétitions d'activités
+- PresenceRepetition: Gestion des présences pour les répétitions
+- Activite: Ajout de la relation avec les répétitions
+
+2. MIGRATIONS
+-------------
+- activity_repetitions: Table pour stocker les répétitions
+  * activite_id (référence vers activites)
+  * date_repetition (date de la répétition)
+  * heure_debut, heure_fin (horaires)
+  * lieu, statut, notes
+  * responsable_id (référence vers membres)
+
+- presence_repetitions: Table pour les présences des répétitions
+  * membre_id, repetition_id
+  * statut (present, absent_justifie, absent_non_justifie, retard)
+  * heure_arrivee, minutes_retard
+  * justification, latitude, longitude
+  * prestation_effectuee, notes_prestation
+
+3. CONTRÔLEURS
+--------------
+- ActivityRepetitionController: Gestion complète des répétitions
+  * CRUD des répétitions
+  * Génération automatique de répétitions par jours de semaine
+  * Gestion des présences par répétition
+  * Statistiques de présence
+
+4. ROUTES
+---------
+- /activites/{activite}/repetitions (index, create, store)
+- /activites/{activite}/repetitions/generer (génération automatique)
+- /repetitions/{repetition} (show, edit, update, destroy)
+- /repetitions/{repetition}/presences (gestion des présences)
+- /repetitions/{repetition}/marquer-presence (marquer présence)
+
+5. VUES
+-------
+- resources/views/activites/repetitions/index.blade.php
+  * Liste des répétitions avec statistiques
+  * Modal d'ajout de répétition
+  * Modal de génération automatique
+  * Actions (voir, modifier, présences, supprimer)
+
+- resources/views/activites/repetitions/presences.blade.php
+  * Gestion des présences pour une répétition
+  * Statistiques de présence
+  * Modal d'ajout de présence
+  * Champs conditionnels (retard, prestation)
+
+CARACTÉRISTIQUES PRINCIPALES
+============================
+
+1. JOURS ET HEURES CONFIGURABLES
+--------------------------------
+- Possibilité de définir des jours fixes mais modifiables
+- Génération automatique par jours de semaine
+- Horaires personnalisables par répétition
+
+2. GESTION DES PRÉSENCES
+------------------------
+- Statuts: Présent, Absent justifié, Absent non justifié, Retard
+- Enregistrement de l'heure d'arrivée
+- Calcul automatique des minutes de retard
+- Justifications pour les absences
+
+3. GESTION DES PRESTATIONS
+--------------------------
+- Marquer si une prestation a été effectuée
+- Notes sur la prestation
+- Suivi des performances
+
+4. STATISTIQUES
+---------------
+- Taux de présence par répétition
+- Nombre de présents, absents, retards
+- Évolution dans le temps
+
+5. DESIGN MODERNE
+-----------------
+- Interface glassmorphism cohérente avec le projet
+- Modals interactifs
+- Responsive design
+- Animations et transitions fluides
+
+FONCTIONNALITÉS AVANCÉES
+========================
+
+1. GÉNÉRATION AUTOMATIQUE
+-------------------------
+- Sélection des jours de la semaine
+- Période de génération (date début/fin)
+- Évite les doublons
+- Configuration des horaires et lieu
+
+2. GÉOLOCALISATION
+------------------
+- Support pour la géolocalisation des présences
+- Calcul de distance
+- Vérification de rayon acceptable
+
+3. VALIDATION ET SÉCURITÉ
+-------------------------
+- Validation des données côté serveur
+- Protection CSRF
+- Gestion des erreurs
+- Logs d'activité
+
+UTILISATION
+===========
+
+1. Accéder aux répétitions d'une activité
+2. Créer des répétitions manuellement ou automatiquement
+3. Gérer les présences pour chaque répétition
+4. Marquer les prestations effectuées
+5. Consulter les statistiques
+
+INTÉGRATION
+===========
+Le système s'intègre parfaitement avec l'existant:
+- Utilise les mêmes modèles (Membre, Activite)
+- Respecte le design system du projet
+- Compatible avec le système de notifications
+- Utilise les mêmes composants d'interface
+
+PROCHAINES ÉTAPES POSSIBLES
+===========================
+- Export des statistiques de présence
+- Notifications automatiques pour les absences
+- Calendrier des répétitions
+- Rapports de performance
+- Intégration avec un système de géolocalisation
+
+TECHNOLOGIES UTILISÉES
+======================
+- Laravel 11
+- MySQL
+- Tailwind CSS
+- JavaScript (Vanilla)
+- Carbon (dates)
+- Blade (templates)
+
+FICHIERS MODIFIÉS/CRÉÉS
+=======================
+- app/Models/ActivityRepetition.php
+- app/Models/PresenceRepetition.php
+- app/Models/Activite.php (modifié)
+- app/Http/Controllers/ActivityRepetitionController.php
+- database/migrations/2025_09_30_084352_create_activity_repetitions_table.php (modifié)
+- database/migrations/2025_09_30_135227_create_presence_repetitions_table.php
+- routes/web.php (modifié)
+- resources/views/activites/repetitions/index.blade.php
+- resources/views/activites/repetitions/presences.blade.php
+
+STATUT
+======
+✅ Modèles créés et configurés
+✅ Migrations exécutées
+✅ Contrôleurs implémentés
+✅ Routes configurées
+✅ Vues créées avec design moderne
+✅ Fonctionnalités de base opérationnelles
+
+Le système de gestion des activités avec répétitions est maintenant 
+pleinement fonctionnel et prêt à être utilisé.

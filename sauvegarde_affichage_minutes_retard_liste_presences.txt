@@ -1,0 +1,122 @@
+SAUVEGARDE - AFFICHAGE MINUTES DE RETARD DANS LA LISTE DES PRÉSENCES
+================================================================
+
+FONCTIONNALITÉ IMPLÉMENTÉE :
+- Affichage des minutes de retard entre parenthèses dans la liste des présences
+- Mise à jour dynamique de l'affichage après modification
+
+MODIFICATIONS APPORTÉES :
+
+1. AFFICHAGE STATIQUE (Blade Template) :
+```php
+$texteStatut = match($statutCourant) {
+    'present' => 'Présent',
+    'absent_justifie' => 'Absent (justifié)',
+    'absent_non_justifie' => 'Absent (non justifié)',
+    'retard' => $presence && $presence->minutes_retard > 0 
+        ? 'En retard (' . $presence->minutes_retard . ' min)' 
+        : 'En retard',
+    default => 'Inconnu'
+};
+```
+
+2. FONCTION JAVASCRIPT POUR MISE À JOUR DYNAMIQUE :
+```javascript
+function actualiserLignePresenceRepetition(presence) {
+    // Trouver la ligne correspondante
+    const ligne = document.querySelector(`tr[data-membre-id="${presence.membre_id}"]`);
+    
+    // Mettre à jour le statut avec les minutes de retard si applicable
+    const statutSpan = ligne.querySelector('.statut-presence');
+    if (statutSpan) {
+        let texteStatut = '';
+        let couleurStatut = '';
+        
+        switch(presence.statut) {
+            case 'retard':
+                texteStatut = presence.minutes_retard > 0 
+                    ? `En retard (${presence.minutes_retard} min)` 
+                    : 'En retard';
+                couleurStatut = 'orange';
+                break;
+            // ... autres cas
+        }
+        
+        statutSpan.textContent = texteStatut;
+        statutSpan.className = `statut-presence px-3 py-1 text-xs font-medium rounded-full bg-${couleurStatut}-500/20 text-${couleurStatut}-400 border border-${couleurStatut}-500/30`;
+    }
+    
+    // Mettre à jour les boutons d'action avec les nouvelles données
+    const boutonModifier = ligne.querySelector('.btn-modifier-presence');
+    if (boutonModifier) {
+        boutonModifier.setAttribute('data-statut-actuel', presence.statut);
+        boutonModifier.setAttribute('data-minutes-retard', presence.minutes_retard || 0);
+        // ... autres attributs
+    }
+}
+```
+
+LOGIQUE DE FONCTIONNEMENT :
+
+1. **Affichage initial** :
+   - Si statut = "retard" ET minutes_retard > 0 → "En retard (15 min)"
+   - Si statut = "retard" ET minutes_retard = 0 → "En retard"
+   - Autres statuts → Affichage normal
+
+2. **Mise à jour dynamique** :
+   - Après modification d'une présence
+   - La fonction actualiserLignePresenceRepetition est appelée
+   - Le statut est mis à jour avec les nouvelles minutes de retard
+   - Les boutons d'action sont mis à jour avec les nouvelles données
+
+3. **Cohérence des données** :
+   - Les attributs data-* des boutons sont mis à jour
+   - Permet une modification ultérieure avec les bonnes données
+
+EXEMPLES D'AFFICHAGE :
+
+1. **Retard avec minutes** :
+   - Statut : "En retard (15 min)"
+   - Couleur : Orange
+   - Icône : Badge orange avec texte
+
+2. **Retard sans minutes** :
+   - Statut : "En retard"
+   - Couleur : Orange
+   - Icône : Badge orange avec texte
+
+3. **Autres statuts** :
+   - Présent : "Présent" (vert)
+   - Absent justifié : "Absent (justifié)" (jaune)
+   - Absent non justifié : "Absent (non justifié)" (rouge)
+
+AVANTAGES :
+
+✅ **Information claire** : Les minutes de retard sont immédiatement visibles
+✅ **Cohérence** : Même affichage en statique et dynamique
+✅ **Mise à jour automatique** : Pas besoin de recharger la page
+✅ **Interface intuitive** : Information importante mise en évidence
+✅ **Données préservées** : Les boutons gardent les bonnes données
+
+TESTS À EFFECTUER :
+
+1. **Test affichage initial** :
+   - Vérifier qu'un retard avec minutes affiche "En retard (X min)"
+   - Vérifier qu'un retard sans minutes affiche "En retard"
+
+2. **Test modification** :
+   - Modifier une présence en retard
+   - Changer les minutes de retard
+   - Vérifier que l'affichage se met à jour automatiquement
+
+3. **Test cohérence** :
+   - Vérifier que les boutons "Modifier" ont les bonnes données
+   - Vérifier que la modification suivante fonctionne correctement
+
+RÉSULTAT ATTENDU :
+- Les minutes de retard sont affichées entre parenthèses dans la liste
+- L'affichage se met à jour automatiquement après modification
+- Interface plus informative et professionnelle
+
+DATE : $(date)
+STATUT : FONCTIONNALITÉ IMPLÉMENTÉE

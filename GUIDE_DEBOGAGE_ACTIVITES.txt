@@ -1,0 +1,227 @@
+GUIDE DE DÉBOGAGE - CRÉATION D'ACTIVITÉ
+========================================
+
+Date: 02/10/2025
+Projet: Gestion Kourel
+
+LOGS DE DÉBOGAGE AJOUTÉS
+========================
+
+1. DANS LE JAVASCRIPT (resources/views/activites/create.blade.php)
+------------------------------------------------------------------
+
+LORS DE LA SOUMISSION DU FORMULAIRE:
+```javascript
+console.log('Formulaire soumis !');
+console.log('Type de création:', typeCreation);
+```
+
+LORS DE LA CRÉATION D'ACTIVITÉ SIMPLE:
+```javascript
+console.log('Début création activité simple');
+console.log('FormData:', Array.from(formData.entries())); // Affiche toutes les données du formulaire
+```
+
+LORS DE LA RÉPONSE DU SERVEUR:
+```javascript
+console.log('Réponse reçue:', response);
+console.log('Status:', response.status);
+console.log('Données reçues:', data);
+```
+
+EN CAS D'ERREUR:
+```javascript
+console.error('Échec de création:', data);
+console.error('Erreurs de validation:', data.errors);
+console.error('Erreur complète:', error);
+console.error('Stack:', error.stack);
+```
+
+2. DANS LE CONTRÔLEUR (app/Http/Controllers/ActiviteController.php)
+-------------------------------------------------------------------
+
+AU DÉBUT DE LA MÉTHODE STORE:
+```php
+\Log::info('Tentative de création d\'activité', [
+    'data' => $request->all(),
+    'headers' => $request->headers->all()
+]);
+```
+
+EN CAS D'ERREUR DE VALIDATION:
+```php
+\Log::error('Erreurs de validation', [
+    'errors' => $validator->errors()->toArray(),
+    'data' => $request->all()
+]);
+```
+
+AVANT ET APRÈS LA CRÉATION:
+```php
+\Log::info('Données préparées pour création', ['data' => $data]);
+\Log::info('Activité créée avec succès', ['activite_id' => $activite->id]);
+```
+
+ÉTAPES DE DÉBOGAGE
+==================
+
+ÉTAPE 1: OUVRIR LA CONSOLE DU NAVIGATEUR
+-----------------------------------------
+1. Appuyer sur F12 ou Ctrl+Shift+I
+2. Aller dans l'onglet "Console"
+3. Garder la console ouverte
+
+ÉTAPE 2: TESTER LE FORMULAIRE
+-----------------------------
+1. Recharger la page de création d'activité
+2. Vérifier dans la console:
+   ✓ "DOM chargé, initialisation..."
+   ✓ "Formulaire trouvé: [object HTMLFormElement]"
+
+ÉTAPE 3: REMPLIR LE FORMULAIRE
+------------------------------
+1. Type: Choisir un type d'activité
+2. Nom: Entrer un nom
+3. Description: (optionnel)
+4. Statut: Choisir un statut
+5. Type de création: Simple ou Avec répétitions
+
+ÉTAPE 4: SOUMETTRE LE FORMULAIRE
+--------------------------------
+1. Cliquer sur "Créer l'activité"
+2. Observer les messages dans la console:
+   ✓ "Formulaire soumis !"
+   ✓ "Type de création: [simple/repetition]"
+   ✓ "Début création activité simple"
+   ✓ "FormData: [...]" (affiche les données)
+   ✓ "Réponse reçue: Response {status: 200, ...}"
+   ✓ "Données reçues: {success: true, ...}"
+
+ÉTAPE 5: VÉRIFIER LES LOGS SERVEUR
+----------------------------------
+1. Ouvrir storage/logs/laravel.log
+2. Chercher:
+   - "Tentative de création d'activité"
+   - "Erreurs de validation" (si erreur)
+   - "Activité créée avec succès" (si succès)
+
+PROBLÈMES POSSIBLES ET SOLUTIONS
+=================================
+
+PROBLÈME 1: Aucun message dans la console
+------------------------------------------
+CAUSE: JavaScript non chargé ou erreur avant le gestionnaire
+SOLUTION: 
+- Vérifier qu'il n'y a pas d'erreurs JavaScript avant
+- Recharger la page avec Ctrl+F5
+- Vider le cache du navigateur
+
+PROBLÈME 2: "Formulaire non trouvé"
+------------------------------------
+CAUSE: L'ID du formulaire ne correspond pas
+SOLUTION:
+- Vérifier que l'ID est bien "formCreateActivite"
+- Vérifier qu'il n'y a pas de duplication d'ID
+
+PROBLÈME 3: Erreurs de validation
+----------------------------------
+CAUSE: Données manquantes ou invalides
+SOLUTION:
+- Regarder "Erreurs de validation:" dans la console
+- Vérifier les champs requis (type, nom, statut)
+- Vérifier le format des dates
+
+PROBLÈME 4: Erreur réseau
+--------------------------
+CAUSE: Serveur non accessible ou route incorrecte
+SOLUTION:
+- Vérifier que le serveur Laravel tourne
+- Vérifier la route avec: php artisan route:list --name=activites.store
+- Vérifier le token CSRF
+
+PROBLÈME 5: Erreur 500 (serveur)
+---------------------------------
+CAUSE: Erreur dans le code PHP
+SOLUTION:
+- Consulter storage/logs/laravel.log
+- Vérifier la connexion à la base de données
+- Vérifier les champs fillable du modèle
+
+MESSAGES À RECHERCHER
+======================
+
+DANS LA CONSOLE:
+----------------
+✅ "DOM chargé, initialisation..." → JavaScript chargé
+✅ "Formulaire trouvé" → Formulaire initialisé
+✅ "Formulaire soumis !" → Soumission détectée
+✅ "Début création activité simple" → Fonction appelée
+✅ "FormData: [...]" → Données préparées
+✅ "Status: 200" → Requête réussie
+✅ "Données reçues: {success: true}" → Activité créée
+
+❌ "FormData: []" → Pas de données (problème formulaire)
+❌ "Status: 422" → Erreur de validation
+❌ "Status: 500" → Erreur serveur
+❌ "Erreurs de validation: {...}" → Champs invalides
+❌ Erreur catch → Problème réseau ou route
+
+DANS LES LOGS:
+--------------
+✅ "Tentative de création d'activité" → Requête reçue
+✅ "Données préparées pour création" → Validation passée
+✅ "Activité créée avec succès" → Création réussie
+
+❌ "Erreurs de validation" → Données invalides
+❌ "Erreur création activité" → Exception levée
+
+COMMANDES UTILES
+================
+
+VIDER LES CACHES:
+-----------------
+php artisan view:clear
+php artisan config:clear
+php artisan cache:clear
+
+VÉRIFIER LES ROUTES:
+-------------------
+php artisan route:list --name=activites
+
+VÉRIFIER LA BASE DE DONNÉES:
+----------------------------
+php artisan migrate:status
+
+TESTER LA CONNEXION DB:
+-----------------------
+php artisan tinker
+>>> DB::connection()->getPdo();
+
+VOIR LES LOGS EN TEMPS RÉEL:
+----------------------------
+Get-Content storage/logs/laravel.log -Wait
+
+STATUT ACTUEL
+=============
+✅ Logs de débogage ajoutés dans le JavaScript
+✅ Logs de débogage ajoutés dans le contrôleur
+✅ Cache vidé
+⏳ En attente des résultats de test
+
+INSTRUCTIONS POUR L'UTILISATEUR
+================================
+
+1. Ouvrez la console du navigateur (F12)
+2. Allez sur la page de création d'activité
+3. Remplissez le formulaire avec:
+   - Type: répétition
+   - Nom: Test Activité
+   - Statut: planifie
+   - Type de création: Simple
+   - Date début: [date future]
+   - Date fin: [date après le début]
+4. Cliquez sur "Créer l'activité"
+5. Copiez TOUS les messages de la console
+6. Envoyez-les moi
+
+Cela permettra d'identifier exactement où le problème se situe.

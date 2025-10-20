@@ -1,0 +1,102 @@
+SAUVEGARDE - CORRECTION ERREUR JAVASCRIPT MODIFIERPRESENCEREPETITION
+================================================================
+
+PROBLÈME IDENTIFIÉ :
+- Erreur JavaScript : "Cannot set properties of null (setting 'value')"
+- La fonction modifierPresenceRepetition essaie d'accéder à des éléments qui n'existent pas
+- Ligne 928 dans la fonction modifierPresenceRepetition
+
+CAUSE DU PROBLÈME :
+- Accès direct aux éléments DOM sans vérification de leur existence
+- Les éléments peuvent être null si le modal n'est pas encore ouvert ou si les IDs sont incorrects
+- Pas de gestion d'erreur pour les éléments manquants
+
+SOLUTION APPLIQUÉE :
+
+1. VÉRIFICATION DE L'EXISTENCE DES ÉLÉMENTS :
+```javascript
+// AVANT (problématique)
+document.getElementById('statut').value = statutActuel;
+document.getElementById('justification').value = justification || '';
+document.getElementById('notes_prestation').value = notesPrestation || '';
+
+// APRÈS (sécurisé)
+const statutSelect = document.getElementById('statut');
+const justificationTextarea = document.getElementById('justification');
+const notesPrestationTextarea = document.getElementById('notes_prestation');
+
+if (statutSelect) statutSelect.value = statutActuel;
+if (justificationTextarea) justificationTextarea.value = justification || '';
+if (notesPrestationTextarea) notesPrestationTextarea.value = notesPrestation || '';
+```
+
+2. VÉRIFICATION DES CHAMPS CONDITIONNELS :
+```javascript
+// Pré-remplir les champs selon le statut
+if (statutActuel === 'present' || statutActuel === 'retard') {
+    const heureInput = document.getElementById('heure_arrivee');
+    const minutesInput = document.getElementById('minutes_retard');
+    
+    if (heureInput && heureArrivee) {
+        heureInput.value = heureArrivee;
+    }
+    if (minutesInput && minutesRetard) {
+        minutesInput.value = minutesRetard;
+    }
+}
+```
+
+3. VÉRIFICATION DE LA CHECKBOX PRESTATION :
+```javascript
+if (statutActuel === 'present' || statutActuel === 'retard') {
+    const prestationCheckbox = document.getElementById('prestation_effectuee');
+    if (prestationCheckbox) {
+        prestationCheckbox.checked = prestationEffectuee === 'true';
+    }
+}
+```
+
+AVANTAGES DE LA CORRECTION :
+
+✅ **Robustesse** : Plus d'erreur JavaScript si un élément n'existe pas
+✅ **Débogage facilité** : Les vérifications permettent d'identifier les éléments manquants
+✅ **Stabilité** : La fonction fonctionne même si certains éléments ne sont pas disponibles
+✅ **Maintenabilité** : Code plus sûr et plus facile à déboguer
+
+ÉLÉMENTS VÉRIFIÉS :
+
+1. **Champs de base** :
+   - `statut` (select)
+   - `justification` (textarea)
+   - `notes_prestation` (textarea)
+
+2. **Champs conditionnels** :
+   - `heure_arrivee` (input time)
+   - `minutes_retard` (input number)
+
+3. **Checkbox** :
+   - `prestation_effectuee` (checkbox)
+
+TESTS À EFFECTUER :
+
+1. **Test modification normale** :
+   - Cliquer sur "Modifier" pour une présence
+   - Vérifier que le modal s'ouvre sans erreur JavaScript
+   - Vérifier que les champs sont pré-remplis
+
+2. **Test avec console ouverte** :
+   - Ouvrir la console du navigateur (F12)
+   - Cliquer sur "Modifier"
+   - Vérifier qu'il n'y a plus d'erreur "Cannot set properties of null"
+
+3. **Test différents statuts** :
+   - Tester avec différents statuts (présent, retard, absent)
+   - Vérifier que les champs appropriés sont remplis
+
+RÉSULTAT ATTENDU :
+- Plus d'erreur JavaScript "Cannot set properties of null"
+- Fonction modifierPresenceRepetition stable et robuste
+- Modal de modification fonctionnel sans erreurs
+
+DATE : $(date)
+STATUT : CORRECTION APPLIQUÉE

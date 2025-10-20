@@ -1,3 +1,18 @@
+2025-10-10 - Correction modals rôles vs sidebar
+-------------------------------------------------
+Objectif: Le modal de visualisation/édition des rôles passait derrière la sidebar.
+
+Actions:
+- Augmentation du z-index des modals rôles pour dépasser la sidebar (z-[2200] > z-[2000]).
+  - resources/views/roles/index.blade.php: #modalRole et #modalDetails -> z-[2200]
+  - resources/views/membres/roles.blade.php: #modalAjoutRole et #modalModifRole -> z-[2200]
+- Sidebar conservée à z-[2000] dans `layouts/app-with-sidebar.blade.php`.
+
+Impact:
+- Les overlays couvrent correctement la sidebar, modals visibles au premier plan.
+
+Note:
+- Tailwind arbitraire z-index utilisé pour homogénéité.
 🎨 SAUVEGARDE DESIGN DASHBOARD - GESTION KOUREL
 =====================================================
 

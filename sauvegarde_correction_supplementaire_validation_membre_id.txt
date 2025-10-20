@@ -1,0 +1,128 @@
+SAUVEGARDE - CORRECTION SUPPLEMENTAIRE VALIDATION MEMBRE_ID
+===========================================================
+
+PROBLÈME PERSISTANT :
+- L'erreur "Le champ membre id est obligatoire" persiste malgré les corrections précédentes
+- Le champ membre_id n'est toujours pas envoyé correctement
+
+ANALYSE DU PROBLÈME :
+1. Déclaration double de la variable modeModification
+2. Manque de vérification de l'existence du champ caché
+3. Pas de gestion d'erreur si le champ caché est vide
+
+CORRECTIONS SUPPLEMENTAIRES :
+
+1. CORRECTION DE LA DÉCLARATION DOUBLE :
+```javascript
+// AVANT (incorrect)
+const modeModification = document.getElementById('mode_modification');
+const modeModification = document.getElementById('mode_modification'); // ← Doublon !
+
+// APRÈS (correct)
+const modeModification = document.getElementById('mode_modification');
+const isModification = modeModification && modeModification.value === 'true';
+```
+
+2. VÉRIFICATION DE L'EXISTENCE DU CHAMP CACHÉ :
+```javascript
+// Dans modifierPresenceRepetition
+const champCache = document.getElementById('membre_id_modification');
+if (champCache) {
+    champCache.value = membreId;
+    console.log('Champ caché membre_id_modification rempli avec:', membreId);
+} else {
+    console.error('Champ caché membre_id_modification non trouvé !');
+}
+```
+
+3. GESTION D'ERREUR DANS LA SOUMISSION :
+```javascript
+if (isModification) {
+    const champCache = document.getElementById('membre_id_modification');
+    const membreIdModification = champCache ? champCache.value : '';
+    
+    if (membreIdModification) {
+        formData.set('membre_id', membreIdModification);
+        console.log('Mode modification - Membre ID utilisé:', membreIdModification);
+    } else {
+        console.error('Mode modification - Aucun ID de membre trouvé dans le champ caché !');
+    }
+}
+```
+
+4. GESTION DU MODE CRÉATION :
+```javascript
+} else {
+    // En mode création, s'assurer que le champ membre_id est présent
+    const membreIdSelect = document.getElementById('membre_id').value;
+    if (membreIdSelect) {
+        formData.set('membre_id', membreIdSelect);
+        console.log('Mode création - Membre ID utilisé:', membreIdSelect);
+    }
+}
+```
+
+LOGS DE DÉBOGAGE AJOUTÉS :
+
+1. **Dans modifierPresenceRepetition** :
+   - Vérification de l'existence du champ caché
+   - Confirmation du remplissage avec l'ID du membre
+
+2. **Dans la soumission du formulaire** :
+   - Vérification du mode (création/modification)
+   - Vérification de l'existence et du contenu du champ caché
+   - Messages d'erreur détaillés si problème
+
+3. **Affichage des données du formulaire** :
+   - Toutes les données envoyées sont loggées
+   - Permet de vérifier que membre_id est bien présent
+
+ÉTAPES DE DÉBOGAGE :
+
+1. **Ouvrir la console** du navigateur (F12)
+2. **Cliquer sur "Modifier"** pour une présence
+3. **Vérifier les logs** :
+   - "Champ caché membre_id_modification rempli avec: [ID]"
+   - "Mode modification: true"
+4. **Modifier le statut** et soumettre
+5. **Vérifier les logs** :
+   - "Mode modification - Membre ID utilisé: [ID]"
+   - Dans "Données du formulaire" : membre_id: [ID]
+
+CAS D'ERREUR POSSIBLES :
+
+1. **Champ caché non trouvé** :
+   - Erreur : "Champ caché membre_id_modification non trouvé !"
+   - Solution : Vérifier que le champ existe dans le HTML
+
+2. **Champ caché vide** :
+   - Erreur : "Aucun ID de membre trouvé dans le champ caché !"
+   - Solution : Vérifier que modifierPresenceRepetition est appelée avec le bon ID
+
+3. **Mode modification non détecté** :
+   - Le champ mode_modification n'est pas créé ou a une valeur incorrecte
+   - Solution : Vérifier la création du champ dans modifierPresenceRepetition
+
+TESTS À EFFECTUER :
+
+1. **Test modification** :
+   - Cliquer sur "Modifier"
+   - Vérifier les logs de remplissage du champ caché
+   - Soumettre et vérifier les logs de soumission
+
+2. **Test création** :
+   - Ouvrir le modal normalement
+   - Sélectionner un membre
+   - Soumettre et vérifier les logs
+
+3. **Vérification des données** :
+   - Dans les logs "Données du formulaire"
+   - Le champ membre_id doit être présent avec une valeur
+
+RÉSULTAT ATTENDU :
+- Plus d'erreur de validation "membre_id obligatoire"
+- Logs détaillés pour identifier tout problème restant
+- Fonctionnement correct en mode création et modification
+
+DATE : $(date)
+STATUT : CORRECTION SUPPLEMENTAIRE APPLIQUÉE

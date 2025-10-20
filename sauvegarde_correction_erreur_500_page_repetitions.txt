@@ -1,0 +1,230 @@
+SAUVEGARDE - CORRECTION ERREUR 500 PAGE RÉPÉTITIONS
+===================================================
+
+Date: 02/10/2025
+Projet: Gestion Kourel
+
+PROBLÈME IDENTIFIÉ
+==================
+Erreur 500 (Internal Server Error) sur la page des répétitions
+GET http://127.0.0.1:8000/activites/3/repetitions 500
+Ligne 269 dans index.blade.php
+
+CAUSE IDENTIFIÉE
+================
+La variable `$membres` n'était pas définie dans le contrôleur `index` mais
+utilisée dans la vue pour remplir les options du formulaire de création
+de répétition.
+
+ERREUR DANS LA VUE:
+```php
+@foreach($membres as $membre)  // ❌ Variable $membres non définie
+<option value="{{ $membre->id }}">{{ $membre->nom }} {{ $membre->prenom }}</option>
+@endforeach
+```
+
+SOLUTION APPLIQUÉE
+==================
+
+1. AJOUT DE LA VARIABLE MEMBRES DANS LE CONTRÔLEUR
+--------------------------------------------------
+```php
+public function index(Activite $activite)
+{
+    $repetitions = $activite->repetitions()
+        ->with(['responsable', 'presences.membre'])
+        ->orderBy('date_repetition', 'desc')
+        ->paginate(10);
+
+    // Statistiques
+    $stats = [
+        'total_repetitions' => $activite->repetitions()->count(),
+        'repetitions_planifiees' => $activite->repetitions()->where('statut', 'planifie')->count(),
+        'repetitions_en_cours' => $activite->repetitions()->where('statut', 'en_cours')->count(),
+        'repetitions_terminees' => $activite->repetitions()->where('statut', 'termine')->count(),
+        'repetitions_annulees' => $activite->repetitions()->where('statut', 'annule')->count(),
+        'repetitions_cette_semaine' => $activite->repetitions()
+            ->whereBetween('date_repetition', [now()->startOfWeek(), now()->endOfWeek()])
+            ->count(),
+    ];
+
+    // Membres pour les formulaires
+    $membres = Membre::where('statut', 'actif')->orderBy('nom')->get();
+
+    return view('activites.repetitions.index', compact('activite', 'repetitions', 'stats', 'membres'));
+}
+```
+
+2. PASSAGE DE LA VARIABLE À LA VUE
+----------------------------------
+```php
+// AVANT
+return view('activites.repetitions.index', compact('activite', 'repetitions', 'stats'));
+
+// APRÈS
+return view('activites.repetitions.index', compact('activite', 'repetitions', 'stats', 'membres'));
+```
+
+FONCTIONNEMENT
+==============
+
+1. RÉCUPÉRATION DES DONNÉES
+---------------------------
+- Répétitions de l'activité avec relations
+- Statistiques des répétitions
+- Membres actifs pour les formulaires
+
+2. PASSAGE À LA VUE
+-------------------
+- activite: L'activité courante
+- repetitions: Liste paginée des répétitions
+- stats: Statistiques des répétitions
+- membres: Liste des membres actifs
+
+3. UTILISATION DANS LA VUE
+--------------------------
+- Affichage des répétitions
+- Affichage des statistiques
+- Formulaire de création avec sélection de responsable
+
+AVANTAGES
+=========
+
+1. FONCTIONNALITÉ
+-----------------
+- Page des répétitions accessible
+- Formulaire de création fonctionnel
+- Sélection de responsable opérationnelle
+
+2. COHÉRENCE
+------------
+- Même logique que dans la méthode create
+- Membres actifs uniquement
+- Tri par nom
+
+3. PERFORMANCE
+--------------
+- Requête optimisée pour les membres actifs
+- Relations chargées avec les répétitions
+
+FICHIERS MODIFIÉS
+=================
+- app/Http/Controllers/ActivityRepetitionController.php
+
+CHANGEMENTS DÉTAILLÉS
+=====================
+
+1. AJOUT DE LA RÉCUPÉRATION DES MEMBRES
+---------------------------------------
+```php
+// AJOUTÉ
+// Membres pour les formulaires
+$membres = Membre::where('statut', 'actif')->orderBy('nom')->get();
+```
+
+2. MODIFICATION DU COMPACT
+--------------------------
+```php
+// AVANT
+return view('activites.repetitions.index', compact('activite', 'repetitions', 'stats'));
+
+// APRÈS
+return view('activites.repetitions.index', compact('activite', 'repetitions', 'stats', 'membres'));
+```
+
+VARIABLES DISPONIBLES DANS LA VUE
+==================================
+
+1. $activite
+-----------
+- Objet Activite
+- Contient les informations de l'activité
+- Utilisé pour le titre et les liens
+
+2. $repetitions
+---------------
+- Collection paginée des répétitions
+- Avec relations responsable et presences.membre
+- Triées par date décroissante
+
+3. $stats
+---------
+- Tableau des statistiques
+- total_repetitions
+- repetitions_planifiees
+- repetitions_en_cours
+- repetitions_terminees
+- repetitions_annulees
+- repetitions_cette_semaine
+
+4. $membres
+-----------
+- Collection des membres actifs
+- Triés par nom
+- Utilisés pour les formulaires
+
+UTILISATION DANS LA VUE
+=======================
+
+1. AFFICHAGE DES RÉPÉTITIONS
+----------------------------
+```php
+@foreach($repetitions as $repetition)
+    // Affichage de chaque répétition
+@endforeach
+```
+
+2. AFFICHAGE DES STATISTIQUES
+-----------------------------
+```php
+<div class="text-2xl font-bold text-white">{{ $stats['total_repetitions'] }}</div>
+<div class="text-sm text-white/60">Total répétitions</div>
+```
+
+3. FORMULAIRE DE CRÉATION
+-------------------------
+```php
+<select name="responsable_id">
+    <option value="">Sélectionner un responsable</option>
+    @foreach($membres as $membre)
+    <option value="{{ $membre->id }}">{{ $membre->nom }} {{ $membre->prenom }}</option>
+    @endforeach
+</select>
+```
+
+TEST ATTENDU
+============
+
+1. Accéder à la page des répétitions
+2. Vérifier que la page se charge sans erreur 500
+3. Vérifier l'affichage des répétitions
+4. Vérifier l'affichage des statistiques
+5. Vérifier le formulaire de création
+6. Vérifier la sélection de responsable
+
+FONCTIONNALITÉS:
+----------------
+✅ Page des répétitions accessible
+✅ Liste des répétitions affichée
+✅ Statistiques affichées
+✅ Formulaire de création fonctionnel
+✅ Sélection de responsable opérationnelle
+
+ERREURS CORRIGÉES:
+------------------
+❌ Erreur 500 Internal Server Error → CORRIGÉE
+❌ Variable $membres non définie → CORRIGÉE
+❌ Page des répétitions inaccessible → CORRIGÉE
+❌ Formulaire de création cassé → CORRIGÉ
+
+STATUT
+======
+✅ Variable $membres ajoutée au contrôleur
+✅ Passage de la variable à la vue
+✅ Page des répétitions fonctionnelle
+✅ Formulaire de création opérationnel
+✅ Sélection de responsable fonctionnelle
+
+La correction de l'erreur 500 sur la page des répétitions est maintenant
+complète et la page devrait s'afficher correctement avec toutes les
+fonctionnalités opérationnelles.

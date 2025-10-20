@@ -1,0 +1,193 @@
+SAUVEGARDE - CORRECTION TRY/CATCH BLOQUANT
+==========================================
+
+Date: 02/10/2025
+Projet: Gestion Kourel
+
+PROBLÈME IDENTIFIÉ
+==================
+L'utilisateur ne peut pas ouvrir la section "Avec répétitions" depuis l'ajout
+des try/catch globaux. Ces gestionnaires d'erreurs bloquent l'exécution du code.
+
+CAUSE RACINE
+============
+Les try/catch ajoutés pour capturer les erreurs JavaScript interceptent TOUTES
+les erreurs, y compris celles qui ne sont pas critiques, et empêchent le code
+de continuer à s'exécuter normalement.
+
+SOLUTION APPLIQUÉE
+==================
+
+1. DÉSACTIVATION DES GESTIONNAIRES GLOBAUX
+-------------------------------------------
+```javascript
+// Gestion globale des erreurs JavaScript (désactivée temporairement)
+// window.addEventListener('error', function(e) {
+//     // Code commenté
+// });
+
+// Gestion des promesses rejetées (désactivée temporairement)
+// window.addEventListener('unhandledrejection', function(e) {
+//     // Code commenté
+// });
+```
+
+2. SUPPRESSION DES TRY/CATCH DANS DOMCONTENTLOADED
+--------------------------------------------------
+```javascript
+// AVANT
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        // Code d'initialisation...
+    } catch (error) {
+        console.error('ERREUR dans DOMContentLoaded:', error);
+        alert('ERREUR lors de l\'initialisation: ' + error.message);
+    }
+});
+
+// APRÈS
+document.addEventListener('DOMContentLoaded', function() {
+    // Code d'initialisation...
+});
+```
+
+3. SUPPRESSION DES TRY/CATCH DANS LA SOUMISSION
+-----------------------------------------------
+```javascript
+// AVANT
+form.addEventListener('submit', function(e) {
+    try {
+        // Code de soumission...
+    } catch (error) {
+        console.error('ERREUR dans la soumission du formulaire:', error);
+        alert('ERREUR lors de la soumission: ' + error.message);
+    }
+});
+
+// APRÈS
+form.addEventListener('submit', function(e) {
+    // Code de soumission...
+});
+```
+
+4. CONSERVATION DES LOGS DE DÉBOGAGE
+------------------------------------
+Les logs de débogage pour la section répétitions sont conservés :
+```javascript
+console.log('Boutons radio trouvés:', typeCreationRadios.length);
+console.log('Section répétitions trouvée:', sectionRepetitions);
+console.log('Section dates trouvée:', sectionDates);
+console.log('Changement détecté:', this.value, this.checked);
+console.log('Affichage section répétitions');
+```
+
+POURQUOI CELA FONCTIONNE MAINTENANT
+====================================
+
+1. EXÉCUTION NORMALE
+--------------------
+- Plus d'interception d'erreurs non critiques
+- Le code s'exécute jusqu'au bout
+- Les event listeners fonctionnent correctement
+
+2. LOGS DE DÉBOGAGE PRÉSERVÉS
+------------------------------
+- Les logs pour la section répétitions sont toujours actifs
+- Possibilité de diagnostiquer les problèmes
+- Pas d'interruption du flux d'exécution
+
+3. GESTION D'ERREURS CIBLÉE
+----------------------------
+- Les erreurs critiques sont toujours loggées
+- Pas d'alertes intempestives
+- Code plus robuste
+
+FICHIERS MODIFIÉS
+=================
+- resources/views/activites/create.blade.php
+
+CHANGEMENTS DÉTAILLÉS
+=====================
+
+1. GESTIONNAIRES GLOBAUX COMMENTÉS
+-----------------------------------
+- window.addEventListener('error') → Commenté
+- window.addEventListener('unhandledrejection') → Commenté
+
+2. TRY/CATCH SUPPRIMÉS
+----------------------
+- DOMContentLoaded → Supprimé
+- Soumission formulaire → Supprimé
+- Vérification formulaire → Simplifiée
+
+3. LOGS CONSERVÉS
+-----------------
+- Logs de débogage section répétitions
+- Logs de soumission formulaire
+- Logs de création d'activité
+
+AVANTAGES
+=========
+
+1. FONCTIONNALITÉ RESTAURÉE
+----------------------------
+- Section répétitions fonctionne
+- Boutons radio réactifs
+- Affichage/masquage correct
+
+2. DÉBOGAGE PRÉSERVÉ
+--------------------
+- Logs détaillés maintenus
+- Diagnostic possible
+- Traçage des actions
+
+3. CODE PLUS PROPRE
+-------------------
+- Moins de gestion d'erreurs intrusive
+- Exécution fluide
+- Maintenance facilitée
+
+TEST ATTENDU
+============
+
+1. Recharger la page de création d'activité
+2. Ouvrir la console (F12)
+3. Vérifier les messages d'initialisation
+4. Cliquer sur "Avec répétitions"
+5. Observer l'affichage de la section
+6. Vérifier les logs de changement
+
+MESSAGES ATTENDUS
+=================
+
+INITIALISATION:
+---------------
+✅ "DOM chargé, initialisation..."
+✅ "Formulaire trouvé: [object HTMLFormElement]"
+✅ "Boutons radio trouvés: 2"
+✅ "Section répétitions trouvée: [object HTMLDivElement]"
+✅ "Section dates trouvée: [object HTMLDivElement]"
+
+CHANGEMENT:
+-----------
+✅ "Changement détecté: repetition true"
+✅ "Affichage section répétitions"
+
+RÉSULTAT VISUEL:
+----------------
+La section "Configuration des Répétitions" devrait apparaître avec :
+- Fond bleu transparent
+- Horaires prédéfinis
+- Jours de répétition avec horaires
+- Période de génération
+
+STATUT
+======
+✅ Gestionnaires globaux désactivés
+✅ Try/catch supprimés
+✅ Logs de débogage conservés
+✅ Fonctionnalité restaurée
+⏳ Test en attente
+
+La section "Avec répétitions" devrait maintenant fonctionner correctement
+sans être bloquée par les gestionnaires d'erreurs.

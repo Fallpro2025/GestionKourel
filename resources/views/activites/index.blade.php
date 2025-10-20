@@ -13,10 +13,10 @@
                 </div>
                 
                 <div class="flex items-center space-x-4">
-                    <button onclick="ouvrirModalAjout()" 
-                            class="px-4 py-2 bg-blue-500/20 text-blue-400 font-medium rounded-xl hover:bg-blue-500/30 transition-all duration-300 border border-blue-500/30">
+                    <a href="{{ route('activites.create') }}" 
+                       class="px-4 py-2 bg-blue-500/20 text-blue-400 font-medium rounded-xl hover:bg-blue-500/30 transition-all duration-300 border border-blue-500/30">
                         <i class="fas fa-plus mr-2"></i>Nouvelle Activité
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -126,8 +126,12 @@
 
         <!-- Liste des activités -->
         <div class="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20">
-            <div class="px-6 py-4 border-b border-white/20">
+            <div class="px-6 py-4 border-b border-white/20 flex justify-between items-center">
                 <h3 class="text-lg font-semibold text-white">Liste des Activités</h3>
+                <a href="{{ route('activites.create') }}" 
+                   class="px-4 py-2 bg-blue-500/20 text-blue-400 font-medium rounded-xl hover:bg-blue-500/30 transition-all duration-300 border border-blue-500/30">
+                    <i class="fas fa-plus mr-2"></i>Nouvelle Activité
+                </a>
             </div>
 
             <div class="overflow-x-auto">
@@ -211,7 +215,11 @@
                                 <div class="text-white/60">
                                     <i class="fas fa-calendar-alt text-4xl mb-4"></i>
                                     <p class="text-lg">Aucune activité trouvée</p>
-                                    <p class="text-sm">Commencez par créer votre première activité</p>
+                                    <p class="text-sm mb-6">Commencez par créer votre première activité</p>
+                                    <a href="{{ route('activites.create') }}" 
+                                       class="inline-flex items-center px-6 py-3 bg-blue-500/20 text-blue-400 font-medium rounded-xl hover:bg-blue-500/30 transition-all duration-300 border border-blue-500/30">
+                                        <i class="fas fa-plus mr-2"></i>Créer ma première activité
+                                    </a>
                                 </div>
                             </td>
                         </tr>
