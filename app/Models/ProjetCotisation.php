@@ -11,6 +11,8 @@ class ProjetCotisation extends Model
 {
     use HasFactory;
 
+    protected $table = 'projets_cotisation';
+
     protected $fillable = [
         'nom',
         'description',

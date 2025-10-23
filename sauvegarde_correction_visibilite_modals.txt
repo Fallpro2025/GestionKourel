@@ -1,0 +1,57 @@
+=== SAUVEGARDE : CORRECTION VISIBILITÉ DES TEXTES MODALS ===
+Date: 25/09/2025
+Problème: Textes non visibles dans les modals glassmorphism
+
+PROBLÈME IDENTIFIÉ:
+❌ Textes peu visibles dans les modals
+❌ Fond semi-transparent (bg-white/10) trop transparent
+❌ Textes en text-gray-900 pas assez contrastés
+❌ Champs de formulaire avec bg-white/50 trop transparents
+
+CAUSE RACINE:
+✅ Le glassmorphism était trop transparent
+✅ Les textes n'avaient pas assez de contraste
+✅ Les champs de formulaire étaient trop transparents
+✅ Les bordures étaient trop subtiles
+
+SOLUTION APPLIQUÉE:
+✅ Augmentation de l'opacité du fond: bg-white/10 → bg-white/95
+✅ Amélioration des bordures: border-white/20 → border-white/30
+✅ Renforcement des textes: text-gray-900 → text-gray-800
+✅ Amélioration des champs: bg-white/50 → bg-white/80
+✅ Renforcement des bordures: border-gray-200 → border-gray-300
+
+CORRECTIONS DÉTAILLÉES:
+
+🎨 MODAL AJOUT DE RÔLE:
+✅ Fond: bg-white/95 (au lieu de bg-white/10)
+✅ Bordures: border-white/30 (au lieu de border-white/20)
+✅ Titre: text-gray-800 (au lieu de text-gray-900)
+✅ Sous-titre: text-gray-700 (au lieu de text-gray-600)
+✅ Labels: text-gray-800 (au lieu de text-gray-700)
+✅ Select: bg-white/80 + text-gray-800
+✅ Textarea: bg-white/80 + text-gray-800
+✅ Section rôle principal: bg-blue-50/80
+
+🎨 MODAL MODIFICATION DE RÔLE:
+✅ Fond: bg-white/95 (au lieu de bg-white/10)
+✅ Bordures: border-white/30 (au lieu de border-white/20)
+✅ Titre: text-gray-800 (au lieu de text-gray-900)
+✅ Sous-titre: text-gray-700 (au lieu de text-gray-600)
+✅ Labels: text-gray-800 (au lieu de text-gray-700)
+✅ Textarea: bg-white/80 + text-gray-800
+✅ Section rôle principal: bg-purple-50/80
+
+IMPACT:
+✅ Textes parfaitement lisibles
+✅ Contraste optimal maintenu
+✅ Design glassmorphism préservé
+✅ Lisibilité améliorée sur tous les écrans
+
+FICHIERS MODIFIÉS:
+✅ resources/views/membres/roles.blade.php
+
+STATUT: ✅ VISIBILITÉ CORRIGÉE
+
+Les textes sont maintenant parfaitement visibles
+tout en conservant le design glassmorphism moderne.

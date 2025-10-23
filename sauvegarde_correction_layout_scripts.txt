@@ -1,0 +1,47 @@
+=== SAUVEGARDE : CORRECTION LAYOUT MANQUANT @yield('scripts') ===
+Date: 25/09/2025
+Problème: JavaScript ne se charge pas - Erreur "testSimple is not defined"
+
+PROBLÈME IDENTIFIÉ:
+❌ Erreur: "testSimple is not defined"
+❌ Le JavaScript dans @section('scripts') ne s'exécute pas
+❌ Le layout app-with-sidebar ne contient pas @yield('scripts')
+❌ Les sections @section('scripts') ne sont jamais rendues
+
+CAUSE RACINE:
+✅ Le layout resources/views/layouts/app-with-sidebar.blade.php
+✅ Ne contient pas @yield('scripts')
+✅ Donc toutes les sections @section('scripts') sont ignorées
+✅ Le JavaScript ne se charge jamais
+
+SOLUTION APPLIQUÉE:
+✅ Ajout de @yield('scripts') dans le layout
+✅ Placement avant la fermeture de </body>
+✅ Permet le rendu des sections scripts
+
+CORRECTION:
+```php
+<!-- Scripts Section -->
+@yield('scripts')
+</body>
+</html>
+```
+
+IMPACT:
+✅ Toutes les pages utilisant app-with-sidebar peuvent maintenant avoir du JavaScript
+✅ La page de gestion des rôles devrait maintenant fonctionner
+✅ Les modals et autres fonctionnalités JavaScript devraient marcher
+
+TESTS À EFFECTUER:
+1. Retester /test-sans-alertes
+2. Retester /test-javascript
+3. Retester la page de gestion des rôles
+4. Vérifier que le modal "Ajouter un Rôle" fonctionne
+
+FICHIERS MODIFIÉS:
+✅ resources/views/layouts/app-with-sidebar.blade.php
+
+STATUT: ✅ CORRECTION APPLIQUÉE
+
+Le problème principal est résolu. Les scripts JavaScript
+devraient maintenant se charger correctement.

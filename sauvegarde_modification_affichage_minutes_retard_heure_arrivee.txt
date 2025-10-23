@@ -1,0 +1,109 @@
+SAUVEGARDE - MODIFICATION AFFICHAGE MINUTES DE RETARD AVEC HEURE D'ARRIVÉE
+=========================================================================
+
+MODIFICATION DEMANDÉE :
+- Afficher les minutes de retard entre parenthèses directement sous l'heure d'arrivée
+- Supprimer l'affichage séparé des minutes de retard
+- Garder le statut "En retard" simple sans les minutes
+
+CHANGEMENTS APPORTÉS :
+
+1. AFFICHAGE STATIQUE (Blade Template) :
+```php
+@if($presence && $presence->heure_arrivee)
+    <div class="text-xs text-white/60">
+        <i class="fas fa-clock mr-1"></i>{{ $presence->heure_arrivee->format('H:i') }}
+        @if($presence->minutes_retard > 0)
+            <span class="text-orange-400">({{ $presence->minutes_retard }} min)</span>
+        @endif
+    </div>
+@endif
+```
+
+2. SUPPRESSION DE L'AFFICHAGE SÉPARÉ :
+```php
+// SUPPRIMÉ - Plus d'affichage séparé des minutes de retard
+@if($presence && $presence->minutes_retard > 0)
+    <div class="text-xs text-orange-400">
+        <i class="fas fa-hourglass-half mr-1"></i>{{ $presence->minutes_retard }} min de retard
+    </div>
+@endif
+```
+
+3. STATUT SIMPLIFIÉ :
+```php
+$texteStatut = match($statutCourant) {
+    'present' => 'Présent',
+    'absent_justifie' => 'Absent (justifié)',
+    'absent_non_justifie' => 'Absent (non justifié)',
+    'retard' => 'En retard', // ← Simple, sans minutes
+    default => 'Inconnu'
+};
+```
+
+4. MISE À JOUR DYNAMIQUE JAVASCRIPT :
+```javascript
+// Mettre à jour l'heure d'arrivée avec les minutes de retard si applicable
+const heureDiv = ligne.querySelector('.text-xs.text-white\\/60');
+if (heureDiv && presence.heure_arrivee) {
+    const heure = presence.heure_arrivee.substring(11, 16); // Format HH:MM
+    let contenuHeure = `<i class="fas fa-clock mr-1"></i>${heure}`;
+    
+    if (presence.minutes_retard > 0) {
+        contenuHeure += `<span class="text-orange-400">(${presence.minutes_retard} min)</span>`;
+    }
+    
+    heureDiv.innerHTML = contenuHeure;
+}
+```
+
+NOUVEAU AFFICHAGE :
+
+1. **Statut** :
+   - "En retard" (badge orange simple)
+
+2. **Heure d'arrivée** :
+   - 🕐 14:15 (30 min) ← Minutes de retard entre parenthèses en orange
+
+3. **Autres informations** :
+   - Justification (si présente)
+   - Prestation effectuée (si applicable)
+
+AVANTAGES :
+
+✅ **Information groupée** : Heure et retard au même endroit
+✅ **Interface plus claire** : Moins d'éléments séparés
+✅ **Statut simplifié** : "En retard" plus lisible
+✅ **Cohérence** : Même logique en statique et dynamique
+✅ **Espace optimisé** : Moins d'encombrement visuel
+
+EXEMPLE D'AFFICHAGE :
+
+```
+┌─────────────────────────────────────┐
+│ 🟠 En retard                        │
+│ 🕐 14:15 (30 min)                   │
+│ 💬 Justification du retard...       │
+│ ✅ Prestation effectuée             │
+└─────────────────────────────────────┘
+```
+
+TESTS À EFFECTUER :
+
+1. **Test affichage initial** :
+   - Vérifier qu'un retard affiche "En retard" + "🕐 14:15 (30 min)"
+
+2. **Test modification** :
+   - Modifier les minutes de retard
+   - Vérifier que l'affichage se met à jour automatiquement
+
+3. **Test sans retard** :
+   - Vérifier qu'une présence normale affiche juste l'heure
+
+RÉSULTAT ATTENDU :
+- Les minutes de retard sont affichées entre parenthèses avec l'heure d'arrivée
+- Le statut reste simple et lisible
+- Interface plus cohérente et professionnelle
+
+DATE : $(date)
+STATUT : MODIFICATION APPLIQUÉE

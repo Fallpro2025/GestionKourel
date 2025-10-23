@@ -1,0 +1,50 @@
+TEST - VÉRIFICATION AFFICHAGE EMOJI HORLOGE
+============================================
+
+CHANGEMENTS APPLIQUÉS :
+- Remplacement de <i class="fas fa-clock mr-1"></i> par 🕐
+- Format d'affichage : 🕐 14:15 (30 min)
+
+ÉTAPES DE VÉRIFICATION :
+
+1. CACHE VIDÉ :
+   ✅ php artisan view:clear
+   ✅ php artisan cache:clear
+
+2. À VÉRIFIER DANS LE NAVIGATEUR :
+   - Vider le cache : Ctrl + F5
+   - Ouvrir les outils de développement : F12
+   - Vérifier la console pour les erreurs
+
+3. TESTER L'AFFICHAGE :
+   - Marquer un membre comme "retard"
+   - Vérifier l'affichage : 🕐 14:15 (30 min)
+   - Vérifier l'affichage séparé : ⏳ 30 min de retard
+
+4. SI PAS DE CHANGEMENT :
+   - Vérifier s'il y a des présences avec retard
+   - Vérifier les erreurs JavaScript
+   - Vérifier que le fichier est bien sauvegardé
+
+CODE ATTENDU :
+```php
+@if($presence && $presence->heure_arrivee)
+    <div class="text-xs text-white/60">
+        🕐 {{ $presence->heure_arrivee->format('H:i') }}
+        @if($presence->minutes_retard > 0)
+            <span class="text-orange-400">({{ $presence->minutes_retard }} min)</span>
+        @endif
+    </div>
+@endif
+```
+
+JAVASCRIPT ATTENDU :
+```javascript
+let contenuHeure = `🕐 ${heure}`;
+if (presence.minutes_retard > 0) {
+    contenuHeure += `<span class="text-orange-400">(${presence.minutes_retard} min)</span>`;
+}
+```
+
+DATE : $(date)
+STATUT : EN ATTENTE DE VÉRIFICATION

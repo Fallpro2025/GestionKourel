@@ -1,0 +1,43 @@
+=== SAUVEGARDE : CORRECTION PROBLÈME IMPORTATION EXCEL ===
+Date: 25/09/2025
+Problème: L'importation Excel échouait à cause de la validation MIME
+
+PROBLÈME IDENTIFIÉ:
+❌ Erreur de validation: "Le fichier doit être au format Excel (.xlsx, .xls) ou CSV"
+❌ La validation `mimes:xlsx,xls,csv` était trop stricte
+❌ Certains fichiers Excel avaient des types MIME différents
+❌ L'importation échouait avant même de traiter le fichier
+
+SOLUTION APPLIQUÉE:
+
+1. VALIDATION AMÉLIORÉE:
+   ✅ Suppression de la validation `mimes:xlsx,xls,csv`
+   ✅ Validation basée sur l'extension du fichier uniquement
+   ✅ Vérification manuelle des extensions autorisées
+   ✅ Plus flexible avec les types MIME
+
+2. NOUVELLE LOGIQUE DE VALIDATION:
+   ✅ Extension autorisées: ['xlsx', 'xls', 'csv']
+   ✅ Validation case-insensitive
+   ✅ Messages d'erreur plus clairs
+   ✅ Logs détaillés pour le débogage
+
+3. FICHIER DE TEST CRÉÉ:
+   ✅ test_import_simple.csv avec données sénégalaises
+   ✅ Format correct avec séparateur point-virgule
+   ✅ Données de test réalistes
+
+AVANTAGES:
+- Plus flexible avec différents types MIME
+- Meilleure compatibilité avec les fichiers Excel
+- Messages d'erreur plus précis
+- Logs détaillés pour le débogage
+
+FICHIERS MODIFIÉS:
+✅ app/Http/Controllers/MembreImportController.php (validation)
+✅ test_import_simple.csv (fichier de test)
+
+STATUT: ✅ CORRECTION APPLIQUÉE AVEC SUCCÈS
+
+L'importation Excel devrait maintenant fonctionner correctement
+avec tous les formats de fichiers Excel et CSV.

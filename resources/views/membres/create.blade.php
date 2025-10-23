@@ -5,7 +5,7 @@
 @section('content')
 <div class="min-h-screen">
     <!-- Header -->
-    <header class="bg-white/10 backdrop-blur-xl border-b border-white/20">
+    <header class="fixed top-0 left-64 right-0 z-40 bg-white/10 backdrop-blur-xl border-b border-white/20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-6">
                 <div class="flex items-center">
@@ -13,7 +13,7 @@
                         <i class="fas fa-arrow-left text-xl"></i>
                     </a>
                     <div>
-                        <h1 class="text-3xl font-bold text-white">Ajouter un Membre</h1>
+                        <h1 class="text-3xl font-bold text-white"><i class="fas fa-user-plus mr-3"></i>Ajouter un Membre</h1>
                         <p class="text-white/70 mt-1">Nouveau membre du groupe Kourel</p>
                     </div>
                 </div>
@@ -29,7 +29,10 @@
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-24">
+        <!-- Messages d'alerte modernes -->
+        @include('components.alertes-session')
+
         <!-- Formulaire -->
         <div class="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-8">
             <form action="{{ route('membres.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
@@ -181,9 +184,9 @@
                                     name="role_id" 
                                     class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
                                     required>
-                                <option value="">Sélectionnez un rôle</option>
+                                <option value="" style="background: #374151; color: white;">Sélectionnez un rôle</option>
                                 @foreach($roles as $role)
-                                    <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
+                                    <option value="{{ $role->id }}" style="background: #374151; color: white;" {{ old('role_id') == $role->id ? 'selected' : '' }}>
                                         {{ $role->nom }}
                                     </option>
                                 @endforeach
@@ -269,6 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('form');
     const inputs = form.querySelectorAll('input, select, textarea');
     
+    // Animation des inputs
     inputs.forEach((input, index) => {
         input.style.opacity = '0';
         input.style.transform = 'translateY(20px)';

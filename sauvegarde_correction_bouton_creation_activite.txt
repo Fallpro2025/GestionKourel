@@ -1,0 +1,58 @@
+SAUVEGARDE - CORRECTION BOUTON CRÉATION D'ACTIVITÉ
+==================================================
+
+Date: 30/09/2025
+Projet: Gestion Kourel
+
+PROBLÈME IDENTIFIÉ
+==================
+Le bouton "Nouvelle Activité" dans la page d'index des activités ouvrait un modal 
+au lieu de rediriger vers la page de création avec les nouvelles fonctionnalités.
+
+SOLUTION APPLIQUÉE
+==================
+- Remplacement du bouton modal par un lien direct vers la route de création
+- Le bouton redirige maintenant vers /activites/create
+- L'utilisateur accède directement à la page de création avec les nouvelles fonctionnalités
+
+FICHIER MODIFIÉ
+===============
+- resources/views/activites/index.blade.php
+
+CHANGEMENT EFFECTUÉ
+===================
+AVANT:
+<button onclick="ouvrirModalAjout()" 
+        class="px-4 py-2 bg-blue-500/20 text-blue-400 font-medium rounded-xl hover:bg-blue-500/30 transition-all duration-300 border border-blue-500/30">
+    <i class="fas fa-plus mr-2"></i>Nouvelle Activité
+</button>
+
+APRÈS:
+<a href="{{ route('activites.create') }}" 
+   class="px-4 py-2 bg-blue-500/20 text-blue-400 font-medium rounded-xl hover:bg-blue-500/30 transition-all duration-300 border border-blue-500/30">
+    <i class="fas fa-plus mr-2"></i>Nouvelle Activité
+</a>
+
+RÉSULTAT
+========
+- Le bouton "Nouvelle Activité" redirige maintenant vers la page de création
+- L'utilisateur peut accéder aux nouvelles fonctionnalités de création avec répétitions
+- Interface cohérente et fonctionnelle
+
+FONCTIONNALITÉS ACCESSIBLES
+============================
+1. Choix entre "Activité simple" et "Avec répétitions"
+2. Horaires prédéfinis (Mardi Soir, Dimanche Midi, Jeudi Goudi)
+3. Auto-sélection des jours selon le type d'activité
+4. Génération automatique des répétitions
+5. Horaires personnalisés
+
+STATUT
+======
+✅ Problème identifié et corrigé
+✅ Bouton redirige vers la page de création
+✅ Nouvelles fonctionnalités accessibles
+✅ Cache des vues vidé pour appliquer les changements
+
+L'utilisateur peut maintenant accéder aux nouvelles fonctionnalités de création 
+d'activités avec répétitions en cliquant sur "Nouvelle Activité".

@@ -1,0 +1,250 @@
+GUIDE - LOGS DÉTAILLÉS POUR ERREURS
+====================================
+
+Date: 02/10/2025
+Projet: Gestion Kourel
+
+LOGS AJOUTÉS
+============
+
+1. GESTION GLOBALE DES ERREURS (LOGS UNIQUEMENT)
+-----------------------------------------------
+```javascript
+window.addEventListener('error', function(e) {
+    console.error('=== ERREUR JAVASCRIPT GLOBALE ===');
+    console.error('Message:', e.message);
+    console.error('Fichier:', e.filename);
+    console.error('Ligne:', e.lineno);
+    console.error('Colonne:', e.colno);
+    console.error('Erreur complète:', e.error);
+    if (e.error && e.error.stack) {
+        console.error('Stack trace:', e.error.stack);
+    }
+    console.error('================================');
+});
+```
+
+2. GESTION DES PROMESSES REJETÉES
+---------------------------------
+```javascript
+window.addEventListener('unhandledrejection', function(e) {
+    console.error('=== PROMESSE REJETÉE ===');
+    console.error('Raison:', e.reason);
+    console.error('Type:', typeof e.reason);
+    if (e.reason && e.reason.stack) {
+        console.error('Stack trace:', e.reason.stack);
+    }
+    console.error('========================');
+});
+```
+
+3. LOGS D'INITIALISATION
+------------------------
+```javascript
+console.log('=== INITIALISATION DOM ===');
+console.log('✅ Formulaire trouvé:', form);
+console.log('=== CONFIGURATION BOUTONS RADIO ===');
+console.log('Boutons radio trouvés:', typeCreationRadios.length);
+```
+
+4. LOGS DE CHANGEMENT BOUTON RADIO
+----------------------------------
+```javascript
+console.log('=== CHANGEMENT BOUTON RADIO ===');
+console.log('Changement détecté:', this.value, this.checked);
+console.log('✅ Affichage section répétitions');
+console.log('Classes section répétitions après:', sectionRepetitions.className);
+```
+
+5. LOGS DE SOUMISSION FORMULAIRE
+--------------------------------
+```javascript
+console.log('=== SOUMISSION FORMULAIRE ===');
+console.log('✅ Formulaire soumis !');
+console.log('🔄 Création avec répétitions');
+console.log('📝 Création simple');
+```
+
+6. LOGS DE CRÉATION D'ACTIVITÉ
+------------------------------
+```javascript
+console.log('=== CRÉATION ACTIVITÉ SIMPLE ===');
+console.log('FormData:', Array.from(formData.entries()));
+console.log('=== RÉPONSE SERVEUR ===');
+console.log('Status:', response.status);
+console.log('Status OK:', response.ok);
+```
+
+7. LOGS DE DONNÉES REÇUES
+-------------------------
+```javascript
+console.log('=== DONNÉES REÇUES ===');
+console.log('Données reçues:', data);
+console.error('=== ÉCHEC DE CRÉATION ===');
+console.error('Message d\'erreur:', data.message);
+```
+
+8. LOGS D'ERREURS DE VALIDATION
+-------------------------------
+```javascript
+console.error('=== ERREURS DE VALIDATION ===');
+console.error('Erreurs de validation:', data.errors);
+console.error('Détail des erreurs:', JSON.stringify(data.errors, null, 2));
+```
+
+9. LOGS D'ERREURS RÉSEAU
+------------------------
+```javascript
+console.error('=== ERREUR RÉSEAU ===');
+console.error('Erreur complète:', error);
+console.error('Message:', error.message);
+console.error('Type:', typeof error);
+console.error('Stack:', error.stack);
+```
+
+TYPES D'ERREURS CAPTURÉES
+=========================
+
+1. ERREURS JAVASCRIPT GLOBALES
+------------------------------
+- Erreurs de syntaxe
+- Erreurs d'exécution
+- Erreurs de référence
+- Erreurs de type
+
+2. PROMESSES REJETÉES
+---------------------
+- Erreurs de fetch()
+- Erreurs de requêtes AJAX
+- Erreurs de parsing JSON
+- Erreurs de réseau
+
+3. ERREURS DE VALIDATION
+------------------------
+- Champs requis manquants
+- Formats invalides
+- Valeurs incorrectes
+
+4. ERREURS RÉSEAU
+-----------------
+- Connexion échouée
+- Timeout
+- Erreurs serveur (500, 404, etc.)
+
+INSTRUCTIONS POUR L'UTILISATEUR
+================================
+
+1. OUVRIR LA CONSOLE
+--------------------
+- Appuyer sur F12
+- Aller dans l'onglet "Console"
+- Garder la console ouverte
+
+2. TESTER L'INITIALISATION
+--------------------------
+- Recharger la page de création d'activité
+- Observer les messages d'initialisation
+- Vérifier que tous les éléments sont trouvés
+
+3. TESTER LES BOUTONS RADIO
+---------------------------
+- Cliquer sur "Avec répétitions"
+- Observer les messages de changement
+- Vérifier l'affichage de la section
+
+4. TESTER LA SOUMISSION
+-----------------------
+- Remplir le formulaire
+- Cliquer sur "Créer l'activité"
+- Observer tous les messages de soumission
+
+5. COPIER LES MESSAGES
+----------------------
+- Copier TOUS les messages de la console
+- Inclure les erreurs (en rouge)
+- Inclure les logs normaux (en noir)
+- Me les envoyer pour diagnostic
+
+MESSAGES ATTENDUS
+=================
+
+INITIALISATION RÉUSSIE:
+-----------------------
+✅ "=== INITIALISATION DOM ==="
+✅ "DOM chargé, initialisation..."
+✅ "✅ Formulaire trouvé: [object HTMLFormElement]"
+✅ "=== CONFIGURATION BOUTONS RADIO ==="
+✅ "Boutons radio trouvés: 2"
+✅ "Section répétitions trouvée: [object HTMLDivElement]"
+✅ "Section dates trouvée: [object HTMLDivElement]"
+
+CHANGEMENT BOUTON RADIO:
+------------------------
+✅ "=== CHANGEMENT BOUTON RADIO ==="
+✅ "Changement détecté: repetition true"
+✅ "✅ Affichage section répétitions"
+✅ "Classes section répétitions après: [classes]"
+
+SOUMISSION FORMULAIRE:
+----------------------
+✅ "=== SOUMISSION FORMULAIRE ==="
+✅ "✅ Formulaire soumis !"
+✅ "Type de création: [simple/repetition]"
+✅ "🔄 Création avec répétitions" ou "📝 Création simple"
+
+CRÉATION D'ACTIVITÉ:
+--------------------
+✅ "=== CRÉATION ACTIVITÉ SIMPLE ==="
+✅ "FormData: [array des données]"
+✅ "=== RÉPONSE SERVEUR ==="
+✅ "Status: 200"
+✅ "Status OK: true"
+✅ "=== DONNÉES REÇUES ==="
+✅ "Données reçues: {success: true, ...}"
+
+ERREURS POSSIBLES:
+------------------
+❌ "=== ERREUR JAVASCRIPT GLOBALE ==="
+❌ "=== PROMESSE REJETÉE ==="
+❌ "=== ÉCHEC DE CRÉATION ==="
+❌ "=== ERREURS DE VALIDATION ==="
+❌ "=== ERREUR RÉSEAU ==="
+
+AVANTAGES
+=========
+
+1. VISIBILITÉ COMPLÈTE
+-----------------------
+- Toutes les erreurs sont capturées
+- Informations détaillées pour chaque erreur
+- Stack traces complètes
+
+2. DIAGNOSTIC FACILITÉ
+-----------------------
+- Localisation précise des erreurs
+- Contexte d'exécution
+- Données impliquées
+
+3. DÉBOGAGE EFFICACE
+--------------------
+- Logs structurés avec séparateurs
+- Messages clairs et identifiables
+- Pas d'interruption du code
+
+4. MAINTENABILITÉ
+-----------------
+- Logs organisés par section
+- Format cohérent
+- Facile à analyser
+
+STATUT
+======
+✅ Gestion globale des erreurs (logs uniquement)
+✅ Logs détaillés pour chaque étape
+✅ Capture des promesses rejetées
+✅ Logs de validation et réseau
+✅ Stack traces complètes
+⏳ En attente des résultats de test
+
+Maintenant, toutes les erreurs seront capturées et affichées 
+détaillées dans la console pour un diagnostic complet.

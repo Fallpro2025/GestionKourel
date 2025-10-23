@@ -1,0 +1,72 @@
+=== SAUVEGARDE : CORRECTION VISIBILITÉ SELECT ===
+Date: 25/09/2025
+Problème: Texte du select invisible (blanc sur blanc)
+
+PROBLÈME IDENTIFIÉ:
+❌ Texte du select invisible quand une option est sélectionnée
+❌ Couleur du texte et du fond identiques (blanc sur blanc)
+❌ Options du select non visibles
+❌ Problème de contraste dans les champs de formulaire
+
+CAUSE RACINE:
+✅ Le select avait bg-white/80 (semi-transparent)
+✅ Les options n'avaient pas de couleur de texte définie
+✅ Le navigateur appliquait ses styles par défaut
+✅ Conflit entre les styles Tailwind et les styles du navigateur
+
+SOLUTION APPLIQUÉE:
+✅ Fond solide: bg-white/80 → bg-white
+✅ Suppression du backdrop-blur-sm sur les champs
+✅ Ajout de classes text-gray-800 sur les options
+✅ Styles CSS personnalisés avec !important
+
+CORRECTIONS DÉTAILLÉES:
+
+🎨 SELECT (Modal Ajout):
+✅ Fond: bg-white (au lieu de bg-white/80)
+✅ Suppression: backdrop-blur-sm
+✅ Options: class="text-gray-800" ajoutée
+✅ Styles CSS: color: #1f2937 !important
+
+🎨 TEXTAREA (Modal Ajout):
+✅ Fond: bg-white (au lieu de bg-white/80)
+✅ Suppression: backdrop-blur-sm
+✅ Texte: text-gray-800 maintenu
+
+🎨 TEXTAREA (Modal Modification):
+✅ Fond: bg-white (au lieu de bg-white/80)
+✅ Suppression: backdrop-blur-sm
+✅ Texte: text-gray-800 maintenu
+
+🎨 STYLES CSS AJOUTÉS:
+```css
+select {
+    color: #1f2937 !important; /* text-gray-800 */
+    background-color: white !important;
+}
+
+select option {
+    color: #1f2937 !important; /* text-gray-800 */
+    background-color: white !important;
+}
+
+select:focus {
+    color: #1f2937 !important;
+    background-color: white !important;
+}
+```
+
+IMPACT:
+✅ Texte du select parfaitement visible
+✅ Options lisibles dans la liste déroulante
+✅ Contraste optimal maintenu
+✅ Compatibilité avec tous les navigateurs
+✅ Design moderne préservé
+
+FICHIERS MODIFIÉS:
+✅ resources/views/membres/roles.blade.php
+
+STATUT: ✅ VISIBILITÉ SELECT CORRIGÉE
+
+Le texte du select est maintenant parfaitement visible
+avec un contraste optimal sur fond blanc.

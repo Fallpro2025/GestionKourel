@@ -1,0 +1,4 @@
+Nom;Prénom;Email;Téléphone;Date de naissance;Matricule;Profession;Niveau d'étude;Adresse;Rôle;Statut;Date d'adhésion
+Diop;Modou;modou.diop@test.com;0123456789;1990-05-15;MEM001;Ingénieur;Master;123 Rue de la Paix, Dakar;Membre;actif;2024-01-01
+Ba;Issa;issa.ba@test.com;0987654321;1985-12-03;MEM002;Designer;Licence;456 Avenue des Champs, Thiès;Membre;actif;2024-01-15
+Ndiaye;Ablaye;ablaye.ndiaye@test.com;0555666777;1992-08-20;MEM003;Développeur;Master;789 Boulevard de la République, Saint-Louis;Administrateur;actif;2024-02-01

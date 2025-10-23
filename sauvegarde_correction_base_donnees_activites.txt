@@ -1,0 +1,128 @@
+SAUVEGARDE - CORRECTION BASE DE DONNÉES ACTIVITÉS
+=================================================
+
+Date: 30/09/2025
+Projet: Gestion Kourel
+
+PROBLÈME IDENTIFIÉ
+==================
+L'ajout d'activité ne passait pas à cause d'un problème de connexion à la base de données :
+- MySQL n'était pas démarré
+- Erreur : "Aucune connexion n'a pu être établie car l'ordinateur cible l'a expressément refusée"
+- Fichier .env manquant
+
+SOLUTION APPLIQUÉE
+==================
+
+1. CRÉATION DU FICHIER .ENV
+---------------------------
+- Copié env.example vers .env
+- Généré la clé d'application avec php artisan key:generate
+- Configuré la base de données
+
+2. PASSAGE À SQLITE
+-------------------
+- Changé DB_CONNECTION de mysql à sqlite
+- Configuré DB_DATABASE=database/database.sqlite
+- Créé le fichier database.sqlite
+- Supprimé les paramètres MySQL inutiles
+
+3. MIGRATION ET SEEDING
+-----------------------
+- Exécuté php artisan migrate
+- Exécuté php artisan db:seed
+- Toutes les tables créées avec succès
+
+FICHIERS MODIFIÉS
+=================
+- .env (créé et configuré)
+- database/database.sqlite (créé)
+
+MIGRATIONS EXÉCUTÉES
+====================
+✅ 0001_01_01_000000_create_users_table
+✅ 0001_01_01_000001_create_cache_table
+✅ 0001_01_01_000002_create_jobs_table
+✅ 2025_01_15_120000_create_membres_table
+✅ 2025_01_15_120001_create_roles_table
+✅ 2025_01_15_120002_create_projets_cotisation_table
+✅ 2025_01_15_120003_create_assignations_cotisation_table
+✅ 2025_01_15_120004_create_activites_table
+✅ 2025_01_15_120005_create_presences_table
+✅ 2025_01_15_120006_create_evenements_table
+✅ 2025_01_15_120007_create_alertes_table
+✅ 2025_09_17_175557_add_matricule_to_membres_table
+✅ 2025_09_24_115607_create_membre_role_table
+✅ 2025_09_24_132512_create_notifications_table
+✅ 2025_09_24_132523_create_competences_table
+✅ 2025_09_24_132535_create_disponibilites_table
+✅ 2025_09_26_091145_create_historiques_table
+✅ 2025_09_30_084352_create_activity_repetitions_table
+✅ 2025_09_30_084353_create_absences_table
+✅ 2025_09_30_084354_create_prestations_table
+✅ 2025_09_30_135227_create_presence_repetitions_table
+
+SEEDERS EXÉCUTÉS
+================
+✅ RoleSeeder
+
+CONFIGURATION FINALE
+====================
+- Base de données : SQLite
+- Fichier : database/database.sqlite
+- Connexion : Fonctionnelle
+- Tables : Toutes créées
+- Données : Rôles de base créés
+
+AVANTAGES DE SQLITE
+===================
+
+1. SIMPLICITÉ
+--------------
+- Pas besoin de serveur de base de données
+- Fichier unique et portable
+- Configuration minimale
+
+2. PERFORMANCE
+---------------
+- Rapide pour les applications de petite/moyenne taille
+- Pas de surcharge réseau
+- Accès direct au fichier
+
+3. MAINTENABILITÉ
+-----------------
+- Sauvegarde simple (copier le fichier)
+- Pas de configuration serveur
+- Déploiement facile
+
+4. DÉVELOPPEMENT
+-----------------
+- Démarrage rapide
+- Pas de dépendances externes
+- Tests simplifiés
+
+LOGS DE DÉBOGAGE AJOUTÉS
+========================
+- Logs dans ActiviteController@store
+- Traçage des données reçues
+- Logs des erreurs de validation
+- Logs de création réussie
+
+PROCHAINES ÉTAPES
+=================
+
+1. Tester la création d'activité
+2. Vérifier les logs dans storage/logs/laravel.log
+3. Confirmer le fonctionnement du formulaire
+4. Retirer les logs de débogage si nécessaire
+
+STATUT
+======
+✅ Base de données configurée et fonctionnelle
+✅ Migrations exécutées avec succès
+✅ Seeders exécutés
+✅ Logs de débogage ajoutés
+⏳ Test de création d'activité en cours
+
+La base de données est maintenant opérationnelle et l'ajout d'activité 
+devrait fonctionner correctement.

@@ -1,0 +1,121 @@
+SAUVEGARDE - AJOUT AFFICHAGE SÉPARÉ MINUTES DE RETARD
+=====================================================
+
+MODIFICATION DEMANDÉE :
+- Afficher les minutes de retard à la fois avec l'heure d'arrivée ET séparément
+- Double affichage des minutes de retard pour le statut "retard"
+- Information plus visible et répétée
+
+CHANGEMENTS APPORTÉS :
+
+1. AFFICHAGE STATIQUE (Blade Template) :
+```php
+@if($presence && $presence->heure_arrivee)
+    <div class="text-xs text-white/60">
+        <i class="fas fa-clock mr-1"></i>{{ $presence->heure_arrivee->format('H:i') }}
+        @if($presence->minutes_retard > 0)
+            <span class="text-orange-400">({{ $presence->minutes_retard }} min)</span>
+        @endif
+    </div>
+@endif
+
+@if($presence && $presence->minutes_retard > 0 && $statutCourant === 'retard')
+    <div class="text-xs text-orange-400">
+        <i class="fas fa-hourglass-half mr-1"></i>{{ $presence->minutes_retard }} min de retard
+    </div>
+@endif
+```
+
+2. MISE À JOUR DYNAMIQUE JAVASCRIPT :
+```javascript
+// Mettre à jour l'heure d'arrivée avec les minutes de retard si applicable
+const heureDiv = ligne.querySelector('.text-xs.text-white\\/60');
+if (heureDiv && presence.heure_arrivee) {
+    const heure = presence.heure_arrivee.substring(11, 16); // Format HH:MM
+    let contenuHeure = `<i class="fas fa-clock mr-1"></i>${heure}`;
+    
+    if (presence.minutes_retard > 0) {
+        contenuHeure += `<span class="text-orange-400">(${presence.minutes_retard} min)</span>`;
+    }
+    
+    heureDiv.innerHTML = contenuHeure;
+}
+
+// Mettre à jour l'affichage séparé des minutes de retard
+const minutesRetardDiv = ligne.querySelector('.text-xs.text-orange-400');
+if (minutesRetardDiv && presence.statut === 'retard' && presence.minutes_retard > 0) {
+    minutesRetardDiv.innerHTML = `<i class="fas fa-hourglass-half mr-1"></i>${presence.minutes_retard} min de retard`;
+} else if (minutesRetardDiv && presence.statut !== 'retard') {
+    minutesRetardDiv.style.display = 'none';
+}
+```
+
+NOUVEAU AFFICHAGE :
+
+1. **Statut** :
+   - 🟠 "En retard" (badge orange)
+
+2. **Heure d'arrivée** :
+   - 🕐 14:15 (30 min) ← Minutes entre parenthèses
+
+3. **Minutes de retard séparées** :
+   - ⏳ 30 min de retard ← Affichage séparé en orange
+
+4. **Autres informations** :
+   - 💬 Justification (si présente)
+   - ✅ Prestation effectuée (si applicable)
+
+EXEMPLE D'AFFICHAGE COMPLET :
+
+```
+┌─────────────────────────────────────┐
+│ 🟠 En retard                        │
+│ 🕐 14:15 (30 min)                   │
+│ ⏳ 30 min de retard                 │
+│ 💬 Justification du retard...       │
+│ ✅ Prestation effectuée             │
+└─────────────────────────────────────┘
+```
+
+LOGIQUE DE FONCTIONNEMENT :
+
+1. **Affichage avec l'heure** :
+   - Toujours affiché si heure d'arrivée présente
+   - Minutes entre parenthèses si > 0
+
+2. **Affichage séparé** :
+   - Affiché seulement si statut = "retard" ET minutes > 0
+   - Masqué pour les autres statuts
+
+3. **Mise à jour dynamique** :
+   - Les deux affichages sont mis à jour après modification
+   - Cohérence entre affichage statique et dynamique
+
+AVANTAGES :
+
+✅ **Information répétée** : Minutes de retard visibles à deux endroits
+✅ **Visibilité maximale** : Information importante mise en évidence
+✅ **Cohérence** : Même logique en statique et dynamique
+✅ **Flexibilité** : Affichage conditionnel selon le statut
+✅ **Interface claire** : Information facilement repérable
+
+TESTS À EFFECTUER :
+
+1. **Test affichage initial** :
+   - Vérifier qu'un retard affiche les minutes à deux endroits
+   - Vérifier qu'un autre statut n'affiche pas les minutes séparées
+
+2. **Test modification** :
+   - Modifier les minutes de retard
+   - Vérifier que les deux affichages se mettent à jour
+
+3. **Test différents statuts** :
+   - Vérifier que les minutes séparées n'apparaissent que pour "retard"
+
+RÉSULTAT ATTENDU :
+- Les minutes de retard sont affichées avec l'heure ET séparément
+- Information plus visible et répétée pour les retards
+- Interface cohérente et informative
+
+DATE : $(date)
+STATUT : MODIFICATION APPLIQUÉE

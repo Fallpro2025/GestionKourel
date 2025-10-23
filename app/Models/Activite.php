@@ -46,6 +46,14 @@ class Activite extends Model
     }
 
     /**
+     * Relation avec les répétitions
+     */
+    public function repetitions(): HasMany
+    {
+        return $this->hasMany(ActivityRepetition::class);
+    }
+
+    /**
      * Accessor pour la durée de l'activité en minutes
      */
     public function getDureeMinutesAttribute(): int

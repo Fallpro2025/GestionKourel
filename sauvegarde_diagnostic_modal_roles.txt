@@ -1,0 +1,47 @@
+=== SAUVEGARDE : DIAGNOSTIC MODAL AJOUT RÔLE ===
+Date: 25/09/2025
+Problème: Le modal "Ajouter un Rôle" ne s'ouvre pas
+
+DIAGNOSTIC EFFECTUÉ:
+
+1. VÉRIFICATION DU CODE:
+   ✅ Fonction ouvrirModalAjoutRole() existe
+   ✅ Bouton appelle onclick="ouvrirModalAjoutRole()"
+   ✅ Modal existe avec id="modalAjoutRole"
+   ✅ Classes CSS correctes (hidden par défaut)
+
+2. AMÉLIORATIONS APPORTÉES:
+   ✅ Logs détaillés dans la fonction ouvrirModalAjoutRole()
+   ✅ Test au chargement de la page (DOMContentLoaded)
+   ✅ Vérification de l'existence du bouton et du modal
+   ✅ ID ajouté au bouton pour faciliter le débogage
+   ✅ Logs de chargement du script
+
+3. LOGS AJOUTÉS:
+   ✅ "=== SCRIPT RÔLES CHARGÉ ===" au début
+   ✅ "=== DOM CHARGÉ ===" au chargement de la page
+   ✅ "=== OUVRIR MODAL AJOUT RÔLE ===" au clic
+   ✅ Vérification de l'existence des éléments
+   ✅ Affichage des classes CSS avant/après
+
+4. TESTS À EFFECTUER:
+   ✅ Ouvrir la console du navigateur (F12)
+   ✅ Aller sur la page de gestion des rôles
+   ✅ Vérifier les logs de chargement
+   ✅ Cliquer sur "Ajouter un Rôle"
+   ✅ Vérifier les logs de la fonction
+
+POSSIBLES CAUSES:
+- JavaScript non chargé
+- Erreur JavaScript bloquante
+- Conflit avec d'autres scripts
+- Problème de timing (DOM pas prêt)
+- Erreur dans le layout ou les dépendances
+
+FICHIERS MODIFIÉS:
+✅ resources/views/membres/roles.blade.php (logs + tests)
+
+STATUT: 🔍 DIAGNOSTIC EN COURS
+
+Le système est maintenant équipé de logs détaillés pour
+identifier exactement où le problème se situe.

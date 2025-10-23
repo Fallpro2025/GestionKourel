@@ -1,0 +1,45 @@
+=== SAUVEGARDE : CORRECTION FINALE EN-TÊTES AVEC ACCENTS ===
+Date: 25/09/2025
+Problème: En-têtes manquants à cause de la suppression excessive des caractères
+
+PROBLÈME IDENTIFIÉ:
+❌ Erreur: "En-têtes manquants dans le fichier Excel : prenom, telephone"
+❌ Le nettoyage supprimait trop de caractères (accents)
+❌ "prénom" devenait "prnom" et "téléphone" devenait "tlphone"
+❌ Les variations d'accents n'étaient pas toutes couvertes
+
+SOLUTIONS APPLIQUÉES:
+
+1. NETTOYAGE AMÉLIORÉ:
+   ✅ Suppression seulement du BOM UTF-8 (\xEF\xBB\xBF)
+   ✅ Suppression seulement des caractères de contrôle (\x00-\x1F\x7F)
+   ✅ Préservation des caractères accentués
+   ✅ Nettoyage plus précis et ciblé
+
+2. VARIATIONS ÉTENDUES:
+   ✅ prenom: ['prenom', 'prénom', 'prnom', 'firstname']
+   ✅ telephone: ['telephone', 'téléphone', 'tlphone', 'tel', 'phone']
+   ✅ Support des versions avec/sans accents
+   ✅ Support des versions corrompues par le nettoyage
+
+3. FICHIER DE TEST CRÉÉ:
+   ✅ test_import_accents.csv avec accents
+   ✅ Format CSV standard avec virgules
+   ✅ Données de test réalistes
+   ✅ En-têtes avec accents français
+
+AVANTAGES:
+- Préservation des caractères accentués
+- Support des versions corrompues
+- Nettoyage plus précis
+- Compatibilité maximale
+- Logs détaillés pour le débogage
+
+FICHIERS MODIFIÉS:
+✅ app/Http/Controllers/MembreImportController.php (nettoyage + variations)
+✅ test_import_accents.csv (fichier de test)
+
+STATUT: ✅ CORRECTION APPLIQUÉE AVEC SUCCÈS
+
+L'importation devrait maintenant fonctionner avec tous les types
+d'en-têtes, avec ou sans accents, même corrompus.

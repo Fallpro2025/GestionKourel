@@ -30,39 +30,8 @@
 
     <!-- Main Content -->
     <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Messages d'erreur -->
-        @if($errors->any())
-            <div class="mb-6 bg-red-500/20 border border-red-500/30 rounded-xl p-4">
-                <div class="flex items-center mb-2">
-                    <i class="fas fa-exclamation-circle text-red-400 mr-3"></i>
-                    <span class="text-red-400 font-medium">Erreurs de validation :</span>
-                </div>
-                <ul class="text-red-400 text-sm space-y-1">
-                    @foreach($errors->all() as $error)
-                        <li>• {{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <!-- Messages de succès/erreur -->
-        @if(session('success'))
-            <div class="mb-6 bg-green-500/20 border border-green-500/30 rounded-xl p-4">
-                <div class="flex items-center">
-                    <i class="fas fa-check-circle text-green-400 mr-3"></i>
-                    <span class="text-green-400 font-medium">{{ session('success') }}</span>
-                </div>
-            </div>
-        @endif
-
-        @if(session('error'))
-            <div class="mb-6 bg-red-500/20 border border-red-500/30 rounded-xl p-4">
-                <div class="flex items-center">
-                    <i class="fas fa-exclamation-circle text-red-400 mr-3"></i>
-                    <span class="text-red-400 font-medium">{{ session('error') }}</span>
-                </div>
-            </div>
-        @endif
+        <!-- Messages de session gérés par le système de toast -->
+        @include('components.alertes-session')
 
         <!-- Formulaire -->
         <div class="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-8">
@@ -208,9 +177,9 @@
                                     name="role_id" 
                                     class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
                                     required>
-                                <option value="">Sélectionnez un rôle</option>
+                                <option value="" style="background: #374151; color: white;">Sélectionnez un rôle</option>
                                 @foreach($roles as $role)
-                                    <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
+                                    <option value="{{ $role->id }}" style="background: #374151; color: white;" {{ old('role_id') == $role->id ? 'selected' : '' }}>
                                         {{ $role->nom }}
                                     </option>
                                 @endforeach

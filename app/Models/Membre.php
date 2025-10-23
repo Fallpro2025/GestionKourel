@@ -40,11 +40,85 @@ class Membre extends Model
     ];
 
     /**
-     * Relation avec le rôle du membre
+     * Relation avec le rôle principal du membre (pour compatibilité)
      */
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
+    }
+
+    /**
+     * Relation many-to-many avec les rôles
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'membre_role')
+                    ->withPivot(['est_principal', 'date_attribution', 'notes'])
+                    ->withTimestamps();
+    }
+
+    /**
+     * Relation avec les attributions de rôles
+     */
+    public function membreRoles(): HasMany
+    {
+        return $this->hasMany(MembreRole::class);
+    }
+
+    /**
+     * Obtenir le rôle principal du membre
+     */
+    public function rolePrincipal(): ?Role
+    {
+        return $this->roles()->wherePivot('est_principal', true)->first();
+    }
+
+    /**
+     * Vérifier si le membre a un rôle spécifique
+     */
+    public function aRole(string $nomRole): bool
+    {
+        return $this->roles()->where('nom', $nomRole)->exists();
+    }
+
+    /**
+     * Vérifier si le membre est administrateur
+     */
+    public function estAdministrateur(): bool
+    {
+        return $this->aRole('Administrateur');
+    }
+
+    /**
+     * Ajouter un rôle au membre
+     */
+    public function ajouterRole(int $roleId, bool $estPrincipal = false, string $notes = null): void
+    {
+        $this->roles()->attach($roleId, [
+            'est_principal' => $estPrincipal,
+            'date_attribution' => now(),
+            'notes' => $notes
+        ]);
+    }
+
+    /**
+     * Retirer un rôle du membre
+     */
+    public function retirerRole(int $roleId): void
+    {
+        $this->roles()->detach($roleId);
+    }
+
+    /**
+     * Définir le rôle principal
+     */
+    public function definirRolePrincipal(int $roleId): void
+    {
+        // Retirer le statut principal de tous les autres rôles
+        $this->roles()->updateExistingPivot($this->roles()->pluck('id'), ['est_principal' => false]);
+        
+        // Définir le nouveau rôle principal
+        $this->roles()->updateExistingPivot($roleId, ['est_principal' => true]);
     }
 
     /**

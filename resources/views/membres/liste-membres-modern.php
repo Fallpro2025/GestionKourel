@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+<!-- Messages d'alerte modernes -->
+@include('components.alertes-session')
+
 @section('title', 'Liste des Membres - Gestion Kourel')
 
 @php
@@ -14,7 +17,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900 mb-2">👥 Membres de l'Association</h1>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2"><i class="fas fa-users mr-3"></i>Membres de l'Association</h1>
                     <p class="text-gray-600">Gestion complète des membres de Kourel</p>
                 </div>
                 <div class="mt-4 sm:mt-0 flex flex-wrap gap-3">
@@ -141,7 +144,7 @@
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold text-gray-900">Liste des Membres</h2>
                     <div class="text-sm text-gray-500 bg-blue-50 px-3 py-1 rounded-full">
-                        🔄 Version {{ $version }} - {{ $membres->count() }} membre(s) réel(s)
+                        <i class="fas fa-sync-alt mr-2"></i>Version {{ $version }} - {{ $membres->count() }} membre(s) réel(s)
                     </div>
                 </div>
             </div>
@@ -357,26 +360,53 @@ function modifierMembre(id) {
 }
 
 function supprimerMembre(id) {
-    if (confirm('Êtes-vous sûr de vouloir supprimer ce membre ?')) {
-        // Créer un formulaire pour la suppression
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = `{{ url('membres') }}/${id}`;
-        
-        const csrfToken = document.createElement('input');
-        csrfToken.type = 'hidden';
-        csrfToken.name = '_token';
-        csrfToken.value = '{{ csrf_token() }}';
-        
-        const methodField = document.createElement('input');
-        methodField.type = 'hidden';
-        methodField.name = '_method';
-        methodField.value = 'DELETE';
-        
-        form.appendChild(csrfToken);
-        form.appendChild(methodField);
-        document.body.appendChild(form);
-        form.submit();
+    if (typeof alerteModerne !== 'undefined') {
+        alerteModerne.confirmation('Êtes-vous sûr de vouloir supprimer ce membre ?', function(confirme) {
+            if (confirme) {
+                // Créer un formulaire pour la suppression
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `{{ url('membres') }}/${id}`;
+                
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}';
+                
+                const methodField = document.createElement('input');
+                methodField.type = 'hidden';
+                methodField.name = '_method';
+                methodField.value = 'DELETE';
+                
+                form.appendChild(csrfToken);
+                form.appendChild(methodField);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
+    } else {
+        // Fallback si alerteModerne n'est pas disponible
+        if (confirm('Êtes-vous sûr de vouloir supprimer ce membre ?')) {
+            // Créer un formulaire pour la suppression
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `{{ url('membres') }}/${id}`;
+            
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_token';
+            csrfToken.value = '{{ csrf_token() }}';
+            
+            const methodField = document.createElement('input');
+            methodField.type = 'hidden';
+            methodField.name = '_method';
+            methodField.value = 'DELETE';
+            
+            form.appendChild(csrfToken);
+            form.appendChild(methodField);
+            document.body.appendChild(form);
+            form.submit();
+        }
     }
 }
 

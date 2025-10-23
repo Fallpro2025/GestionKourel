@@ -1,0 +1,52 @@
+=== SAUVEGARDE : CORRECTION TEMPLATE - HOMMES UNIQUEMENT ===
+Date: 24/09/2025
+Correction: Suppression des exemples féminins du template
+
+PROBLÈME IDENTIFIÉ:
+❌ Le template contenait des exemples avec des prénoms féminins
+❌ Le kourel ne compte que des hommes selon l'utilisateur
+❌ Incohérence avec la réalité de l'association
+
+CORRECTIONS APPORTÉES:
+
+1. TEMPLATE EXCEL CORRIGÉ:
+   ✅ Suppression de "Fatou Sow" (prénom féminin)
+   ✅ Remplacement par "Moussa Sow" (prénom masculin)
+   ✅ Ajout d'un 7ème exemple masculin: "Amadou Thiam"
+   ✅ Tous les exemples sont maintenant masculins
+
+2. NOUVEAUX EXEMPLES DE MEMBRES (HOMMES UNIQUEMENT):
+   ✅ Diop Modou - Ingénieur, Dakar
+   ✅ Ba Issa - Designer, Thiès  
+   ✅ Ndiaye Ablaye - Développeur, Saint-Louis
+   ✅ Sow Moussa - Comptable, Kaolack (corrigé)
+   ✅ Fall Cheikh - Enseignant, Ziguinchor
+   ✅ Thiam Amadou - Médecin, Dakar (nouveau)
+
+3. PRÉVISUALISATION MISE À JOUR:
+   ✅ Exemples de fallback avec prénoms masculins uniquement
+   ✅ Cohérence avec le template téléchargeable
+   ✅ Respect de la composition du kourel
+
+4. PROFESSIONS VARIÉES (HOMMES):
+   ✅ Ingénieur (Master)
+   ✅ Designer (Licence)
+   ✅ Développeur (Master)
+   ✅ Comptable (BTS)
+   ✅ Enseignant (Master)
+   ✅ Médecin (Doctorat) - nouveau
+
+AVANTAGES:
+- Respect de la composition réelle du kourel
+- Exemples cohérents avec la réalité
+- Template plus représentatif
+- Évite toute confusion
+
+FICHIERS MODIFIÉS:
+✅ app/Http/Controllers/MembreImportController.php (template)
+✅ resources/views/membres/import.blade.php (prévisualisation)
+
+STATUT: ✅ CORRECTION APPLIQUÉE AVEC SUCCÈS
+
+Le template respecte maintenant la composition exclusivement
+masculine de votre kourel sénégalais.

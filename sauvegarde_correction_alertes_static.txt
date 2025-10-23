@@ -1,0 +1,70 @@
+=== SAUVEGARDE : CORRECTION DES MESSAGES D'ALERTE STATIQUES ===
+Date: 27/09/2025
+Problème résolu: 
+- Messages d'alerte statiques qui s'affichent encore dans les vues
+- Durée d'affichage des toasts à ajuster à 4 secondes
+
+PROBLÈME IDENTIFIÉ:
+- Certaines vues affichaient encore des messages d'alerte statiques
+- Le système de toast moderne n'était pas utilisé partout
+- Durée d'affichage des toasts était de 5 secondes au lieu de 4
+
+SOLUTION IMPLÉMENTÉE:
+
+1. DURÉE D'AFFICHAGE CORRIGÉE:
+   ✅ public/js/alertes-modernes.js : 5000ms → 4000ms
+   ✅ Auto-disparition après 4 secondes comme demandé
+
+2. SUPPRESSION DES MESSAGES STATIQUES:
+   ✅ resources/views/membres/index.blade.php
+   ✅ resources/views/membres/membres.blade.php
+   ✅ resources/views/membres/create-simple.blade.php
+   ✅ Remplacés par @include('components.alertes-session')
+
+3. AJOUT DU COMPOSANT D'ALERTES:
+   ✅ resources/views/roles/index.blade.php
+   ✅ resources/views/roles/show.blade.php
+   ✅ resources/views/roles/edit.blade.php
+   ✅ resources/views/roles/create.blade.php
+   ✅ resources/views/cotisations/index.blade.php
+   ✅ resources/views/cotisations/show.blade.php
+
+4. CARACTÉRISTIQUES DU SYSTÈME DE TOAST:
+   ✅ Position: En haut à droite (fixed top-4 right-4)
+   ✅ Durée: 4 secondes d'affichage
+   ✅ Design: Glassmorphism avec backdrop-blur-xl
+   ✅ Animations: Entrée/sortie fluides
+   ✅ Fermeture: Manuelle avec bouton X
+
+5. TYPES DE TOASTS DISPONIBLES:
+   ✅ SUCCESS: Vert avec icône check-circle
+   ✅ ERROR: Rouge avec icône exclamation-circle
+   ✅ WARNING: Jaune avec icône exclamation-triangle
+   ✅ INFO: Bleu avec icône info-circle
+
+6. INTÉGRATION COMPLÈTE:
+   ✅ Toutes les vues utilisent maintenant le système de toast
+   ✅ Messages de session Laravel convertis en toasts
+   ✅ Erreurs de validation affichées en toasts
+   ✅ Confirmations avec modals glassmorphism
+
+AVANTAGES:
+✅ Interface cohérente sur toute la plateforme
+✅ Messages non-intrusifs en haut à droite
+✅ Auto-disparition après 4 secondes
+✅ Design moderne avec glassmorphism
+✅ Animations fluides et professionnelles
+✅ Fermeture manuelle possible
+
+RÉSULTAT:
+- Plus aucun message d'alerte statique dans les vues
+- Tous les messages utilisent le système de toast moderne
+- Durée d'affichage de 4 secondes comme demandé
+- Position en haut à droite respectée
+- Design glassmorphism cohérent
+
+TESTS À EFFECTUER:
+1. Créer un membre → Toast de succès en haut à droite pendant 4s
+2. Modifier un membre → Toast de succès en haut à droite pendant 4s
+3. Supprimer un rôle → Confirmation moderne + toast de succès
+4. Erreur de validation → Toast d'erreur en haut à droite pendant 4s

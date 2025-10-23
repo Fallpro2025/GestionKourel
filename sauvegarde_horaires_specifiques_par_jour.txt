@@ -1,0 +1,158 @@
+SAUVEGARDE - HORAIRES SPÉCIFIQUES PAR JOUR
+==========================================
+
+Date: 30/09/2025
+Projet: Gestion Kourel
+
+DESCRIPTION
+===========
+Amélioration de l'interface de création d'activités pour permettre de définir 
+des horaires spécifiques pour chaque jour de répétition sélectionné.
+
+FONCTIONNALITÉS AJOUTÉES
+========================
+
+1. INTERFACE AMÉLIORÉE
+----------------------
+- Chaque jour de la semaine a sa propre section
+- Horaires spécifiques pour chaque jour sélectionné
+- Affichage/masquage automatique des horaires selon la sélection
+- Design cohérent avec le système existant
+
+2. GESTION DES HORAIRES PAR JOUR
+--------------------------------
+- Mardi: 20h30 - 22h30 (par défaut pour répétitions)
+- Dimanche: 12h00 - 15h00 (par défaut pour répétitions)
+- Jeudi: 20h45 - 21h15 (par défaut pour Goudi Aldiouma)
+- Possibilité de personnaliser chaque jour individuellement
+
+3. AUTO-SÉLECTION INTELLIGENTE
+------------------------------
+- Sélection automatique des jours selon le type d'activité
+- Remplissage automatique des horaires par défaut
+- Affichage automatique des champs horaires pour les jours sélectionnés
+
+4. VALIDATION ET GESTION
+------------------------
+- Vérification qu'au moins un jour a des horaires définis
+- Validation des horaires (début < fin)
+- Nettoyage automatique des horaires quand un jour est décoché
+
+FICHIERS MODIFIÉS
+=================
+- resources/views/activites/create.blade.php
+- app/Http/Controllers/ActivityRepetitionController.php
+
+FONCTIONNALITÉS JAVASCRIPT
+==========================
+
+1. toggleHorairesJour(jour)
+- Affiche/masque les horaires d'un jour spécifique
+- Vide les horaires quand le jour est décoché
+- Gestion de l'état des champs
+
+2. autoSelectionJours(type)
+- Sélection automatique des jours selon le type d'activité
+- Remplissage des horaires par défaut
+- Affichage des champs horaires correspondants
+
+3. genererRepetitions(activiteId, formData)
+- Collecte des horaires spécifiques pour chaque jour
+- Validation qu'au moins un jour a des horaires
+- Envoi des données au serveur
+
+FONCTIONNALITÉS SERVEUR
+=======================
+
+1. Validation améliorée
+- Vérification de la présence d'horaires par jour
+- Validation du format JSON des horaires
+- Gestion des erreurs
+
+2. Génération intelligente
+- Utilisation des horaires spécifiques par jour
+- Génération des répétitions avec les bons horaires
+- Évite les doublons
+
+STRUCTURE DES DONNÉES
+=====================
+
+Horaires par jour (JSON):
+{
+    "mardi": {
+        "debut": "20:30",
+        "fin": "22:30"
+    },
+    "dimanche": {
+        "debut": "12:00",
+        "fin": "15:00"
+    }
+}
+
+UTILISATION
+===========
+
+1. Créer une activité avec répétitions
+- Sélectionner "Avec répétitions"
+- Choisir les jours de répétition
+- Définir les horaires pour chaque jour
+- Spécifier la période de génération
+- Soumettre le formulaire
+
+2. Exemples d'utilisation
+- Répétitions: Mardi 20h30-22h30 + Dimanche 12h00-15h00
+- Goudi Aldiouma: Jeudi 20h45-21h15
+- Formation: Lundi 18h00-20h00 + Mercredi 18h00-20h00
+
+AVANTAGES
+=========
+
+1. Flexibilité maximale
+- Horaires différents pour chaque jour
+- Adaptation aux besoins spécifiques
+- Gestion des cas particuliers
+
+2. Simplicité d'utilisation
+- Interface intuitive
+- Auto-sélection intelligente
+- Validation en temps réel
+
+3. Cohérence
+- Design aligné avec l'existant
+- Gestion d'erreurs uniforme
+- Messages clairs et précis
+
+4. Robustesse
+- Validation côté client et serveur
+- Gestion des cas d'erreur
+- Logs détaillés
+
+EXEMPLES D'UTILISATION
+======================
+
+1. Répétitions Kourel
+- Mardi: 20h30 - 22:30
+- Dimanche: 12h00 - 15h00
+
+2. Goudi Aldiouma
+- Jeudi: 20h45 - 21h15
+
+3. Formation
+- Lundi: 18h00 - 20h00
+- Mercredi: 18h00 - 20h00
+
+4. Réunions
+- Vendredi: 19h00 - 21h00
+
+STATUT
+======
+✅ Interface avec horaires spécifiques par jour
+✅ Auto-sélection intelligente
+✅ Validation côté client et serveur
+✅ Génération automatique des répétitions
+✅ Gestion des erreurs et cas particuliers
+✅ Design cohérent et responsive
+
+L'interface permet maintenant de définir des horaires spécifiques pour 
+chaque jour de répétition, offrant une flexibilité maximale tout en 
+gardant une utilisation simple et intuitive.

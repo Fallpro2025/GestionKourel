@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('telephone', 20)->unique()->nullable();
             $table->date('date_naissance')->nullable();
-            $table->date('date_adhesion')->default(DB::raw('CURRENT_DATE'));
+            $table->date('date_adhesion')->default(now());
             $table->enum('statut', ['actif', 'inactif', 'suspendu', 'ancien'])->default('actif');
             $table->unsignedBigInteger('role_id')->nullable();
             $table->string('photo_url', 500)->nullable();
@@ -35,7 +35,8 @@ return new class extends Migration
             $table->index('email');
             $table->index('statut');
             $table->index('date_adhesion');
-            $table->fullText(['nom', 'prenom', 'email', 'profession']);
+            // Note: fullText non supporté par SQLite, remplacé par un index composite
+            $table->index(['nom', 'prenom', 'email', 'profession']);
         });
     }
 

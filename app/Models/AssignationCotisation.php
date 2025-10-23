@@ -10,6 +10,8 @@ class AssignationCotisation extends Model
 {
     use HasFactory;
 
+    protected $table = 'assignations_cotisation';
+
     protected $fillable = [
         'membre_id',
         'projet_id',

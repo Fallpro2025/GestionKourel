@@ -1,0 +1,208 @@
+GUIDE DE DÉBOGAGE - SECTION RÉPÉTITIONS
+=======================================
+
+Date: 02/10/2025
+Projet: Gestion Kourel
+
+PROBLÈME IDENTIFIÉ
+==================
+L'utilisateur ne peut pas ouvrir la section "Avec répétitions" - rien ne s'affiche
+quand il clique sur le bouton radio.
+
+LOGS DE DÉBOGAGE AJOUTÉS
+========================
+
+1. VÉRIFICATION DES ÉLÉMENTS
+----------------------------
+```javascript
+console.log('Boutons radio trouvés:', typeCreationRadios.length);
+console.log('Section répétitions trouvée:', sectionRepetitions);
+console.log('Section dates trouvée:', sectionDates);
+```
+
+2. VÉRIFICATION DES BOUTONS RADIO
+---------------------------------
+```javascript
+typeCreationRadios.forEach((radio, index) => {
+    console.log(`Radio ${index}:`, radio.value, radio.checked);
+    // ...
+});
+```
+
+3. DÉTECTION DES CHANGEMENTS
+----------------------------
+```javascript
+radio.addEventListener('change', function() {
+    console.log('Changement détecté:', this.value, this.checked);
+    if (this.value === 'repetition') {
+        console.log('Affichage section répétitions');
+        // ...
+    } else {
+        console.log('Masquage section répétitions');
+        // ...
+    }
+});
+```
+
+ÉTAPES DE DÉBOGAGE
+==================
+
+ÉTAPE 1: OUVRIR LA CONSOLE
+---------------------------
+1. Appuyer sur F12
+2. Aller dans l'onglet "Console"
+3. Recharger la page
+
+ÉTAPE 2: VÉRIFIER L'INITIALISATION
+----------------------------------
+Dans la console, vous devriez voir :
+✅ "DOM chargé, initialisation..."
+✅ "Formulaire trouvé: [object HTMLFormElement]"
+✅ "Boutons radio trouvés: 2"
+✅ "Section répétitions trouvée: [object HTMLDivElement]"
+✅ "Section dates trouvée: [object HTMLDivElement]"
+✅ "Radio 0: simple true"
+✅ "Radio 1: repetition false"
+
+ÉTAPE 3: TESTER LE CHANGEMENT
+-----------------------------
+1. Cliquer sur "Avec répétitions"
+2. Observer les messages dans la console :
+   ✅ "Changement détecté: repetition true"
+   ✅ "Affichage section répétitions"
+
+ÉTAPE 4: VÉRIFIER L'AFFICHAGE
+-----------------------------
+La section "Configuration des Répétitions" devrait apparaître avec :
+- Horaires prédéfinis
+- Jours de répétition avec horaires
+- Période de génération
+
+PROBLÈMES POSSIBLES
+===================
+
+PROBLÈME 1: Éléments non trouvés
+--------------------------------
+CAUSE: IDs incorrects ou éléments manquants
+SOLUTION: Vérifier les IDs dans le HTML
+
+PROBLÈME 2: Event listeners non attachés
+----------------------------------------
+CAUSE: JavaScript exécuté avant le DOM
+SOLUTION: Vérifier que le code est dans DOMContentLoaded
+
+PROBLÈME 3: Classes CSS incorrectes
+-----------------------------------
+CAUSE: Classe "hidden" non définie ou conflit
+SOLUTION: Vérifier les classes Tailwind
+
+PROBLÈME 4: Boutons radio non fonctionnels
+------------------------------------------
+CAUSE: Attributs manquants ou conflits
+SOLUTION: Vérifier name, value, checked
+
+MESSAGES À RECHERCHER
+=====================
+
+INITIALISATION RÉUSSIE:
+-----------------------
+✅ "Boutons radio trouvés: 2"
+✅ "Section répétitions trouvée: [object HTMLDivElement]"
+✅ "Section dates trouvée: [object HTMLDivElement]"
+
+CHANGEMENT DÉTECTÉ:
+-------------------
+✅ "Changement détecté: repetition true"
+✅ "Affichage section répétitions"
+
+PROBLÈMES:
+----------
+❌ "Boutons radio trouvés: 0" → Pas de boutons radio
+❌ "Section répétitions trouvée: null" → ID incorrect
+❌ Pas de "Changement détecté" → Event listener non attaché
+
+STRUCTURE HTML ATTENDUE
+========================
+
+Boutons radio:
+```html
+<input type="radio" name="type_creation" value="simple" checked>
+<input type="radio" name="type_creation" value="repetition">
+```
+
+Sections:
+```html
+<div id="sectionDates">...</div>
+<div id="sectionRepetitions" class="hidden">...</div>
+```
+
+CLASSES CSS UTILISÉES
+=====================
+
+- `hidden` : Masque l'élément (Tailwind CSS)
+- `space-y-6` : Espacement vertical
+- `bg-blue-500/10` : Fond bleu transparent
+- `border-blue-500/30` : Bordure bleue
+
+COMMANDES DE TEST
+=================
+
+1. Vérifier les éléments dans la console :
+```javascript
+document.querySelectorAll('input[name="type_creation"]')
+document.getElementById('sectionRepetitions')
+document.getElementById('sectionDates')
+```
+
+2. Tester manuellement l'affichage :
+```javascript
+document.getElementById('sectionRepetitions').classList.remove('hidden')
+document.getElementById('sectionDates').classList.add('hidden')
+```
+
+3. Vérifier les classes :
+```javascript
+document.getElementById('sectionRepetitions').className
+```
+
+INSTRUCTIONS POUR L'UTILISATEUR
+================================
+
+1. Ouvrir la console (F12)
+2. Recharger la page de création d'activité
+3. Copier TOUS les messages de la console
+4. Cliquer sur "Avec répétitions"
+5. Copier les nouveaux messages
+6. Me les envoyer pour diagnostic
+
+MESSAGES ATTENDUS
+=================
+
+AVANT LE CLIC:
+--------------
+- "DOM chargé, initialisation..."
+- "Formulaire trouvé: [object HTMLFormElement]"
+- "Boutons radio trouvés: 2"
+- "Section répétitions trouvée: [object HTMLDivElement]"
+- "Section dates trouvée: [object HTMLDivElement]"
+- "Radio 0: simple true"
+- "Radio 1: repetition false"
+
+APRÈS LE CLIC:
+--------------
+- "Changement détecté: repetition true"
+- "Affichage section répétitions"
+
+RÉSULTAT VISUEL:
+----------------
+La section "Configuration des Répétitions" devrait apparaître avec un fond bleu
+et contenir les options pour configurer les répétitions.
+
+STATUT
+======
+✅ Logs de débogage ajoutés
+✅ Vérification des éléments
+✅ Détection des changements
+⏳ En attente des résultats de test
+
+Envoyez-moi les messages de la console pour identifier le problème exact.
