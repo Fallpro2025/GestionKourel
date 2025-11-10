@@ -236,9 +236,6 @@
                                 <button class="table-action-btn warning" onclick="event.stopPropagation(); sendMessageToMember()" title="Envoyer SMS">
                                     <i class="fas fa-sms text-sm"></i>
                                 </button>
-                                <button class="table-action-btn danger" onclick="event.stopPropagation(); deleteMember(${dataId || '1'})" title="Supprimer">
-                                    <i class="fas fa-trash text-sm"></i>
-                                </button>
                             </div>
                         </td>
                     </tr>
@@ -884,11 +881,6 @@
             border-color: rgba(245, 158, 11, 0.5);
         }
         
-        .table-action-btn.danger:hover {
-            background: rgba(239, 68, 68, 0.3);
-            border-color: rgba(239, 68, 68, 0.5);
-        }
-        
         .member-list-item {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
@@ -991,13 +983,12 @@
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 min-h-screen">
-
     <!-- Système de messages d'alerte modernes -->
     <div id="alertContainer" class="fixed top-4 right-4 z-[9999] space-y-3">
         @if(session('success'))
             <div class="alert-item alert-success bg-gradient-to-r from-green-600/95 to-green-500/95 backdrop-blur-md border border-green-400/50 rounded-2xl p-4 max-w-sm shadow-2xl transform transition-all duration-500 ease-out">
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center">
+                <div class="flex items-center">
                         <i class="fas fa-check-circle text-green-100 mr-3 text-lg"></i>
                         <span class="text-green-100 font-semibold text-sm">{{ session('success') }}</span>
                     </div>
@@ -1011,7 +1002,7 @@
         @if(session('error'))
             <div class="alert-item alert-error bg-gradient-to-r from-red-600/95 to-red-500/95 backdrop-blur-md border border-red-400/50 rounded-2xl p-4 max-w-sm shadow-2xl transform transition-all duration-500 ease-out">
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center">
+                <div class="flex items-center">
                         <i class="fas fa-exclamation-circle text-red-100 mr-3 text-lg"></i>
                         <span class="text-red-100 font-semibold text-sm">{{ session('error') }}</span>
                     </div>
@@ -1025,7 +1016,7 @@
         @if(session('warning'))
             <div class="alert-item alert-warning bg-gradient-to-r from-yellow-600/95 to-yellow-500/95 backdrop-blur-md border border-yellow-400/50 rounded-2xl p-4 max-w-sm shadow-2xl transform transition-all duration-500 ease-out">
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center">
+                <div class="flex items-center">
                         <i class="fas fa-exclamation-triangle text-yellow-100 mr-3 text-lg"></i>
                         <span class="text-yellow-100 font-semibold text-sm">{{ session('warning') }}</span>
                     </div>
@@ -1039,7 +1030,7 @@
         @if(session('info'))
             <div class="alert-item alert-info bg-gradient-to-r from-blue-600/95 to-blue-500/95 backdrop-blur-md border border-blue-400/50 rounded-2xl p-4 max-w-sm shadow-2xl transform transition-all duration-500 ease-out">
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center">
+                <div class="flex items-center">
                         <i class="fas fa-info-circle text-blue-100 mr-3 text-lg"></i>
                         <span class="text-blue-100 font-semibold text-sm">{{ session('info') }}</span>
                     </div>
@@ -1106,10 +1097,6 @@
         </div>
     </div>
     
-
-    <!-- Messages de session gérés par le système de toast -->
-    @include('components.alertes-session')
-
     <div id="app">
         <!-- Sidebar Navigation -->
         <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white/10 backdrop-blur-xl border-r border-white/20 sidebar-transition">
@@ -1440,9 +1427,6 @@
                             <button onclick="editMember({{ $membre->id }})" class="flex-1 px-3 py-2 bg-primary-500/20 text-primary-400 text-xs rounded-lg hover:bg-primary-500/30 transition-all duration-300">
                                 Modifier
                             </button>
-                            <button onclick="deleteMember({{ $membre->id }})" class="px-3 py-2 bg-red-500/20 text-red-400 text-xs rounded-lg hover:bg-red-500/30 transition-all duration-300" title="Supprimer">
-                                <i class="fas fa-trash"></i>
-                            </button>
                         </div>
                     </div>
                     @empty
@@ -1480,7 +1464,7 @@
         <!-- Add Member Modal -->
         <div id="addMemberModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden">
             <div class="flex items-center justify-center min-h-screen p-4">
-                <div class="metric-card rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20 w-full max-w-lg max-h-[90vh] overflow-y-auto modal-content">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-2xl font-bold text-white">Ajouter un Membre</h3>
                         <button onclick="closeAddMemberModal()" class="text-white/60 hover:text-white">
@@ -1513,49 +1497,49 @@
                                 <input type="text" 
                                        id="matriculeModal"
                                        readonly
-                                       class="search-input w-full px-3 py-2 text-white/60 bg-white/5 rounded-lg text-sm cursor-not-allowed" 
+                                       class="search-input w-full px-3 py-2 text-gray-800 bg-white/70 rounded-lg text-sm" 
                                        placeholder="MFTB-0001 (généré automatiquement)">
                             </div>
                             
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label class="block text-white/80 text-xs font-medium mb-1">Nom <span class="text-red-400">*</span></label>
+                                    <label class="block text-gray-700 text-xs font-medium mb-1">Nom <span class="text-red-600">*</span></label>
                                     <input type="text" 
                                            name="nom" 
                                            id="nomModal"
                                            required
-                                           class="search-input w-full px-3 py-2 text-white placeholder-white/50 rounded-lg focus:outline-none text-sm" 
+                                           class="w-full px-3 py-2 bg-white/70 border border-gray-300 rounded-lg focus:outline-none text-gray-800 placeholder-gray-500 text-sm" 
                                            placeholder="Nom">
                                 </div>
                                 
                                 <div>
-                                    <label class="block text-white/80 text-xs font-medium mb-1">Prénom <span class="text-red-400">*</span></label>
+                                    <label class="block text-gray-700 text-xs font-medium mb-1">Prénom <span class="text-red-600">*</span></label>
                                     <input type="text" 
                                            name="prenom" 
                                            id="prenomModal"
                                            required
-                                           class="search-input w-full px-3 py-2 text-white placeholder-white/50 rounded-lg focus:outline-none text-sm" 
+                                           class="w-full px-3 py-2 bg-white/70 border border-gray-300 rounded-lg focus:outline-none text-gray-800 placeholder-gray-500 text-sm" 
                                            placeholder="Prénom">
                                 </div>
                             </div>
                             
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label class="block text-white/80 text-xs font-medium mb-1">Téléphone <span class="text-red-400">*</span></label>
+                                    <label class="block text-gray-700 text-xs font-medium mb-1">Téléphone <span class="text-red-600">*</span></label>
                                     <input type="tel" 
                                            name="telephone" 
                                            id="telephoneModal"
                                            required
-                                           class="search-input w-full px-3 py-2 text-white placeholder-white/50 rounded-lg focus:outline-none text-sm" 
+                                           class="w-full px-3 py-2 bg-white/70 border border-gray-300 rounded-lg focus:outline-none text-gray-800 placeholder-gray-500 text-sm" 
                                            placeholder="+221 77 123 45 67">
                                 </div>
                                 
                                 <div>
-                                    <label class="block text-white/80 text-xs font-medium mb-1">Email</label>
+                                    <label class="block text-gray-700 text-xs font-medium mb-1">Email</label>
                                     <input type="email" 
                                            name="email" 
                                            id="emailModal"
-                                           class="search-input w-full px-3 py-2 text-white placeholder-white/50 rounded-lg focus:outline-none text-sm" 
+                                           class="w-full px-3 py-2 bg-white/70 border border-gray-300 rounded-lg focus:outline-none text-gray-800 placeholder-gray-500 text-sm" 
                                            placeholder="email@example.com">
                                 </div>
                             </div>
@@ -1567,15 +1551,14 @@
                             
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label class="block text-white/80 text-xs font-medium mb-1">Rôle <span class="text-red-400">*</span></label>
+                                    <label class="block text-gray-700 text-xs font-medium mb-1">Rôle <span class="text-red-600">*</span></label>
                                     <select name="role_id" 
                                             id="roleModal"
                                             required
-                                            class="search-input w-full px-3 py-2 text-white rounded-lg focus:outline-none text-sm" 
-                                            style="color: white; background: rgba(255, 255, 255, 0.1);">
-                                        <option value="" style="background: #1f2937; color: white;">Sélectionner</option>
+                                            class="w-full px-3 py-2 bg-white/70 border border-gray-300 rounded-lg focus:outline-none text-gray-800 text-sm">
+                                        <option value="" class="bg-white text-gray-800">Sélectionner</option>
                                         @foreach(\App\Models\Role::all() as $role)
-                                            <option value="{{ $role->id }}" style="background: #1f2937; color: white;">{{ $role->nom }}</option>
+                                              <option value="{{ $role->id }}" class="bg-white text-gray-800">{{ $role->nom }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -1737,6 +1720,17 @@
                                 <label class="block text-white/80 text-sm font-medium mb-2">Date d'inscription</label>
                                 <div class="p-3 bg-white/5 rounded-xl text-white" id="memberJoinDate">15 Janvier 2024</div>
                             </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Section Permissions du rôle -->
+                    <div class="mt-6 pt-6 border-t border-white/20">
+                        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                            <i class="fas fa-shield-alt mr-2 text-blue-400"></i>
+                            Gestion des rôles et permissions
+                        </h3>
+                        <div id="memberRolePermissions" class="space-y-3">
+                            <!-- Les permissions seront ajoutées dynamiquement -->
                         </div>
                     </div>
                 </div>
@@ -2024,8 +2018,41 @@
     
     
     <script>
-        console.log('JavaScript chargé correctement');
-        console.log('Vérification des fonctions disponibles...');
+        console.log('✅ JavaScript chargé correctement');
+        console.log('🔍 Vérification des fonctions disponibles...');
+        
+        // Données des rôles avec leurs permissions
+        const rolesData = {!! json_encode(\App\Models\Role::all()->map(function($role) {
+            return [
+                'id' => $role->id,
+                'nom' => $role->nom,
+                'description' => $role->description,
+                'niveau_priorite' => $role->niveau_priorite,
+                'permissions' => $role->permissions ?? []
+            ];
+        })) !!};
+        
+        // Permissions disponibles avec leurs labels
+        const permissionsLabels = {
+            'voir_profil': 'Voir les profils des membres',
+            'gestion_membres': 'Gérer les membres',
+            'gestion_cotisations': 'Gérer les cotisations',
+            'gestion_evenements': 'Gérer les événements',
+            'gestion_finances': 'Gérer les finances',
+            'gestion_documents': 'Gérer les documents',
+            'gestion_activites': 'Gérer les activités',
+            'animer_activites': 'Animer les activités',
+            'participer_chorale': 'Participer à la chorale',
+            'participation_repetitions': 'Participer aux répétitions',
+            'participation_concerts': 'Participer aux concerts',
+            'interpretation_solos': 'Interpréter des solos',
+            'interpretation_instrumentale': 'Interpréter des instruments',
+            'gestion_section': 'Gérer une section',
+            'coordination_activites': 'Coordonner les activités',
+            'gestion_technique': 'Gérer la technique',
+            'maintenance_equipements': 'Maintenir les équipements',
+            'administration_generale': 'Administration générale'
+        };
         
         // Gestion des alertes de session
         document.addEventListener('DOMContentLoaded', function() {
@@ -2150,10 +2177,10 @@
         
         // Test de disponibilité des fonctions
                 setTimeout(() => {
-            console.log('Fonction editMember disponible:', typeof editMember);
-            console.log('Fonction viewMemberDetails disponible:', typeof viewMemberDetails);
-            console.log('Modal editMemberModal existe:', !!document.getElementById('editMemberModal'));
-            console.log('Modal memberDetailsModal existe:', !!document.getElementById('memberDetailsModal'));
+            console.log('🔍 Fonction editMember disponible:', typeof editMember);
+            console.log('🔍 Fonction viewMemberDetails disponible:', typeof viewMemberDetails);
+            console.log('🔍 Modal editMemberModal existe:', !!document.getElementById('editMemberModal'));
+            console.log('🔍 Modal memberDetailsModal existe:', !!document.getElementById('memberDetailsModal'));
             }, 1000);
             
         // Test simple pour vérifier que le JavaScript fonctionne
@@ -2164,7 +2191,7 @@
             // Test d'ouverture du modal
             const modal = document.getElementById('editMemberModal');
             if (modal) {
-                console.log('Modal trouvé');
+                console.log('✅ Modal trouvé');
                 modal.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
                 setTimeout(() => {
@@ -2172,17 +2199,48 @@
                     document.body.style.overflow = 'auto';
                 }, 2000);
             } else {
-                console.error('Modal non trouvé');
+                console.error('❌ Modal non trouvé');
                 showNotification('Erreur: Modal non trouvé', 'error');
             }
         };
         
         // Données des membres (récupérées depuis Laravel)
-        const membresData = @json($membres ?? []);
+        const membresData = {!! json_encode(($membres ?? collect([]))->map(function($membre) {
+            $photoPath = null;
+            if ($membre->photo) {
+                // Si la photo commence par 'photos/', on garde tel quel, sinon on ajoute 'photos/'
+                $photoPath = str_starts_with($membre->photo, 'photos/') 
+                    ? $membre->photo 
+                    : 'photos/' . $membre->photo;
+            }
+            
+            return [
+                'id' => $membre->id,
+                'nom' => $membre->nom,
+                'prenom' => $membre->prenom,
+                'nom_famille' => $membre->nom_famille ?? null,
+                'telephone' => $membre->telephone,
+                'email' => $membre->email,
+                'statut' => $membre->statut,
+                'created_at' => $membre->created_at,
+                'photo' => $photoPath,
+                'photo_url' => $photoPath ? asset('storage/' . $photoPath) : null,
+                'role_id' => $membre->role_id,
+                'role' => $membre->role ? [
+                    'id' => $membre->role->id,
+                    'nom' => $membre->role->nom,
+                    'description' => $membre->role->description,
+                    'niveau_priorite' => $membre->role->niveau_priorite,
+                    'permissions' => $membre->role->permissions ?? []
+                ] : null
+            ];
+        })) !!};
         let membreActuel = null;
         
-        console.log('Données membres chargées:', membresData.length, 'membres');
-        console.log('Premier membre (debug):', membresData[0]);
+        console.log('📊 Données membres chargées:', membresData.length, 'membres');
+        console.log('🔍 Premier membre (debug):', membresData[0]);
+        console.log('🔍 Premier membre - role_id:', membresData[0]?.role_id);
+        console.log('🔍 Premier membre - role:', membresData[0]?.role);
         
         // Fonction utilitaire pour calculer les initiales
         function calculerInitiales(membre) {
@@ -2338,22 +2396,32 @@
             const photoElement = document.getElementById('memberPhoto');
             const elementInitiales = document.getElementById('memberInitials');
             
-            // Utiliser photo_url au lieu de photo
-            const photoUrl = membre.photo_url || membre.photo;
+            console.log('🖼️ DEBUG - Photo données:', {
+                photo: membre.photo,
+                photo_url: membre.photo_url
+            });
             
-            if (photoUrl && photoUrl !== '') {
-                // Construire l'URL complète de l'image
-                const fullImageUrl = photoUrl.startsWith('http') ? photoUrl : `/storage/${photoUrl}`;
-                
-                // Afficher la photo si elle existe
+            // Utiliser photo_url (qui contient déjà l'URL complète)
+            const photoUrl = membre.photo_url;
+            
+            if (photoUrl && photoUrl !== '' && photoUrl !== 'null') {
+                // photo_url contient déjà l'URL complète avec asset()
                 if (photoElement) {
-                    photoElement.src = fullImageUrl;
+                    photoElement.src = photoUrl;
                     photoElement.classList.remove('hidden');
+                    photoElement.onerror = function() {
+                        console.log('❌ Erreur de chargement de la photo, affichage des initiales');
+                        this.classList.add('hidden');
+                        if (elementInitiales) {
+                            elementInitiales.textContent = calculerInitiales(membre);
+                            elementInitiales.classList.remove('hidden');
+                        }
+                    };
                 }
                 if (elementInitiales) {
                     elementInitiales.classList.add('hidden');
                 }
-                console.log('🖼️ Photo détails chargée:', fullImageUrl);
+                console.log('🖼️ Photo détails chargée:', photoUrl);
             } else {
                 // Afficher les initiales si pas de photo
                 const initiales = calculerInitiales(membre);
@@ -2365,7 +2433,7 @@
                 if (photoElement) {
                     photoElement.classList.add('hidden');
                 }
-                console.log('Initiales détails affichées:', initiales);
+                console.log('👤 Initiales détails affichées:', initiales);
             }
             
             // Nom complet - Construction à partir des champs disponibles
@@ -2511,7 +2579,109 @@
                 }
             }
             
-            console.log('Modal de détails rempli avec les données de:', membre.nom);
+            // Afficher les permissions du rôle
+            afficherPermissionsRole(membre);
+            
+            console.log('✅ Modal de détails rempli avec les données de:', membre.nom);
+        }
+        
+        // Fonction pour afficher les permissions du rôle
+        function afficherPermissionsRole(membre) {
+            const permissionsContainer = document.getElementById('memberRolePermissions');
+            if (!permissionsContainer) {
+                console.log('❌ Conteneur des permissions non trouvé');
+                return;
+            }
+            
+            // Trouver le rôle du membre
+            let roleId = null;
+            let roleName = 'Aucun rôle';
+            
+            // Extraire l'ID du rôle depuis différentes sources possibles
+            if (membre.role_id) {
+                roleId = membre.role_id;
+            } else if (membre.role && typeof membre.role === 'object' && membre.role.id) {
+                roleId = membre.role.id;
+                roleName = membre.role.nom || roleName;
+            }
+            
+            console.log('🔍 DEBUG - Role ID:', roleId);
+            console.log('🔍 DEBUG - Roles disponibles:', rolesData);
+            
+            // Trouver les données du rôle
+            const roleData = rolesData.find(r => r.id === roleId);
+            
+            if (!roleData) {
+                permissionsContainer.innerHTML = `
+                    <div class="p-4 bg-white/5 rounded-xl border border-white/10 text-center">
+                        <p class="text-white/60 text-sm">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Aucune information de rôle disponible
+                        </p>
+                    </div>
+                `;
+                console.log('❌ Rôle non trouvé pour ID:', roleId);
+                return;
+            }
+            
+            console.log('✅ Rôle trouvé:', roleData);
+            
+            // Construire le HTML des permissions
+            let html = `
+                <div class="p-4 bg-white/5 rounded-xl border border-white/10 mb-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="text-white font-semibold">${roleData.nom}</h4>
+                            <p class="text-white/60 text-sm mt-1">${roleData.description || 'Aucune description'}</p>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs font-medium
+                            ${roleData.niveau_priorite >= 4 ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 
+                              roleData.niveau_priorite >= 3 ? 'bg-orange-500/20 text-orange-400 border border-orange-500/30' : 
+                              roleData.niveau_priorite >= 2 ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' : 
+                              'bg-green-500/20 text-green-400 border border-green-500/30'}">
+                            Niveau ${roleData.niveau_priorite}
+                        </span>
+                    </div>
+                </div>
+            `;
+            
+            // Afficher les permissions
+            if (roleData.permissions && roleData.permissions.length > 0) {
+                html += `
+                    <div class="mb-3">
+                        <h5 class="text-white/80 text-sm font-medium mb-3">
+                            Permissions attribuées (${roleData.permissions.length})
+                        </h5>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                `;
+                
+                roleData.permissions.forEach(permission => {
+                    const label = permissionsLabels[permission] || permission.replace(/_/g, ' ');
+                    html += `
+                        <div class="flex items-center p-2 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 transition-all duration-200">
+                            <i class="fas fa-check-circle text-green-400 mr-2 text-sm"></i>
+                            <span class="text-white text-sm">${label}</span>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="p-4 bg-white/5 rounded-xl border border-white/10 text-center">
+                        <p class="text-white/60 text-sm">
+                            <i class="fas fa-shield-alt mr-2"></i>
+                            Aucune permission attribuée à ce rôle
+                        </p>
+                    </div>
+                `;
+            }
+            
+            permissionsContainer.innerHTML = html;
+            console.log('✅ Permissions affichées pour le rôle:', roleData.nom);
         }
         
         // Fonction de test pour diagnostiquer le problème
@@ -2526,11 +2696,11 @@
             // Puis essayer d'ouvrir le modal
             const modal = document.getElementById('editMemberModal');
             if (modal) {
-                console.log('Modal trouvé, ouverture...');
+                console.log('✅ Modal trouvé, ouverture...');
                 modal.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
             } else {
-                console.error('Modal editMemberModal non trouvé');
+                console.error('❌ Modal editMemberModal non trouvé');
                 showNotification('Erreur: Modal de modification non trouvé', 'error');
             }
         }
@@ -2543,34 +2713,34 @@
             try {
                 // Vérifier que les données sont disponibles
                 if (!membresData || membresData.length === 0) {
-                    console.error('Aucune donnée membre disponible');
+                    console.error('❌ Aucune donnée membre disponible');
                     showNotification('Erreur: Aucune donnée membre disponible', 'error');
                     return;
                 }
 
-                console.log('Données membres:', membresData.length, 'membres');
-                console.log('IDs disponibles:', membresData.map(m => m.id));
+                console.log('📊 Données membres:', membresData.length, 'membres');
+                console.log('📋 IDs disponibles:', membresData.map(m => m.id));
                 
                 // Trouver le membre
                 const membre = membresData.find(m => m.id == memberId);
                 if (!membre) {
-                    console.error('Membre non trouvé avec ID:', memberId);
+                    console.error('❌ Membre non trouvé avec ID:', memberId);
                     showNotification('Membre non trouvé avec l\'ID: ' + memberId, 'error');
                     return;
                 }
                 
-                console.log('Membre trouvé:', membre.nom);
+                console.log('✅ Membre trouvé:', membre.nom);
                 membreActuel = membre;
                 
                 // Ouvrir le modal directement
                 const modal = document.getElementById('editMemberModal');
                 if (!modal) {
-                    console.error('Modal editMemberModal non trouvé');
+                    console.error('❌ Modal editMemberModal non trouvé');
                     showNotification('Erreur: Modal de modification non trouvé', 'error');
                     return;
                 }
                 
-                console.log('Modal trouvé, ouverture...');
+                console.log('✅ Modal trouvé, ouverture...');
                 modal.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
                 
@@ -2977,32 +3147,32 @@
                 `Changer le statut de ${membreActuel?.nom || 'Membre'} vers "${statusLabels[newStatus]}" ?`,
                 (confirmed) => {
                     if (confirmed) {
-                        membreActuel.statut = statusLabels[newStatus];
-                        
-                        // Mettre à jour l'affichage
-                        const statusElement = document.getElementById('memberStatus');
-                        if (statusElement) {
-                            statusElement.textContent = statusLabels[newStatus];
-                            statusElement.className = 'px-3 py-1 text-sm rounded-full border';
-                            
-                            switch(newStatus) {
-                                case 'actif':
-                                    statusElement.classList.add('bg-green-500/20', 'text-green-400', 'border-green-500/30');
-                            break;
-                                case 'suspendu':
-                                    statusElement.classList.add('bg-orange-500/20', 'text-orange-400', 'border-orange-500/30');
-                            break;
-                                case 'inactif':
-                                    statusElement.classList.add('bg-red-500/20', 'text-red-400', 'border-red-500/30');
-                            break;
-                                case 'ancien':
-                                    statusElement.classList.add('bg-gray-500/20', 'text-gray-400', 'border-gray-500/30');
-                            break;
-                        }
-                    }
+                membreActuel.statut = statusLabels[newStatus];
+                
+                // Mettre à jour l'affichage
+                const statusElement = document.getElementById('memberStatus');
+                if (statusElement) {
+                    statusElement.textContent = statusLabels[newStatus];
+                    statusElement.className = 'px-3 py-1 text-sm rounded-full border';
+                    
+                    switch(newStatus) {
+                        case 'actif':
+                            statusElement.classList.add('bg-green-500/20', 'text-green-400', 'border-green-500/30');
+                    break;
+                        case 'suspendu':
+                            statusElement.classList.add('bg-orange-500/20', 'text-orange-400', 'border-orange-500/30');
+                    break;
+                        case 'inactif':
+                            statusElement.classList.add('bg-red-500/20', 'text-red-400', 'border-red-500/30');
+                    break;
+                        case 'ancien':
+                            statusElement.classList.add('bg-gray-500/20', 'text-gray-400', 'border-gray-500/30');
+                    break;
+            }
+        }
 
-                        showNotification(`Statut de ${membreActuel?.nom || 'Membre'} changé vers "${statusLabels[newStatus]}"`, 'success');
-                    }
+                showNotification(`Statut de ${membreActuel?.nom || 'Membre'} changé vers "${statusLabels[newStatus]}"`, 'success');
+            }
                 }
             );
         }
@@ -3018,18 +3188,18 @@
                 `Nouveau rôle pour ${membreActuel?.nom || 'Membre'}:\n\nRôles disponibles: ${roles.join(', ')}`,
                 currentRole,
                 (roleInput) => {
-                    if (roleInput && roleInput.trim() !== '' && roleInput !== currentRole) {
-                        membreActuel.role = roleInput.trim();
-                        
-                        // Mettre à jour l'affichage
-                        const elementsRole = ['memberRole', 'memberRoleDetail'];
-                        elementsRole.forEach(id => {
-                            const element = document.getElementById(id);
-                            if (element) element.textContent = roleInput.trim();
-                        });
-                        
-                        showNotification(`Rôle de ${membreActuel?.nom || 'Membre'} changé vers "${roleInput.trim()}"`, 'success');
-                    }
+            if (roleInput && roleInput.trim() !== '' && roleInput !== currentRole) {
+                membreActuel.role = roleInput.trim();
+                
+                // Mettre à jour l'affichage
+                const elementsRole = ['memberRole', 'memberRoleDetail'];
+                elementsRole.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) element.textContent = roleInput.trim();
+                });
+                
+                showNotification(`Rôle de ${membreActuel?.nom || 'Membre'} changé vers "${roleInput.trim()}"`, 'success');
+            }
                 }
             );
         }
@@ -3042,93 +3212,11 @@
                 `Message à envoyer à ${membreActuel?.nom || 'Membre'} (${membreActuel?.telephone || 'N/A'}):`,
                 '',
                 (message) => {
-                    if (message && message.trim() !== '') {
-                        showNotification(`SMS envoyé à ${membreActuel?.nom || 'Membre'}: "${message}"`, 'success');
-                    }
-                }
-            );
-        }
-        
-        // Fonction de suppression de membre
-        function deleteMember(memberId) {
-            console.log('🗑️ Suppression du membre:', memberId);
-            
-            // Trouver le membre dans les données pour obtenir son nom
-            const membre = membresData.find(m => m.id == memberId);
-            const nomMembre = membre ? (membre.nom || membre.prenom || 'Membre') : 'Membre';
-            
-            // Afficher la confirmation
-            showConfirm(
-                'Supprimer le membre',
-                `Êtes-vous sûr de vouloir supprimer "${nomMembre}" ?\n\nCette action est irréversible et supprimera définitivement toutes les données du membre.`,
-                (confirmed) => {
-                    if (confirmed) {
-                        // Effectuer la suppression
-                        supprimerMembre(memberId, nomMembre);
-                    }
-                }
-            );
-        }
-        
-        function supprimerMembre(memberId, nomMembre) {
-            console.log('🗑️ Suppression confirmée pour:', nomMembre);
-            
-            // Afficher un indicateur de chargement
-            showNotification('Suppression en cours...', 'info', 2000);
-            
-            // Simuler la suppression (remplacer par un appel API réel)
-            setTimeout(() => {
-                // Supprimer la carte du DOM
-                const carte = document.querySelector(`[data-id="${memberId}"]`);
-                if (carte) {
-                    // Animation de suppression
-                    carte.style.transform = 'scale(0.8)';
-                    carte.style.opacity = '0';
-                    
-                    setTimeout(() => {
-                        carte.remove();
-                        console.log('✅ Carte supprimée du DOM');
-                    }, 300);
-                }
-                
-                // Supprimer du tableau si en vue tableau
-                if (vueActuelle === 'tableau') {
-                    const ligne = document.querySelector(`tr[data-name*="${nomMembre.toLowerCase()}"]`);
-                    if (ligne) {
-                        ligne.style.transform = 'scale(0.8)';
-                        ligne.style.opacity = '0';
-                        
-                        setTimeout(() => {
-                            ligne.remove();
-                            console.log('✅ Ligne supprimée du tableau');
-                        }, 300);
-                    }
-                }
-                
-                // Supprimer des données JavaScript
-                const index = membresData.findIndex(m => m.id == memberId);
-                if (index !== -1) {
-                    membresData.splice(index, 1);
-                    console.log('✅ Membre supprimé des données');
-                }
-                
-                // Afficher le message de succès
-                showNotification(`Membre "${nomMembre}" supprimé avec succès !`, 'success');
-                
-                // Mettre à jour les statistiques si nécessaire
-                mettreAJourStatistiques();
-                
-            }, 1000);
-        }
-        
-        function mettreAJourStatistiques() {
-            // Mettre à jour le compteur de membres
-            const compteurMembres = document.querySelector('.metric-value');
-            if (compteurMembres) {
-                compteurMembres.textContent = membresData.length;
+            if (message && message.trim() !== '') {
+                showNotification(`SMS envoyé à ${membreActuel?.nom || 'Membre'}: "${message}"`, 'success');
             }
-            
-            console.log('📊 Statistiques mises à jour');
+                }
+            );
         }
         
         function exportMemberData() {

@@ -33,10 +33,28 @@
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-24">
         <!-- Informations du membre -->
         <div class="bg-white/10 backdrop-blur-xl rounded-xl shadow-lg p-6 mb-8 border border-white/20">
+            <!-- DEBUG: Affichage des informations photo -->
+            @if(config('app.debug'))
+            <div class="mb-4 p-3 bg-yellow-500/20 border border-yellow-500/30 rounded-lg text-xs text-yellow-200">
+                <strong>🔍 DEBUG Photo:</strong><br>
+                - Photo brute (photo): <code>{{ $membre->photo ?? 'NULL' }}</code><br>
+                - Photo URL (photo_url): <code>{{ $membre->photo_url ?? 'NULL' }}</code><br>
+                - URL construite: <code>{{ $membre->photo_url ? asset('storage/' . $membre->photo_url) : 'AUCUNE' }}</code><br>
+                - Photo existe: <code>{{ $membre->photo_url ? 'OUI' : 'NON' }}</code>
+            </div>
+            @endif
+            
             <div class="flex items-center">
                 <div class="flex-shrink-0 h-16 w-16">
                     @if($membre->photo_url)
-                    <img class="h-16 w-16 rounded-full" src="{{ $membre->photo_url }}" alt="{{ $membre->nom }}">
+                    <img class="h-16 w-16 rounded-full object-cover" 
+                         src="{{ asset('storage/' . $membre->photo_url) }}" 
+                         alt="{{ $membre->nom }}"
+                         onload="console.log('✅ Photo chargée:', this.src);" 
+                         onerror="console.error('❌ Erreur photo:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="h-16 w-16 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center" style="display: none;">
+                        <span class="text-white font-bold text-xl">{{ substr($membre->nom, 0, 1) }}{{ substr($membre->prenom, 0, 1) }}</span>
+                    </div>
                     @else
                     <div class="h-16 w-16 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center">
                         <span class="text-white font-bold text-xl">{{ substr($membre->nom, 0, 1) }}{{ substr($membre->prenom, 0, 1) }}</span>

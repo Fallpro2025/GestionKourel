@@ -179,67 +179,75 @@
 
 <!-- Modal Ajout/Modification -->
 <div id="modalRole" class="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full hidden z-[2200]">
-    <div class="relative top-20 mx-auto p-5 w-11/12 md:w-3/4 lg:w-1/2">
-        <div class="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/30 overflow-hidden">
-            <div class="px-6 py-4 bg-gradient-to-r from-blue-500/20 to-purple-500/20 border-b border-white/20">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-xl font-bold text-gray-800" id="modalTitre">Nouveau Rôle</h3>
-                    <button onclick="fermerModal()" class="text-gray-500 hover:text-gray-700 transition-colors duration-200">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-8 max-w-2xl w-full border border-white/20 transform transition-all duration-300">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-bold text-white" id="modalTitre">Nouveau Rôle</h3>
+                <button onclick="fermerModal()" class="text-white/60 hover:text-white transition-colors duration-200">
                         <i class="fas fa-times text-xl"></i>
                     </button>
-                </div>
             </div>
             
-            <div class="p-6">
                 <form id="formRole" class="space-y-6">
                     @csrf
                     <div>
-                        <label for="nom" class="block text-sm font-semibold text-gray-800 mb-2">Nom du rôle *</label>
+                    <label for="nom" class="block text-sm font-semibold text-white/80 mb-2">Nom du rôle <span class="text-red-400">*</span></label>
                         <input type="text" id="nom" name="nom" required 
-                               class="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 transition-all duration-200"
+                           class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-white/50 transition-all duration-200"
                                placeholder="Ex: Administrateur, Membre, Trésorier...">
                     </div>
                     
                     <div>
-                        <label for="description" class="block text-sm font-semibold text-gray-800 mb-2">Description</label>
+                    <label for="description" class="block text-sm font-semibold text-white/80 mb-2">Description</label>
                         <textarea id="description" name="description" rows="3"
-                                  class="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 transition-all duration-200"
+                              class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-white/50 transition-all duration-200"
                                   placeholder="Décrivez les responsabilités de ce rôle..."></textarea>
                     </div>
                     
                     <div>
-                        <label for="niveau_priorite" class="block text-sm font-semibold text-gray-800 mb-2">Niveau de priorité *</label>
+                    <label for="niveau_priorite" class="block text-sm font-semibold text-white/80 mb-2">Niveau de priorité <span class="text-red-400">*</span></label>
                         <select id="niveau_priorite" name="niveau_priorite" required
-                                class="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 transition-all duration-200">
-                            <option value="1">1 - Bas (Membre standard)</option>
-                            <option value="2">2 - Moyen (Responsable section)</option>
-                            <option value="3">3 - Élevé (Coordinateur)</option>
-                            <option value="4">4 - Très élevé (Direction)</option>
-                            <option value="5">5 - Administrateur (Accès complet)</option>
+                            class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white transition-all duration-200">
+                        <option value="1" class="text-gray-800">1 - Bas (Membre standard)</option>
+                        <option value="2" class="text-gray-800">2 - Moyen (Responsable section)</option>
+                        <option value="3" class="text-gray-800">3 - Élevé (Coordinateur)</option>
+                        <option value="4" class="text-gray-800">4 - Très élevé (Direction)</option>
+                        <option value="5" class="text-gray-800">5 - Administrateur (Accès complet)</option>
                         </select>
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-semibold text-gray-800 mb-3">Permissions *</label>
-                        <div class="bg-blue-50/80 rounded-xl p-4 border border-blue-200/50">
+                    <div class="flex items-center justify-between mb-3">
+                        <label class="block text-sm font-semibold text-white/80">Permissions <span class="text-red-400">*</span></label>
+                        <div class="flex space-x-2">
+                            <button type="button" onclick="toutCocher()" 
+                                    class="px-3 py-1 text-xs font-medium text-green-400 bg-green-500/20 hover:bg-green-500/30 rounded-lg transition-all duration-200 border border-green-500/30">
+                                <i class="fas fa-check-double mr-1"></i>Tout cocher
+                            </button>
+                            <button type="button" onclick="toutDecocher()" 
+                                    class="px-3 py-1 text-xs font-medium text-red-400 bg-red-500/20 hover:bg-red-500/30 rounded-lg transition-all duration-200 border border-red-500/30">
+                                <i class="fas fa-times mr-1"></i>Tout décocher
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/20">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto" id="permissionsContainer">
                                 <!-- Les permissions seront ajoutées dynamiquement -->
                             </div>
                         </div>
                     </div>
                     
-                    <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                <div class="flex justify-end space-x-3 pt-4 border-t border-white/20">
                         <button type="button" onclick="fermerModal()" 
-                                class="px-6 py-3 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all duration-200">
+                            class="px-6 py-3 text-sm font-medium text-white bg-white/10 hover:bg-white/20 rounded-xl transition-all duration-200 border border-white/20">
                             <i class="fas fa-times mr-2"></i>Annuler
                         </button>
                         <button type="submit" 
-                                class="px-6 py-3 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-xl transition-all duration-200 shadow-lg hover:shadow-blue-500/25">
+                            class="px-6 py-3 text-sm font-medium text-blue-400 bg-blue-500/20 hover:bg-blue-500/30 rounded-xl transition-all duration-200 border border-blue-500/30">
                             <i class="fas fa-save mr-2"></i>Enregistrer
                         </button>
                     </div>
                 </form>
-            </div>
         </div>
     </div>
 </div>
@@ -269,6 +277,20 @@
 
 @section('scripts')
 <script>
+// Données des rôles
+const rolesData = {!! json_encode($roles->map(function($role) {
+    return [
+        'id' => $role->id,
+        'nom' => $role->nom,
+        'description' => $role->description,
+        'niveau_priorite' => $role->niveau_priorite,
+        'permissions' => $role->permissions ?? [],
+        'membres_count' => $role->membres_count,
+        'created_at' => $role->created_at->format('d/m/Y à H:i'),
+        'updated_at' => $role->updated_at->format('d/m/Y à H:i')
+    ];
+})) !!};
+
 // Permissions disponibles
 const permissionsDisponibles = {
     'voir_profil': 'Voir les profils des membres',
@@ -293,6 +315,22 @@ const permissionsDisponibles = {
 
 let roleActuel = null;
 
+// Fonction pour tout cocher
+function toutCocher() {
+    const checkboxes = document.querySelectorAll('#permissionsContainer input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = true;
+    });
+}
+
+// Fonction pour tout décocher
+function toutDecocher() {
+    const checkboxes = document.querySelectorAll('#permissionsContainer input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+}
+
 // Ouvrir modal d'ajout
 function ouvrirModalAjout() {
     document.getElementById('modalTitre').textContent = 'Nouveau Rôle';
@@ -307,11 +345,11 @@ function ouvrirModalAjout() {
     
     Object.entries(permissionsDisponibles).forEach(([key, label]) => {
         const div = document.createElement('div');
-        div.className = 'flex items-center p-2 bg-white/50 rounded-lg hover:bg-white/70 transition-colors duration-200';
+        div.className = 'flex items-center p-3 bg-white/10 rounded-lg hover:bg-white/15 transition-colors duration-200 border border-white/10';
         div.innerHTML = `
             <input type="checkbox" id="perm_${key}" name="permissions[]" value="${key}" 
-                   class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-            <label for="perm_${key}" class="ml-3 text-sm text-gray-800 font-medium cursor-pointer">${label}</label>
+                   class="h-4 w-4 text-blue-500 focus:ring-blue-500 border-white/30 rounded bg-white/10">
+            <label for="perm_${key}" class="ml-3 text-sm text-white font-medium cursor-pointer">${label}</label>
         `;
         containerPermissions.appendChild(div);
     });
@@ -321,60 +359,167 @@ function ouvrirModalAjout() {
 
 // Modifier un rôle
 function modifierRole(roleId) {
-    // Récupérer les données du rôle via AJAX
-    fetch(`/roles/${roleId}/edit`)
-        .then(response => response.text())
-        .then(html => {
-            // Parser la réponse et remplir le formulaire
-            // Pour simplifier, on va juste ouvrir le modal avec les données
+    const role = rolesData.find(r => r.id === roleId);
+    if (!role) {
+        if (typeof alerteModerne !== 'undefined' && alerteModerne) {
+            alerteModerne.error('Rôle introuvable');
+        } else {
+            alert('Rôle introuvable');
+        }
+        return;
+    }
+    
+    // Configurer le formulaire en mode modification
             document.getElementById('modalTitre').textContent = 'Modifier le Rôle';
             document.getElementById('formRole').action = `/roles/${roleId}`;
-            document.getElementById('formRole').method = 'PUT';
+    document.getElementById('formRole').dataset.method = 'PUT';
             roleActuel = roleId;
             
-            // Ajouter les permissions
+    // Remplir les champs du formulaire
+    document.getElementById('nom').value = role.nom;
+    document.getElementById('description').value = role.description || '';
+    document.getElementById('niveau_priorite').value = role.niveau_priorite;
+    
+    // Ajouter les permissions avec les bonnes cases cochées
             const containerPermissions = document.getElementById('permissionsContainer');
             containerPermissions.innerHTML = '';
             
             Object.entries(permissionsDisponibles).forEach(([key, label]) => {
                 const div = document.createElement('div');
-                div.className = 'flex items-center p-2 bg-white/50 rounded-lg hover:bg-white/70 transition-colors duration-200';
+        div.className = 'flex items-center p-3 bg-white/10 rounded-lg hover:bg-white/15 transition-colors duration-200 border border-white/10';
+        const isChecked = role.permissions && role.permissions.includes(key) ? 'checked' : '';
                 div.innerHTML = `
-                    <input type="checkbox" id="perm_${key}" name="permissions[]" value="${key}" 
-                           class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                    <label for="perm_${key}" class="ml-3 text-sm text-gray-800 font-medium cursor-pointer">${label}</label>
+            <input type="checkbox" id="perm_${key}" name="permissions[]" value="${key}" ${isChecked}
+                   class="h-4 w-4 text-blue-500 focus:ring-blue-500 border-white/30 rounded bg-white/10">
+            <label for="perm_${key}" class="ml-3 text-sm text-white font-medium cursor-pointer">${label}</label>
                 `;
                 containerPermissions.appendChild(div);
             });
             
             document.getElementById('modalRole').classList.remove('hidden');
-        })
-        .catch(error => {
-            console.error('Erreur:', error);
-            if (typeof alerteModerne !== 'undefined' && alerteModerne) {
-                alerteModerne.error('Erreur lors du chargement du rôle');
-            } else {
-                alert('Erreur lors du chargement du rôle');
-            }
-        });
 }
 
 // Voir les détails d'un rôle
 function voirRole(roleId) {
-    fetch(`/roles/${roleId}`)
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById('contenuDetails').innerHTML = html;
-            document.getElementById('modalDetails').classList.remove('hidden');
-        })
-        .catch(error => {
-            console.error('Erreur:', error);
+    const role = rolesData.find(r => r.id === roleId);
+    if (!role) {
             if (typeof alerteModerne !== 'undefined' && alerteModerne) {
-                alerteModerne.error('Erreur lors du chargement des détails');
+            alerteModerne.error('Rôle introuvable');
+        } else {
+            alert('Rôle introuvable');
+        }
+        return;
+    }
+    
+    // Générer le badge de priorité
+    let prioriteBadge = '';
+    if (role.niveau_priorite >= 4) {
+        prioriteBadge = '<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-500/20 text-red-400 border border-red-500/30">Niveau ' + role.niveau_priorite + '</span>';
+    } else if (role.niveau_priorite >= 3) {
+        prioriteBadge = '<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-orange-500/20 text-orange-400 border border-orange-500/30">Niveau ' + role.niveau_priorite + '</span>';
+    } else if (role.niveau_priorite >= 2) {
+        prioriteBadge = '<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">Niveau ' + role.niveau_priorite + '</span>';
             } else {
-                alert('Erreur lors du chargement des détails');
-            }
+        prioriteBadge = '<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30">Niveau ' + role.niveau_priorite + '</span>';
+    }
+    
+    // Générer la liste des permissions
+    let permissionsHtml = '';
+    if (role.permissions && role.permissions.length > 0) {
+        permissionsHtml = '<div class="grid grid-cols-1 md:grid-cols-2 gap-2">';
+        role.permissions.forEach(perm => {
+            const label = permissionsDisponibles[perm] || perm.replace(/_/g, ' ');
+            permissionsHtml += `
+                <div class="flex items-center p-2 bg-white/10 rounded-lg border border-white/10">
+                    <i class="fas fa-check-circle text-green-400 mr-2"></i>
+                    <span class="text-sm text-white">${label}</span>
+                </div>
+            `;
         });
+        permissionsHtml += '</div>';
+    } else {
+        permissionsHtml = '<p class="text-white/60 text-sm">Aucune permission attribuée</p>';
+    }
+    
+    // Construire le contenu du modal
+    const contenu = `
+        <div class="space-y-6">
+            <!-- En-tête avec nom et priorité -->
+            <div class="flex items-center justify-between pb-4 border-b border-white/20">
+                <div>
+                    <h4 class="text-2xl font-bold text-white mb-2">${role.nom}</h4>
+                    <p class="text-white/70 text-sm">${role.description || 'Aucune description'}</p>
+                </div>
+                ${prioriteBadge}
+            </div>
+            
+            <!-- Statistiques -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-blue-500/20 rounded-lg">
+                            <i class="fas fa-users text-blue-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-white/60 text-xs">Membres</p>
+                            <p class="text-white text-lg font-bold">${role.membres_count}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-purple-500/20 rounded-lg">
+                            <i class="fas fa-shield-alt text-purple-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-white/60 text-xs">Permissions</p>
+                            <p class="text-white text-lg font-bold">${role.permissions ? role.permissions.length : 0}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Permissions -->
+            <div>
+                <h5 class="text-white font-semibold mb-3 flex items-center">
+                    <i class="fas fa-shield-alt mr-2 text-blue-400"></i>
+                    Permissions attribuées
+                </h5>
+                ${permissionsHtml}
+            </div>
+            
+            <!-- Dates -->
+            <div class="pt-4 border-t border-white/20">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                    <div>
+                        <span class="text-white/60">Créé le :</span>
+                        <span class="text-white ml-2">${role.created_at}</span>
+                    </div>
+                    <div>
+                        <span class="text-white/60">Modifié le :</span>
+                        <span class="text-white ml-2">${role.updated_at}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="flex space-x-3 pt-4 border-t border-white/20">
+                <button onclick="fermerModalDetails(); modifierRole(${role.id});" 
+                        class="flex-1 px-4 py-2 bg-blue-500/20 text-blue-400 font-medium rounded-xl hover:bg-blue-500/30 transition-all duration-200 border border-blue-500/30">
+                    <i class="fas fa-edit mr-2"></i>Modifier
+                </button>
+                <button onclick="fermerModalDetails(); supprimerRole(${role.id}, '${role.nom}');" 
+                        class="flex-1 px-4 py-2 bg-red-500/20 text-red-400 font-medium rounded-xl hover:bg-red-500/30 transition-all duration-200 border border-red-500/30"
+                        ${role.membres_count > 0 ? 'disabled title="Impossible de supprimer un rôle avec des membres"' : ''}>
+                    <i class="fas fa-trash mr-2"></i>Supprimer
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('contenuDetails').innerHTML = contenu;
+    document.getElementById('modalDetails').classList.remove('hidden');
 }
 
 // Supprimer un rôle
@@ -451,10 +596,16 @@ document.getElementById('formRole').addEventListener('submit', function(e) {
     };
     
     const url = this.action;
-    const method = this.method;
+    // Vérifier si c'est une modification (PUT) ou une création (POST)
+    const method = this.dataset.method || this.method || 'POST';
+    
+    // Pour Laravel, on doit envoyer POST avec _method pour PUT
+    if (method === 'PUT') {
+        data._method = 'PUT';
+    }
     
     fetch(url, {
-        method: method,
+        method: 'POST', // Toujours POST, Laravel gère _method
         headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')

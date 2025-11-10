@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnostic Photo Membre</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .diagnostic-box {
+            background: #2a2a2a;
+            border: 2px solid #3a3a3a;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .success { border-color: #10b981; }
+        .error { border-color: #ef4444; }
+        .warning { border-color: #f59e0b; }
+        h2 { color: #60a5fa; margin-top: 0; }
+        code {
+            background: #1a1a1a;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #fbbf24;
+        }
+        .test-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 10px;
+            border: 3px solid #60a5fa;
+        }
+        .initials {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Diagnostic Photo Membre</h1>
+    
+    <div class="diagnostic-box warning">
+        <h2>⚠️ Instructions</h2>
+        <p>Ouvrez la console du navigateur (F12) et allez dans l'onglet "Console" pour voir les messages de diagnostic.</p>
+    </div>
+
+    <div class="diagnostic-box">
+        <h2>1. Test de chargement d'image</h2>
+        <p>Essayez de charger une image avec différents chemins :</p>
+        
+        <div style="display: flex; flex-wrap: wrap;">
+            <div>
+                <p>Test 1: <code>/storage/photos/test.jpg</code></p>
+                <img src="/storage/photos/test.jpg" class="test-image" 
+                     onerror="console.error('❌ Test 1 ÉCHEC:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="initials" style="display: none;">T1</div>
+            </div>
+            
+            <div>
+                <p>Test 2: <code>/storage/test.jpg</code></p>
+                <img src="/storage/test.jpg" class="test-image" 
+                     onerror="console.error('❌ Test 2 ÉCHEC:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="initials" style="display: none;">T2</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="diagnostic-box">
+        <h2>2. Vérifications à faire</h2>
+        <ul>
+            <li>Ouvrez la page <code>/membres/1/roles</code></li>
+            <li>Ouvrez la console du navigateur (F12 → Console)</li>
+            <li>Regardez les erreurs 404 pour les images</li>
+            <li>Notez l'URL exacte qui est tentée</li>
+        </ul>
+    </div>
+
+    <div class="diagnostic-box">
+        <h2>3. Vérifications backend Laravel</h2>
+        <p>Dans votre terminal, exécutez ces commandes :</p>
+        <pre style="background: #1a1a1a; padding: 15px; border-radius: 5px; overflow-x: auto;">
+# 1. Vérifier si le lien symbolique existe
+php artisan storage:link
+
+# 2. Vérifier les permissions
+ls -la public/storage
+
+# 3. Vérifier le contenu du dossier photos
+ls -la storage/app/public/photos
+        </pre>
+    </div>
+
+    <div class="diagnostic-box">
+        <h2>4. Structure attendue</h2>
+        <pre style="background: #1a1a1a; padding: 15px; border-radius: 5px;">
+projet/
+├── storage/
+│   └── app/
+│       └── public/
+│           └── photos/        ← Les images doivent être ici
+│               └── membre.jpg
+└── public/
+    └── storage/              ← Lien symbolique vers storage/app/public
+        </pre>
+    </div>
+
+    <script>
+        console.log('=== DIAGNOSTIC PHOTO MEMBRE ===');
+        console.log('URL actuelle:', window.location.href);
+        console.log('URL de base:', window.location.origin);
+        
+        // Test de construction d'URL
+        const photoPath = 'photos/membre.jpg';
+        const url1 = `${window.location.origin}/storage/${photoPath}`;
+        const url2 = `${window.location.origin}/storage/photos/membre.jpg`;
+        
+        console.log('Test URL 1 (avec path):', url1);
+        console.log('Test URL 2 (direct):', url2);
+        
+        // Tester si les URLs sont accessibles
+        fetch(url1)
+            .then(response => {
+                if (response.ok) {
+                    console.log('✅ URL 1 accessible!');
+                } else {
+                    console.error('❌ URL 1 erreur:', response.status, response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error('❌ URL 1 échec:', error);
+            });
+    </script>
+</body>
+</html>
+

@@ -34,16 +34,16 @@ SOLUTIONS IMPLÉMENTÉES:
 
 LOGIQUE AMÉLIORÉE POUR LE NOM:
 =============================
-```javascript
+   ```javascript
 // Logique améliorée pour extraire prénom et nom
-if (membre.prenom && membre.nom_famille) {
+   if (membre.prenom && membre.nom_famille) {
     // Cas idéal : champs séparés
     prenom = membre.prenom;
     nomFamille = membre.nom_famille;
     nomComplet = `${prenom} ${nomFamille}`;
-} else if (membre.nom) {
+   } else if (membre.nom) {
     // Cas courant : nom complet dans un seul champ
-    nomComplet = membre.nom;
+       nomComplet = membre.nom;
     
     // Essayer de séparer prénom et nom
     const partiesNom = membre.nom.trim().split(' ');
@@ -54,16 +54,16 @@ if (membre.prenom && membre.nom_famille) {
         prenom = membre.nom;
         nomFamille = '';
     }
-} else if (membre.prenom) {
+   } else if (membre.prenom) {
     // Cas avec seulement le prénom
     prenom = membre.prenom;
     nomComplet = prenom;
-}
-```
+   }
+   ```
 
 LOGIQUE AMÉLIORÉE POUR LE RÔLE:
 ===============================
-```javascript
+   ```javascript
 // Essayer différentes variantes du champ rôle
 if (membre.role) {
     role = membre.role;
